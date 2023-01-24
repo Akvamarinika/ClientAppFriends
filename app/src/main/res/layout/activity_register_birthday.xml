@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".register.RegisterBirthdayActivity">
+
+    <ImageView
+        android:id="@+id/imageViewFriendsPageThree"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        android:layout_marginStart="@dimen/activity_left_right_margin"
+        android:layout_marginEnd="@dimen/activity_left_right_margin"
+        android:layout_marginTop="60dp"
+        app:srcCompat="@drawable/friends"
+        android:contentDescription="@string/img_description_friends"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <TextView
+        android:id="@+id/textViewRegBirthdayTitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="60dp"
+        android:layout_marginStart="@dimen/activity_left_right_margin"
+        android:layout_marginEnd="@dimen/activity_left_right_margin"
+        android:fontFamily="sans-serif-black"
+        android:gravity="center"
+        android:textSize="@dimen/title_size"
+        android:textColor="@color/grey"
+        android:text="@string/reg_birthday_title"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageViewFriendsPageThree"  />
+
+    <TextView
+        android:id="@+id/textViewWelcomeDescription"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/title_edit_margin"
+        android:layout_marginStart="@dimen/activity_left_right_margin"
+        android:layout_marginEnd="@dimen/activity_left_right_margin"
+        android:gravity="center"
+        android:textSize="16sp"
+        android:textColor="@color/grey"
+        android:text="@string/reg_birthday_description"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewRegBirthdayTitle" />
+
+    <DatePicker
+        android:id="@+id/datePickerRegAge"
+        style="@style/MyDatePickerDialogTheme"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="24dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginRight="24dp"
+        android:backgroundTint="@color/colorPrimaryDark"
+        android:calendarTextColor="@color/colorPrimaryDark"
+        android:calendarViewShown="false"
+        android:datePickerMode="spinner"
+        android:minDate="01/01/1962"
+        android:maxDate="01/01/2006"
+        android:yearListSelectorColor="@color/colorPrimaryDark"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewWelcomeDescription"/>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/buttonRegContinueThree"
+        style="@style/Widget.MaterialComponents.Button"
+        android:layout_width="match_parent"
+        android:layout_height="58dp"
+        android:layout_marginTop="@dimen/btn_margin_top"
+        android:layout_marginStart="@dimen/activity_left_right_margin"
+        android:layout_marginEnd="@dimen/activity_left_right_margin"
+        android:backgroundTint="@color/colorPrimary"
+        android:textStyle="bold"
+        android:textSize="18sp"
+        android:elevation="20dp"
+        android:text="@string/reg_btn_text"
+        app:cornerRadius="@dimen/radius_button"
+        app:strokeColor="@color/colorPrimaryDark"
+        app:strokeWidth="1dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/datePickerRegAge"
+        />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

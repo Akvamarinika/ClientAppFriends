@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:animateLayoutChanges="true"
+    android:background="@color/colorPrimaryDark"
+    tools:context=".chats.AddUsersActivity">
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/chatsImageBack"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="12dp"
+        android:background="@color/grey"
+        android:padding="6dp"
+        android:src="@drawable/ic_arrow_back_chats"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:tint="@color/white"
+        />
+
+    <TextView
+        android:id="@+id/chatsSelectedUsers"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Пригласить в группу EventName"
+        android:textColor="@color/white"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/chatsImageBack"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/chats_selector_background_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/chatsImageBack">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/chatsRecyclerViewUsers"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:orientation="vertical"
+            android:overScrollMode="never"
+            android:padding="15dp"
+            android:visibility="gone"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:itemCount="5"
+            tools:listitem="@layout/item_event_recycler" />
+
+        <ProgressBar
+            android:id="@+id/chatsProgressBar"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_gravity="center"/>
+
+        <TextView
+            android:id="@+id/chatsTextErrorMessage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginStart="24dp"
+            android:layout_marginEnd="24dp"
+            android:textColor="@color/colorAccent"
+            android:textSize="14sp"
+            android:visibility="gone"
+            />
+
+
+    </FrameLayout>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabBtnSelectedUsers"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/colorPrimary"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="24dp"
+        android:src="@drawable/ic_ok_check"
+        android:scaleType="center"
+        app:layout_behavior="@string/hide_bottom_view_on_scroll_behavior"
+        app:maxImageSize="35dp"
+        app:tint="@color/white"
+        android:contentDescription="@string/description_add_btn"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

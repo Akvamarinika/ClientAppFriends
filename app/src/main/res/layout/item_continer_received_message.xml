@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="8dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:padding="4dp">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/receiverImageProfile"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="@drawable/shape_circle_background"
+        android:contentDescription="@string/avatar_img_description"
+        android:scaleType="centerCrop"
+        app:layout_constraintDimensionRatio="h,1:1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="@id/receiverTextMessage"
+        tools:src="@sample/avatars" />
+
+    <TextView
+        android:id="@+id/receiverTextMessage"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:background="@drawable/chats_background_received_message"
+        android:paddingStart="12dp"
+        android:paddingTop="8dp"
+        android:paddingEnd="12dp"
+        android:paddingBottom="8dp"
+        app:layout_constraintWidth_max="wrap"
+        android:textColor="@color/white"
+        android:textSize="14sp"
+        app:layout_constraintStart_toEndOf="@id/receiverImageProfile"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth_percent="0.75"
+        />
+
+    <TextView
+        android:id="@+id/receiverTextDateTime"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:textColor="@color/icons"
+        android:textSize="11sp"
+        app:layout_constraintStart_toStartOf="@id/receiverTextMessage"
+        app:layout_constraintTop_toBottomOf="@+id/receiverTextMessage"
+        />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

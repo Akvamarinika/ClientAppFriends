@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.cardview.widget.CardView xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardCornerRadius="6dp"
+    app:cardBackgroundColor="@color/white"
+    app:cardUseCompatPadding="true"
+    app:cardElevation="2dp"
+    android:id="@+id/cardView">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/mainLayoutCard"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="3dp">
+
+        <LinearLayout
+            android:id="@+id/layoutAvatar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.526">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/imageCircleAvatar"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_margin="@dimen/image_margin"
+                android:contentDescription="@string/avatar_img_description"
+                android:scaleType="centerCrop"
+                app:layout_constraintDimensionRatio="h,1:1"
+                tools:src="@sample/avatars" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layoutLinearBase"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/layoutAvatar"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constrainedHeight="true"
+            app:layout_constraintVertical_bias="0.526"
+            android:padding="6dp">
+
+            <LinearLayout
+                android:id="@+id/layoutNameAge"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/textViewUserName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/text_margin"
+                    android:text="@string/event_card_nickname"
+                    android:textSize="14sp"
+                    tools:text="@sample/user_names" />
+
+                <TextView
+                    android:id="@+id/textViewAge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/event_card_age"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/textViewConstText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/text_margin"
+                    android:text="@string/event_card_text"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/textViewDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/event_card_date"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:id="@+id/layoutEventDetails"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/textViewEventName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/event_card_event_name"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:maxLines="2"
+                    android:ellipsize="end"
+                    tools:text="@sample/event_names" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layoutWith"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/textViewWith"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginEnd="@dimen/text_margin"
+                    android:text="@string/event_card_with"/>
+
+                <ImageView
+                    android:id="@+id/imageCompany"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:contentDescription="@string/avatar_img_description"
+                    android:scaleType="centerCrop"
+                    app:layout_constraintDimensionRatio="h,1:1"
+                    tools:src="@drawable/card_ic_men" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layoutEventCategory"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/textViewCategory"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/text_margin"
+                    android:text="@string/event_card_category"
+                    android:textSize="12sp"
+                    tools:text="@sample/event_categories" />
+            </LinearLayout>
+
+    </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>

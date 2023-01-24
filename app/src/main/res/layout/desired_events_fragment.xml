@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bgcolor"
+    tools:context=".ui.myevents.tabs.DesiredEventsFragment">
+
+    <TextView
+        android:id="@+id/text_tab_DesiredEvents"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:textAlignment="center"
+        android:layout_gravity="center"
+        android:textSize="20sp"
+        android:text="Здесь будут отображаться мероприятия, которые ожидают одобрения от их создателя" />
+
+</FrameLayout>

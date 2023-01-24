@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:animateLayoutChanges="true"
+    android:background="@color/colorPrimaryDark"
+    tools:context=".chats.GroupChatActivity">
+
+    <View
+        android:id="@+id/viewBackground"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/chats_background_content_top"
+        app:layout_constraintBottom_toTopOf="@id/layoutSend"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <View
+        android:id="@+id/headerBackground"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginBottom="0dp"
+        android:background="@color/colorPrimaryDark"
+        app:layout_constraintBottom_toTopOf="@id/viewSupporter"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/groupChatImageBack"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="12dp"
+        android:padding="6dp"
+        android:src="@drawable/ic_arrow_back_chats"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:tint="@color/white"
+        />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/groupChatAddNewUsers"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="16dp"
+        android:padding="4dp"
+        android:src="@drawable/ic_chats_person_add"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:tint="@color/white"
+        />
+
+    <TextView
+        android:id="@+id/groupChatGroupName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:ellipsize="end"
+        android:gravity="center"
+        android:maxLines="1"
+        android:text="Беседа EventName"
+        android:textColor="@color/white"
+        android:textSize="@dimen/subtitle_size"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/groupChatImageBack"
+        app:layout_constraintTop_toTopOf="@+id/groupChatImageBack"
+        app:layout_constraintEnd_toStartOf="@+id/groupChatAddNewUsers"
+        app:layout_constraintStart_toEndOf="@+id/groupChatImageBack"
+        />
+
+    <View
+        android:id="@+id/viewSupporter"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="12dp"
+        android:background="@color/colorPrimaryDark"
+        app:layout_constraintTop_toBottomOf="@id/groupChatImageBack"
+        />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/groupChatRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:clipToPadding="false"
+        android:orientation="vertical"
+        android:overScrollMode="never"
+        app:stackFromEnd="true"
+        android:padding="15dp"
+        android:visibility="gone"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintBottom_toBottomOf="@+id/viewBackground"
+        app:layout_constraintTop_toBottomOf="@+id/viewSupporter"
+        tools:itemCount="5"
+        tools:listitem="@layout/item_event_recycler" />
+
+    <ProgressBar
+        android:id="@+id/chatsProgressBar"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_gravity="center"
+        app:layout_constraintBottom_toBottomOf="@+id/viewBackground"
+        app:layout_constraintStart_toStartOf="@+id/viewBackground"
+        app:layout_constraintEnd_toEndOf="@+id/viewBackground"
+        app:layout_constraintTop_toTopOf="@+id/viewBackground"/>
+
+    <FrameLayout
+        android:id="@+id/layoutSend"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="12dp"
+        android:background="@drawable/chats_background_input"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/chatsImageSend"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="fill"
+            android:layout_marginStart="4dp"
+            android:padding="5dp"
+            android:src="@drawable/ic_chats_send"
+            android:tint="@color/white"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </FrameLayout>
+
+    <EditText
+        android:id="@+id/inputMessageEditText"
+        android:layout_width="0dp"
+        android:layout_height="45dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="12dp"
+        android:background="@drawable/chats_background_input"
+        android:hint="Ввод сообщения..."
+        android:imeOptions="actionDone"
+        android:importantForAutofill="no"
+        android:inputType="text"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:textColor="@color/white"
+        android:textColorHint="@color/light_grey"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/layoutSend"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="8dp">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/chatsImageProfile"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_margin="@dimen/image_margin"
+        android:contentDescription="@string/avatar_img_description"
+        android:scaleType="centerCrop"
+        app:layout_constraintDimensionRatio="h,1:1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:civ_circle_background_color="@color/grey"
+        tools:src="@sample/avatars" />
+
+    <View
+        android:id="@+id/chatsViewSupporter"
+        android:layout_width="1dp"
+        android:layout_height="1dp"
+        app:layout_constraintBottom_toBottomOf="@+id/chatsImageProfile"
+        app:layout_constraintStart_toEndOf="@+id/chatsImageProfile"
+        app:layout_constraintTop_toTopOf="@+id/chatsImageProfile"/>
+
+    <TextView
+        android:id="@+id/chatsUserName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:ellipsize="end"
+        android:minLines="1"
+        android:textColor="@color/black"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toTopOf="@+id/chatsViewSupporter"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/chatsImageProfile"
+         />
+
+    <TextView
+        android:id="@+id/chatsUserInterest"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:ellipsize="end"
+        android:minLines="1"
+        android:textColor="@color/grey"
+        android:textSize="11sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/chatsImageProfile"
+        app:layout_constraintTop_toBottomOf="@+id/chatsViewSupporter"
+        />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".register.RegisterCityActivity">
+
+    <ImageView
+        android:id="@+id/imageViewFriendsPageFive"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        android:layout_marginStart="@dimen/activity_left_right_margin"
+        android:layout_marginEnd="@dimen/activity_left_right_margin"
+        android:layout_marginTop="60dp"
+        app:srcCompat="@drawable/friends"
+        android:contentDescription="@string/img_description_friends"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <TextView
+        android:id="@+id/textViewRegNameTitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="60dp"
+        android:layout_marginStart="@dimen/activity_left_right_margin"
+        android:layout_marginEnd="@dimen/activity_left_right_margin"
+        android:fontFamily="sans-serif-black"
+        android:gravity="center"
+        android:textSize="@dimen/title_size"
+        android:textColor="@color/grey"
+        android:text="Почти готово! Ещё один вопрос. Откуда Вы?"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageViewFriendsPageFive"  />
+
+    <TextView
+        android:id="@+id/textViewWelcomeDescription"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/title_edit_margin"
+        android:layout_marginStart="@dimen/activity_left_right_margin"
+        android:layout_marginEnd="@dimen/activity_left_right_margin"
+        android:gravity="center"
+        android:textSize="16sp"
+        android:textColor="@color/grey"
+        android:text="Укажте свое местоположение - это позволит найти созданные события из Вашего города"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewRegNameTitle" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textInputLayoutRegCity"
+        style="@style/editTextStyleBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+        android:layout_marginStart="@dimen/activity_left_right_margin"
+        android:layout_marginEnd="@dimen/activity_left_right_margin"
+        app:startIconDrawable="@drawable/ic_search"
+        app:boxBackgroundColor="@android:color/white"
+        app:boxCornerRadiusBottomEnd="@dimen/radius_form"
+        app:boxCornerRadiusBottomStart="@dimen/radius_form"
+        app:boxCornerRadiusTopEnd="@dimen/radius_form"
+        app:boxCornerRadiusTopStart="@dimen/radius_form"
+        app:counterEnabled="true"
+        app:counterMaxLength="35"
+        app:errorEnabled="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewWelcomeDescription"
+        app:hintTextColor="@color/colorPrimaryDark">
+
+        <AutoCompleteTextView
+            android:id="@+id/autoCompleteTextViewCity"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:ellipsize="end"
+            android:hint="Укажите свой город"
+            android:imeOptions="actionGo"
+            android:inputType="textEmailAddress"
+            android:lines="1"
+            android:maxLength="35"
+            android:maxLines="1"
+            android:minLines="1"
+            app:counterOverflowTextAppearance="@style/MyCounterText"
+            tools:ignore="KeyboardInaccessibleWidget" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/buttonRegContinueFive"
+        style="@style/Widget.MaterialComponents.Button"
+        android:layout_width="match_parent"
+        android:layout_height="58dp"
+        android:layout_marginTop="@dimen/btn_margin_top"
+        android:layout_marginStart="@dimen/activity_left_right_margin"
+        android:layout_marginEnd="@dimen/activity_left_right_margin"
+        android:backgroundTint="@color/colorPrimary"
+        android:textStyle="bold"
+        android:textSize="18sp"
+        android:elevation="20dp"
+        android:text="Готово"
+        app:cornerRadius="@dimen/radius_button"
+        app:strokeColor="@color/colorPrimaryDark"
+        app:strokeWidth="1dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textInputLayoutRegCity"
+        />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

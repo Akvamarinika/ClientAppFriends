@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:yourapp="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/event_search"
+        android:title="@string/text_search"
+        android:icon="@drawable/ic_search"
+        yourapp:showAsAction="always|collapseActionView"
+        yourapp:actionViewClass="androidx.appcompat.widget.SearchView" />
+
+    <item
+        android:id="@+id/event_filter"
+        android:title="@string/text_filter"
+        android:icon="@drawable/ic_tune_vertical"
+        yourapp:showAsAction="ifRoom" />
+
+
+<!--    <item-->
+<!--        android:id="@+id/arrow_back"-->
+<!--        android:title="Вернуться назад"-->
+<!--        android:icon="@drawable/ic_arrow_back"-->
+<!--        yourapp:showAsAction="always" />-->
+</menu>

@@ -1,0 +1,101 @@
+<resources>
+    <string name="app_name">Friends App</string>
+
+    <string name="facebook_app_id">425828452374267</string>
+    <string name="fb_login_protocol_scheme">fb425828452374267</string>
+    <string name="facebook_client_token">ad7a8fbaac8c938e536cca5dca49d204</string>
+
+    <integer name="com_vk_sdk_AppId">8182319</integer>
+
+    <string name="welcome_title">Добро пожаловать в приложение FriendsApp!</string>
+    <string name="welcome_description">Пожалуйста, выполните вход в приложение или создайте новый аккаунт.</string>
+    <string name="social_description">Или выполнить вход используя:</string>
+    <string name="facebook_description">facebook</string>
+    <string name="btn_sign_in">Выполнить вход</string>
+    <string name="btn_create_account">Создать аккаунт</string>
+    <string name="hint_e_mail">Введите E-mail</string>
+    <string name="hint_pass">Введите пароль</string>
+
+    <string name="title_my_events">Мои события</string>
+    <string name="title_notifications">Уведомления</string>
+    <string name="title_profile">Профиль</string>
+    <string name="title_home">Главная</string>
+    <string name="title_add_new_event">Новое событие</string>
+
+    <string name="avatar_img_description">Аватар</string>
+    <string name="text_filter">Настройки фильтрации</string>
+    <string name="text_search">Поиск названию события</string>
+    <string name="vk_description">VK</string>
+    <string name="google_icon_description">Google icon</string>
+    <string name="insta_icon_description">Instagram icon</string>
+    <string name="event_card_nickname">Имя пользователя</string>
+    <string name="event_card_age">XX</string>
+    <string name="event_card_text">, желает</string>
+    <string name="event_card_date">ХХ-ХХ-ХХХХ</string>
+    <string name="event_card_event_name">Название события</string>
+    <string name="event_card_with">C</string>
+    <string name="event_card_category">Категория</string>
+    <string name="add_hint_event_name">Например: пойти в кафе</string>
+    <string name="add_label_i_want">Я желаю:</string>
+    <string name="icon_label_all">Любой</string>
+    <string name="icon_label_company">Компания</string>
+    <string name="icon_label_girl">Девушка</string>
+    <string name="icon_label_men">Парень</string>
+    <string name="add_label_with">С кем:</string>
+    <string name="add_label_category">Категория события:</string>
+    <string name="description_add_btn">Добавить</string>
+    <string name="add_date_label">Дата:</string>
+    <string name="add_label_hours">Время суток:</string>
+    <string name="add_label_icon_morning">Утро</string>
+    <string name="add_label_icon_day">День</string>
+    <string name="add_label_icon_evening">Вечер</string>
+    <string name="add_label_icon_night">Ночь</string>
+    <string name="add_label_event_description">Описание:</string>
+    <string name="add_hint_event_description">Расскажите о намечающемся мероприятии</string>
+    <string name="error_count_symbols">Введите не менее 4-х символов</string>
+    <string name="error_empty_field">Данное поле не может быть пустым</string>
+    <string name="error_email">Неверно введен email</string>
+    <string name="error_two_pass">Извините, Ваши пароли не совпадают</string>
+    <string name="error_check_pass">Пароль должен состоять из букв нижнего и верхнего регистра, цифр. И иметь не менее 5 символов.</string>
+    <string name="error_check_name">Имя может состоять из букв нижнего и верхнего регистра.</string>
+    <string name="error_check_city">Данный город не был найден в списке</string>
+    <string name="error_radio">Выберете один из элементов</string>
+    <string name="add_btn_label_done">Добавить</string>
+    <string name="want_text">Желает:</string>
+    <string name="about_event_label">О мероприятии:</string>
+    <string name="label_day_of_week">День недели:</string>
+    <string name="label_with">C:</string>
+
+    <string name="event_info_men">парнем</string>
+    <string name="event_info_girl">девушкой</string>
+    <string name="event_info_company">компанией</string>
+    <string name="event_info_all">кем-нибудь</string>
+    <string name="background_wave">background wave</string>
+    <string name="hint_repeat_pass">Повторите пароль</string>
+    <string name="description_logo">AppFriends logo</string>
+    <string name="register_description">Данная информация необходима для подтверждения аккаунта</string>
+    <string name="register_title">Регистрация</string>
+    <string name="img_description_friends">Friends</string>
+    <string name="reg_btn_text">Продолжить</string>
+    <string name="reg_birthday_title">Когда у Вас день рождения?</string>
+    <string name="reg_birthday_description">Пользовали AppFriends увидят в профиле только Ваш возраст</string>
+    <string name="hint_reg_name">Введите Имя</string>
+    <string name="reg_photo_text_description">Фото будет отображаться на Вашей аватарке. Вы можете изменить или добавить ещё фото в меню Профиль.</string>
+    <string name="reg_photo_title">Чего-то не хватает… Точно! Вашего фото.</string>
+    <string name="about_user_description">Вам будет задано несколько простых вопросов.Так пользователи FriendsApp будут знать то, что Вам нравится и какие мероприятия можно Вам предложить</string>
+
+    <string-array name="event_categories_lst">
+        <item>Бары, кафе и рестораны</item>
+        <item>Прогулки</item>
+        <item>Спорт</item>
+        <item>Кино, театры</item>
+        <item>Концерты</item>
+        <item>Путешествия</item>
+        <item>Походы</item>
+        <item>Фестивали</item>
+        <item>Квесты, квизы</item>
+        <item>Выставки, музеи</item>
+        <item>Другое</item>
+    </string-array>
+
+</resources>

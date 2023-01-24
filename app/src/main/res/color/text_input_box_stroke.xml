@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!--    Colors for GoogleEditText -->
+    <item
+        android:color="@color/colorPrimaryDark"
+        android:state_focused="true" />
+    <item
+        android:color="@color/colorPrimary"
+        android:state_hovered="true" />
+    <item android:color="@color/grey" />
+</selector>

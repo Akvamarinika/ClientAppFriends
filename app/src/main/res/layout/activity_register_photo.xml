@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".register.RegisterPhotoActivity">
+
+    <ImageView
+        android:id="@+id/imageViewFriendsPageFour"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        android:layout_marginStart="@dimen/activity_left_right_margin"
+        android:layout_marginEnd="@dimen/activity_left_right_margin"
+        android:layout_marginTop="60dp"
+        app:srcCompat="@drawable/friends"
+        android:contentDescription="@string/img_description_friends"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <TextView
+        android:id="@+id/textViewRegNameTitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="60dp"
+        android:layout_marginStart="@dimen/activity_left_right_margin"
+        android:layout_marginEnd="@dimen/activity_left_right_margin"
+        android:fontFamily="sans-serif-black"
+        android:gravity="center"
+        android:textSize="@dimen/title_size"
+        android:textColor="@color/grey"
+        android:text="@string/reg_photo_title"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageViewFriendsPageFour"  />
+
+    <TextView
+        android:id="@+id/textViewWelcomeDescription"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/title_edit_margin"
+        android:layout_marginStart="@dimen/activity_left_right_margin"
+        android:layout_marginEnd="@dimen/activity_left_right_margin"
+        android:gravity="center"
+        android:textSize="16sp"
+        android:textColor="@color/grey"
+        android:text="@string/reg_photo_text_description"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewRegNameTitle" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardVieRegUserPhoto"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        app:cardCornerRadius="10dp"
+        app:cardElevation="6dp"
+        app:cardUseCompatPadding="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewWelcomeDescription">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/bgcolor">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                app:drawableStartCompat="@drawable/ic_register_add_photo" />
+
+            <ImageView
+                android:id="@+id/imageViewRegAvatar"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="fitXY" />
+        </RelativeLayout>
+    </androidx.cardview.widget.CardView>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/buttonRegContinueFour"
+        style="@style/Widget.MaterialComponents.Button"
+        android:layout_width="match_parent"
+        android:layout_height="58dp"
+        android:layout_marginTop="@dimen/btn_margin_top"
+        android:layout_marginStart="@dimen/activity_left_right_margin"
+        android:layout_marginEnd="@dimen/activity_left_right_margin"
+        android:backgroundTint="@color/colorPrimary"
+        android:textStyle="bold"
+        android:textSize="18sp"
+        android:elevation="20dp"
+        android:text="@string/reg_btn_text"
+        app:cornerRadius="@dimen/radius_button"
+        app:strokeColor="@color/colorPrimaryDark"
+        app:strokeWidth="1dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cardVieRegUserPhoto"
+        />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
