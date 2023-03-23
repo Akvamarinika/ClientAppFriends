@@ -48,7 +48,8 @@ public class LoginPresenter {
                 Log.d(TAG, "data " + data);
               //  Log.d(TAG, vkAccessToken.getPhone());
                 //           preferenceManager.putString(Constants.KEY_VK_TOKEN, vkAccessToken.toString());
-                Log.d(TAG, "VK Token: " + vkAccessToken.getAccessToken());
+                Log.d(TAG, "VK Silent Token: " + vkAccessToken.getAccessToken());
+                Log.d(TAG, "uuid: " + vkAccessToken.getUserId());
                 preferenceManager.putString(Constants.KEY_VK_TOKEN, vkAccessToken.getAccessToken());
 
                 sendTokenOnServerTest(vkAccessToken.getAccessToken());

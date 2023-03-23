@@ -240,6 +240,9 @@ public class AuthorizationActivity extends AppCompatActivity {
     }
 
 
+    /**
+     * Запуск активности VK SDK
+     * ***/
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         VKAuthCallback vkCallback = loginPresenter.loginVkontakte(requestCode, resultCode, data);
