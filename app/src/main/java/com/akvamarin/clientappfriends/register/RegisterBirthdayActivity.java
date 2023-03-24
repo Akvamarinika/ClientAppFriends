@@ -2,6 +2,7 @@ package com.akvamarin.clientappfriends.register;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
@@ -14,15 +15,17 @@ import com.akvamarin.clientappfriends.dto.User;
 import com.akvamarin.clientappfriends.utils.CheckerFields;
 import com.akvamarin.clientappfriends.utils.Constants;
 import com.akvamarin.clientappfriends.utils.PreferenceManager;
+import com.akvamarin.clientappfriends.utils.Utils;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 public class RegisterBirthdayActivity extends AppCompatActivity {
     private static final int AGE_LIMIT = 15;
-    private SimpleDateFormat dateFormatter = new SimpleDateFormat("MM-dd-yyyy");
+    private final SimpleDateFormat dateFormatter = new SimpleDateFormat("MM-dd-yyyy", Locale.ENGLISH);
     private DatePicker datePickerRegAge;
     private Button buttonRegContinueThree;
 
@@ -54,7 +57,7 @@ public class RegisterBirthdayActivity extends AppCompatActivity {
     }
 
     private void setUserAge() {
-        int age = CheckerFields.getAge(datePickerRegAge.getYear(), datePickerRegAge.getMonth(), datePickerRegAge.getDayOfMonth()); // age function
+        int age = Utils.getAgeWithCalendar(datePickerRegAge.getYear(), datePickerRegAge.getMonth(), datePickerRegAge.getDayOfMonth()); // age function
         preferenceManager.putString(Constants.KEY_AGE, String.valueOf(age)); ////////////////////////////////////pref
 
         // converting date to string

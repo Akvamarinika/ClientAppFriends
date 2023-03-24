@@ -17,6 +17,7 @@ import com.akvamarin.clientappfriends.utils.PreferenceManager;
 import com.vk.api.sdk.VK;
 import com.vk.api.sdk.auth.VKAccessToken;
 import com.vk.api.sdk.auth.VKAuthCallback;
+import com.vk.api.sdk.exceptions.VKAuthException;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -36,6 +37,7 @@ public class LoginPresenter {
 
     public VKAuthCallback loginVkontakte(int requestCode, int resultCode, @Nullable Intent data){
         VKAuthCallback vkCallback = new VKAuthCallback() {
+
             @Override
             public void onLogin(@NonNull VKAccessToken vkAccessToken) {     //прошел авторизацию
                //VK.saveAccessToken(context, VK.getUserId(), vkAccessToken.getAccessToken(), null);
@@ -57,8 +59,8 @@ public class LoginPresenter {
                 Toast.makeText(context, "RESULT_OK", Toast.LENGTH_SHORT).show();
             }
             @Override
-            public void onLoginFailed(int errorCode) {
-                Log.d(TAG, "error " + errorCode);
+            public void onLoginFailed(@NonNull VKAuthException errorCode) {
+                Log.d(TAG, "error " + errorCode.getAuthError());
                 Toast.makeText(context, "RESULT_ERROR", Toast.LENGTH_SHORT).show();
             }
         };

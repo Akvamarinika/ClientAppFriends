@@ -16,9 +16,9 @@ public class CheckerFields {
     private static final String TAG = "CheckerFields";
     private static final int MIN_TEXT_LENGTH = 5;
     private static final String EMPTY_STRING = "";
-    private final String EMAIL_PATTERN = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
-    private final String PASS_PATTERN = "[A-Za-z0-9 ]*";
-    private final String NAME_PATTERN = "[A-Za-z]*";
+    private static final String EMAIL_PATTERN = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
+    private static final String PASS_PATTERN = "[A-Za-z0-9 ]*";
+    private static final String NAME_PATTERN = "[A-Za-z]*";
     private final Context context;
 
     public CheckerFields(Context context) {
@@ -119,18 +119,5 @@ public class CheckerFields {
         return false;
     }
 
-    public static int getAge(int year, int month, int day) {
-        Calendar dateOfBirth = Calendar.getInstance();
-        Calendar today = Calendar.getInstance();
 
-        dateOfBirth.set(year, month, day);
-
-        int age = today.get(Calendar.YEAR) - dateOfBirth.get(Calendar.YEAR);
-
-        if (today.get(Calendar.DAY_OF_YEAR) < dateOfBirth.get(Calendar.DAY_OF_YEAR)) {
-            age--;
-        }
-
-        return age;
-    }
 }

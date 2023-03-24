@@ -1,11 +1,13 @@
 <resources>
     <string name="app_name">Friends App</string>
-
     <string name="facebook_app_id">425828452374267</string>
     <string name="fb_login_protocol_scheme">fb425828452374267</string>
     <string name="facebook_client_token">ad7a8fbaac8c938e536cca5dca49d204</string>
-
     <integer name="com_vk_sdk_AppId">8182319</integer>
+
+    <string name="message_connection_error">Connection error</string>
+    <string name="message_unknown_error">Unknown error. Try again later.</string>
+    <string name="vk_retry">Retry</string>
 
     <string name="welcome_title">Добро пожаловать в приложение FriendsApp!</string>
     <string name="welcome_description">Пожалуйста, выполните вход в приложение или создайте новый аккаунт.</string>

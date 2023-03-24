@@ -1,6 +1,8 @@
 package com.akvamarin.clientappfriends;
 
 import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
@@ -138,5 +140,14 @@ public class AllEventsActivity extends AppCompatActivity {
         } catch (IllegalArgumentException ex) {
             ex.printStackTrace();
         }
+    }
+
+    /** запускает AllEventsActivity из текущего Контекста
+     * очистит все существующие действия в верхней части стека, перед запуском нового
+     * **/
+    public static void startFrom(Context context) {
+        Intent intent = new Intent(context, AllEventsActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        context.startActivity(intent);
     }
 }

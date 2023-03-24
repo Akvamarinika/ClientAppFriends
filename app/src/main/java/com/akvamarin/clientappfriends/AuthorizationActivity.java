@@ -8,7 +8,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -16,6 +18,7 @@ import android.content.pm.Signature;
 import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
+import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -45,14 +48,12 @@ import com.vk.api.sdk.VK;
 import com.vk.api.sdk.VKApiCallback;
 import com.vk.api.sdk.auth.VKAccessToken;
 import com.vk.api.sdk.auth.VKAuthCallback;
+import com.vk.api.sdk.auth.VKAuthenticationResult;
 import com.vk.api.sdk.auth.VKScope;
+import com.vk.api.sdk.exceptions.VKAuthException;
 import com.vk.api.sdk.requests.VKRequest;
 import com.vk.api.sdk.utils.VKUtils;
-import com.vk.sdk.api.base.dto.BaseCity;
-import com.vk.sdk.api.users.UsersService;
-import com.vk.sdk.api.users.dto.NameCaseParam;
-import com.vk.sdk.api.users.dto.UsersFields;
-import com.vk.sdk.api.users.dto.UsersUserXtrCounters;
+
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
@@ -62,6 +63,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -78,9 +80,6 @@ public class AuthorizationActivity extends AppCompatActivity {
     private TextInputLayout textInputLayoutPassword;
     private EditText editTextPassword;
     private ImageView imageViewVK;
-    private ImageView imageViewGoogle;
-    private ImageView imageViewInsta;
-    private ImageView imageViewFacebook;
 
     private PreferenceManager preferenceManager;
     private VKAccessToken access_token;
@@ -89,6 +88,7 @@ public class AuthorizationActivity extends AppCompatActivity {
 
     private LoginPresenter loginPresenter;
     private LoginInfoProvider loginInfoProvider;
+    private ActivityResultLauncher<Collection<VKScope>> authLauncherVK;
     private static final String TAG = "AuthorizationActivity";
 
     private RetrofitService retrofitService;
@@ -97,31 +97,49 @@ public class AuthorizationActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        VK.initialize(getApplicationContext());
+
+        if (VK.isLoggedIn()) {  // уже был ранее залогенен пользователь в ВК
+            AllEventsActivity.startFrom(this);
+            finish();
+            return;
+        }
+
         setContentView(R.layout.activity_authorization);
+        initWidgets();
 
-//        if (VK.isLoggedIn()) {
-//            startMainActivityAllEvents();
-//        }
-
-        GoogleSignInOptions options = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestEmail()
-                .build();
-
-        googleSignInClient = GoogleSignIn.getClient(getApplicationContext(), options);
-
-
-
+        authLauncherVK = VK.login(this, result -> {
+            if (result instanceof VKAuthenticationResult.Success) {
+                VKAccessToken token = ((VKAuthenticationResult.Success) result).getToken();
+                String uuid = token.getUserId().toString();
+                String email = token.getEmail();
+                Log.d(TAG, "token: " + token.getAccessToken());
+                Log.d(TAG, "token Expired: " + token.getExpiresInSec()); //86400
+                Log.d(TAG, "token Secret: " + token.getSecret());
+                Log.d(TAG, "uuid: " + uuid);
+                Log.d(TAG, "email: " + email);
 
 
+
+                onLogin();
+            } else if (result instanceof VKAuthenticationResult.Failed) {
+                onLoginFailed(((VKAuthenticationResult.Failed) result).getException());
+            }
+        });
+
+
+        imageViewVK.setOnClickListener(view -> {    // Слушатель на кнопке ВК
+            authLauncherVK.launch(getVKPermissions());
+            //Log.d(TAG, "VK Fingerprint: " + Arrays.toString(VKUtils.getCertificateFingerprint(this, this.getPackageName())));
+            Log.d(TAG, "VKONTAKTE:  click button VK.login ");
+        });
 
         //AppEventsLogger.activateApp(this);
 
 
-        initWidgets();
         signInEmailListener();
         createAccountListener();
-        socialListeners();
-        getAuthorizeData();///////////////////////////////////////////////////////////
+      //  getAuthorizeData();///////////////////////////////////////////////////////////
     }
 
     private void initWidgets(){
@@ -132,9 +150,6 @@ public class AuthorizationActivity extends AppCompatActivity {
         editTextPassword = findViewById(R.id.editTextPassword);
         textInputLayoutPassword = findViewById(R.id.textInputLayoutPassword);
         imageViewVK = findViewById(R.id.imageViewVK);
-        imageViewGoogle = findViewById(R.id.imageViewGoogle);
-        imageViewInsta = findViewById(R.id.imageViewInsta);
-        imageViewFacebook = findViewById(R.id.imageViewFacebook);
         preferenceManager = new PreferenceManager(getApplicationContext());
         loginPresenter = new LoginPresenter(preferenceManager, getApplicationContext());
         loginInfoProvider = new LoginInfoProvider(preferenceManager, getApplicationContext());
@@ -186,43 +201,60 @@ public class AuthorizationActivity extends AppCompatActivity {
         });
     }
 
-    private void socialListeners(){
-        ActivityResultLauncher<Intent> launcher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
-            @Override
-            public void onActivityResult(ActivityResult result) {
-                if (result.getResultCode() == Activity.RESULT_OK) {
-                    Task<GoogleSignInAccount> accountTask = GoogleSignIn.getSignedInAccountFromIntent(result.getData());
-                    try {
-                        GoogleSignInAccount account = accountTask.getResult();
-                        //getParentFragmentManager().setFragmentResult(AUTH_RESULT, new Bundle());
-                    } catch (Exception ex) {
-                        Toast.makeText(getApplicationContext(), "Auth Failed", Toast.LENGTH_LONG).show();
-                    }
-                }
-            }
-        });
 
-        /*TODO: авторизация через соц. сети: */
-        imageViewVK.setOnClickListener(view -> {
-            List<VKScope> permissions = new ArrayList<>();
-            permissions.add(VKScope.EMAIL);
-  //          permissions.add(VKScope.PHONE);
+    /***
+     * Возвращает список необходимых разрешений
+     * для соц. сети ВКонтакте
+     * **/
+    private List<VKScope> getVKPermissions() {
+        List<VKScope> permissions = new ArrayList<>();
+        permissions.add(VKScope.EMAIL);
+        //          permissions.add(VKScope.PHONE);
 //            permissions.add(VKScope.PHOTOS);
- //           permissions.add(VKScope.OFFLINE);
-
-            VK.login(this, permissions);
-            //Log.d(TAG, "VK Fingerprint: " + Arrays.toString(VKUtils.getCertificateFingerprint(this, this.getPackageName())));
-            Log.d(TAG, "VKONTAKTE:  click button VK.login ");
-        });
-
-        imageViewGoogle.setOnClickListener(view -> {
-            Intent intent = googleSignInClient.getSignInIntent();
-            launcher.launch(intent);
-        });
-
+ //      permissions.add(VKScope.OFFLINE);
+        return permissions;
     }
 
-    //private void
+    /***
+     * Когда только что аутентифицировался пользователь
+     * Перенаправить в AllEventsActivity
+     * **/
+    private void onLogin() {
+        AllEventsActivity.startFrom(AuthorizationActivity.this);
+        finish();
+    }
+
+    private void onLoginFailed(VKAuthException exception) {
+        if (!exception.isCanceled()) {
+            int descriptionResource;
+
+            if (exception.getWebViewError() == WebViewClient.ERROR_HOST_LOOKUP) {
+                descriptionResource = R.string.message_connection_error;
+            } else {
+                descriptionResource = R.string.message_unknown_error;
+            }
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(AuthorizationActivity.this);
+            builder.setMessage(descriptionResource);
+
+            builder.setPositiveButton(R.string.vk_retry, new DialogInterface.OnClickListener() {  // retry button to re-initiate the authentication process with VKScope values
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    authLauncherVK.launch(getVKPermissions());  // launch the authentication process with VKScope values
+                }
+            });
+
+            builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() { // cancel button to dismiss the alert dialog box
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss(); // dismiss the alert dialog box
+                }
+            });
+
+            builder.show();
+        }
+    }
+
 
     /*** Methods check fields: ***/
     private boolean isEmptyEditText(EditText editText) {
@@ -233,17 +265,17 @@ public class AuthorizationActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if (toUpdateAuth) {
+       /* if (toUpdateAuth) {
             toUpdateAuth = false;
             startMainActivityAllEvents();
-        }
+        }*/
     }
 
 
     /**
      * Запуск активности VK SDK
      * ***/
-    @Override
+ /*   @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         VKAuthCallback vkCallback = loginPresenter.loginVkontakte(requestCode, resultCode, data);
 //data == null ||
@@ -252,7 +284,7 @@ public class AuthorizationActivity extends AppCompatActivity {
         }
 
         //super.onActivityResult(requestCode, resultCode, data);
-    }
+    }*/
 
     private void startMainActivityAllEvents(){
         Intent intent = new Intent(AuthorizationActivity.this, AllEventsActivity.class);
@@ -262,8 +294,6 @@ public class AuthorizationActivity extends AppCompatActivity {
 
 
     public static void signOut(Context context) {
-        GoogleSignInOptions googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).build();
-        GoogleSignIn.getClient(context, googleSignInOptions).signOut();
 
         if (VK.isLoggedIn()) {
             VK.logout();
@@ -272,22 +302,20 @@ public class AuthorizationActivity extends AppCompatActivity {
 
 
     public void getAuthorizeData() {
-        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(getApplicationContext());
-        if (account != null) {
-            String urlPhoto = account.getPhotoUrl().getPath();
-            preferenceManager.putBoolean(Constants.KEY_IS_SIGNED_IN, true);
-            preferenceManager.putString(Constants.KEY_EMAIL, account.getEmail());
-            preferenceManager.putString(Constants.KEY_NAME, account.getDisplayName());
-            preferenceManager.putString(Constants.KEY_IMAGE, (urlPhoto != null) ? urlPhoto : "");
+     if (loginInfoProvider.loadInfoAboutUserInVK()){
             startMainActivityAllEvents();
         }
-
-        if (loginInfoProvider.loadInfoAboutUserInVK()){
-            startMainActivityAllEvents();
-        }
-
-
     }
 
+
+
+    /** запускает AuthorizationActivity из текущего Контекста
+     * очистит все существующие действия в верхней части стека, перед запуском нового
+     * **/
+    public static void startFrom(Context context) {
+        Intent intent = new Intent(context, AuthorizationActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        context.startActivity(intent);
+    }
 
 }

@@ -67,8 +67,8 @@ dependencies {
     implementation "androidx.core:core-ktx:1.9.0"
 
     //implementation 'com.facebook.android:facebook-android-sdk:latest.release'
-    implementation 'com.vk:android-sdk-core:3.1.0'
-    implementation 'com.vk:android-sdk-api:3.1.0'
+    implementation 'com.vk:android-sdk-core:4.0.1'
+    implementation 'com.vk:android-sdk-api:4.0.1'
     implementation 'com.google.android.gms:play-services-auth:20.3.0'
 
     // https://mvnrepository.com/artifact/com.squareup.retrofit2/retrofit

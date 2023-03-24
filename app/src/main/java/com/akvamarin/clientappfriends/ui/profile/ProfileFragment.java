@@ -1,8 +1,13 @@
 package com.akvamarin.clientappfriends.ui.profile;
 
+import static com.akvamarin.clientappfriends.utils.Utils.getUserAgeVK;
+
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.os.Build;
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
@@ -20,12 +26,22 @@ import com.akvamarin.clientappfriends.dto.User;
 import com.akvamarin.clientappfriends.utils.BitmapConvertor;
 import com.akvamarin.clientappfriends.utils.Constants;
 import com.akvamarin.clientappfriends.utils.PreferenceManager;
+import com.akvamarin.clientappfriends.utils.Utils;
+import com.akvamarin.clientappfriends.vk.models.VKUser;
+import com.akvamarin.clientappfriends.vk.requests.VKUsersCommand;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.squareup.picasso.Picasso;
 import com.vk.api.sdk.VK;
+import com.vk.api.sdk.VKApiCallback;
+
+import java.time.LocalDate;
+import java.time.Period;
+import java.util.List;
 
 public class ProfileFragment extends Fragment {
+    private static final String TAG = "ProfileFragment";
     private User user;
     private View viewProfileFragment;
     //private FragmentProfileBinding binding;
@@ -46,22 +62,13 @@ public class ProfileFragment extends Fragment {
         startEditActivityWithFAB();
 
         linearLayoutLogOut.setOnClickListener(view -> {
-
-
-            GoogleSignInOptions googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).build();
-            GoogleSignIn.getClient(requireActivity().getApplicationContext(), googleSignInOptions).signOut();
-
-            if (VK.isLoggedIn()) {
-                VK.logout();
-            }
-
-            Intent intent = new Intent(requireActivity(), AuthorizationActivity.class);
-            startActivity(intent);
-            requireActivity().finish();
+            VK.logout();  // Log out of VK
+            AuthorizationActivity.startFrom(getActivity()); // Start AuthorizationActivity from this context
+            requireActivity().finish(); // Finish the current activity
         });
 
 
-
+        requestUsers();
         return viewProfileFragment;
     }
 
@@ -77,12 +84,12 @@ public class ProfileFragment extends Fragment {
         String name = preferenceManager.getString(Constants.KEY_NAME);
         String age = preferenceManager.getString(Constants.KEY_AGE);
         String imgBase64 = preferenceManager.getString(Constants.KEY_IMAGE_BASE64);
-        tvProfileNameAge.setText(name + ", " + age);
+       /* tvProfileNameAge.setText(name + ", " + age);
 
         if (!imgBase64.equalsIgnoreCase("image")){
             Bitmap bitmap = BitmapConvertor.convertFromBase64ToBitmap(preferenceManager.getString(Constants.KEY_IMAGE_BASE64));
             imageProfileAvatar.setImageBitmap(bitmap);
-        }
+        }*/
 
 //        String img = preferenceManager.getString(Constants.KEY_IMAGE);
 //        if (!img.equalsIgnoreCase("image")){
@@ -112,9 +119,36 @@ public class ProfileFragment extends Fragment {
         });
     }
 
+    /** Все поля для VK API
+     * https://vk.com/dev.php?method=user&prefix=objects
+     * */
+    private void requestUsers() {
+        VK.execute(new VKUsersCommand(new int[0]), new VKApiCallback<List<VKUser>>() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public void success(List<VKUser> result) {
+                if (!requireActivity().isFinishing() && !result.isEmpty()) {
+                    //TextView nameTV = findViewById(R.id.nameTV);
+                    VKUser user = result.get(0);
+                    String nameUser = String.format("%s %s, %s %s", user.firstName, user.lastName, getUserAgeVK(user.dateOfBirth), user.email);
+                    tvProfileNameAge.setText(nameUser);
 
+                    if (!TextUtils.isEmpty(user.photo)) {  // Check if the photo URL is not empty
+                        Picasso.get().load(user.photo) // Load the image from the URL
+                                .error(R.drawable.no_avatar) // If an error occurs, set a placeholder image
+                                .into(imageProfileAvatar); // Set the loaded image to the ImageView
+                    } else {  // If no photo URL is given, set a placeholder image
+                        imageProfileAvatar.setImageResource(R.drawable.no_avatar);
+                    }
+                }
+            }
 
-
+            @Override
+            public void fail(@NonNull Exception error) {
+                Log.e(TAG, error.toString());
+            }
+        });
+    }
 
 
 

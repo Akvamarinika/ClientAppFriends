@@ -16,15 +16,11 @@ public class FriendsAppApplication extends Application {
 
    // private BroadcastReceiver internetModeChangeReceiver = new InternetModeChangeReceiver();
 
-    private static final VKTokenExpiredHandler tokenTracker = new VKTokenExpiredHandler() { //когда срок действия токена истек
-        @Override
-        public void onTokenExpired() {
-            Log.d(TAG, "onTokenExpired...");
 
-
-        }
-
-
+    //когда срок действия токена истек
+    private final VKTokenExpiredHandler tokenTracker = () -> {
+        Log.d(TAG, "onTokenExpired...");
+        AuthorizationActivity.startFrom(FriendsAppApplication.this);
     };
 
     @Override
