@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.akvamarin.clientappfriends.R;
 
 import com.akvamarin.clientappfriends.databinding.ItemContainerUserBinding;
-import com.akvamarin.clientappfriends.dto.User;
+import com.akvamarin.clientappfriends.domain.dto.User;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;

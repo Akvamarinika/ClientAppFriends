@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".register.RegisterGenderActivity">
+    tools:context=".view.register.RegisterGenderActivity">
 
     <ImageView
         android:id="@+id/imageViewFriendsPageZero"

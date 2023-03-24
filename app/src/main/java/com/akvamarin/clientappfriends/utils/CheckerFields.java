@@ -2,14 +2,11 @@ package com.akvamarin.clientappfriends.utils;
 
 import android.content.Context;
 import android.widget.EditText;
-import android.widget.RadioGroup;
 import android.widget.TextView;
-import android.widget.Toast;
+
 import com.akvamarin.clientappfriends.R;
-import com.akvamarin.clientappfriends.addevent.AddEventActivity;
 import com.google.android.material.textfield.TextInputLayout;
 
-import java.util.Calendar;
 import java.util.List;
 
 public class CheckerFields {

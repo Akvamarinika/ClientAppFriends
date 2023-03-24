@@ -5,6 +5,8 @@ import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.akvamarin.clientappfriends.view.AuthorizationActivity;
+
 public class SplashScreen extends AppCompatActivity {
 
     @Override

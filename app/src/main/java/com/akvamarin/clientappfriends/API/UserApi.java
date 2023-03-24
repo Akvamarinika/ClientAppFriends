@@ -1,7 +1,7 @@
 package com.akvamarin.clientappfriends.API;
 
-import com.akvamarin.clientappfriends.dto.User;
-import com.akvamarin.clientappfriends.dto.UserSignInDTO;
+import com.akvamarin.clientappfriends.domain.dto.User;
+import com.akvamarin.clientappfriends.domain.dto.UserSignInDTO;
 
 import retrofit2.Call;
 import retrofit2.http.Body;

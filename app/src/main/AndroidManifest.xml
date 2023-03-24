@@ -38,67 +38,67 @@
         </activity>
 
         <activity
-            android:name=".ui.profile.ViewProfileActivity"
+            android:name=".view.ui.profile.ViewProfileActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.profile.SettingsActivity"
+            android:name=".view.ui.profile.SettingsActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.profile.EditProfileActivity"
+            android:name=".view.ui.profile.EditProfileActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".InfoEventActivity"
+            android:name=".view.InfoEventActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".addevent.AddEventActivity"
+            android:name=".view.addevent.AddEventActivity"
             android:exported="false"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustPan" /> <!-- android:theme="@style/Theme.FriendsApp"> -->
         <activity
-            android:name=".AllEventsActivity"
+            android:name=".view.AllEventsActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".register.RegisterActivity"
+            android:name=".view.register.RegisterActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".AuthorizationActivity"
+            android:name=".view.AuthorizationActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
 
 
         <activity
-            android:name=".chats.GroupChatActivity"
+            android:name=".view.chats.GroupChatActivity"
             android:windowSoftInputMode="adjustResize"
             android:screenOrientation="portrait"
             android:exported="false" />
         <activity
-            android:name=".chats.AddUsersActivity"
+            android:name=".view.chats.AddUsersActivity"
             android:screenOrientation="portrait"
             android:exported="false" />
         <activity
-            android:name=".register.RegisterPhotoActivity"
+            android:name=".view.register.RegisterPhotoActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".register.RegisterCityActivity"
+            android:name=".view.register.RegisterCityActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".register.RegisterGenderActivity"
+            android:name=".view.register.RegisterGenderActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".register.RegisterBirthdayActivity"
+            android:name=".view.register.RegisterBirthdayActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".register.RegisterNameActivity"
+            android:name=".view.register.RegisterNameActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
     </application>

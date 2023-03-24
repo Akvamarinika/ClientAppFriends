@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/bgcolor"
-    tools:context=".ui.myevents.tabs.ChatsFragment">
+    tools:context=".view.ui.myevents.tabs.ChatsFragment">
 
     <TextView
         android:id="@+id/text_tab_ChatsFragment"

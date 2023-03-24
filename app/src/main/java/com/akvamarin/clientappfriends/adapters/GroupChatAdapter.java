@@ -7,7 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.akvamarin.clientappfriends.R;
-import com.akvamarin.clientappfriends.chats.GroupChatMessage;
+import com.akvamarin.clientappfriends.view.chats.GroupChatMessage;
 import com.akvamarin.clientappfriends.databinding.ItemConteinerSendMessageBinding;
 import com.akvamarin.clientappfriends.databinding.ItemContinerReceivedMessageBinding;
 import com.squareup.picasso.Picasso;

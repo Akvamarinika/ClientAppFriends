@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/bgcolor"
-    tools:context=".ui.myevents.MyEventsFragment">
+    tools:context=".view.ui.myevents.MyEventsFragment">
 <!--    <TextView-->
 <!--        android:id="@+id/text_my_events"-->
 <!--        android:layout_width="match_parent"-->

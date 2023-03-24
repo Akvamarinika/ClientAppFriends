@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/bgcolor"
-    tools:context=".ui.myevents.tabs.DesiredEventsFragment">
+    tools:context=".view.ui.myevents.tabs.DesiredEventsFragment">
 
     <TextView
         android:id="@+id/text_tab_DesiredEvents"

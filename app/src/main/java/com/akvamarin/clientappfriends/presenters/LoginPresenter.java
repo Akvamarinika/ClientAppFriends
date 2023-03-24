@@ -10,11 +10,8 @@ import androidx.annotation.Nullable;
 
 import com.akvamarin.clientappfriends.API.UserApi;
 import com.akvamarin.clientappfriends.API.connection.RetrofitService;
-import com.akvamarin.clientappfriends.AuthorizationActivity;
-import com.akvamarin.clientappfriends.dto.User;
 import com.akvamarin.clientappfriends.utils.Constants;
 import com.akvamarin.clientappfriends.utils.PreferenceManager;
-import com.vk.api.sdk.VK;
 import com.vk.api.sdk.auth.VKAccessToken;
 import com.vk.api.sdk.auth.VKAuthCallback;
 import com.vk.api.sdk.exceptions.VKAuthException;
