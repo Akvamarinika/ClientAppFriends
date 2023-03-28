@@ -8,7 +8,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.akvamarin.clientappfriends.API.UserApi;
+import com.akvamarin.clientappfriends.API.AuthenticationApi;
 import com.akvamarin.clientappfriends.API.connection.RetrofitService;
 import com.akvamarin.clientappfriends.utils.Constants;
 import com.akvamarin.clientappfriends.utils.PreferenceManager;
@@ -67,10 +67,10 @@ public class LoginPresenter {
     }
 
     private void sendTokenOnServerTest(String token){
-        RetrofitService retrofitService = new RetrofitService(context);
-        UserApi userApi  = retrofitService.getRetrofit().create(UserApi.class);
+    //    RetrofitService retrofitService = new RetrofitService(context);
+ //       AuthenticationApi userApi  = retrofitService.getRetrofit().create(AuthenticationApi.class);
 
-        userApi.sendToken(token).enqueue(new Callback<String>() {
+      /*  userApi.sendToken(token).enqueue(new Callback<String>() {
             @Override
             public void onResponse(@NonNull Call<String> call, @NonNull Response<String> response) {
                 Toast.makeText(context, "Save successful", Toast.LENGTH_SHORT).show();
@@ -81,6 +81,6 @@ public class LoginPresenter {
                 Toast.makeText(context, "Save filed!!!", Toast.LENGTH_SHORT).show();
                 Log.d(TAG, "error: " + t.fillInStackTrace());
             }
-        });
+        }); */
     }
 }

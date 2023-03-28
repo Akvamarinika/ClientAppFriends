@@ -12,7 +12,7 @@ import android.widget.Toast;
 
 import com.akvamarin.clientappfriends.view.AllEventsActivity;
 import com.akvamarin.clientappfriends.R;
-import com.akvamarin.clientappfriends.API.UserApi;
+import com.akvamarin.clientappfriends.API.AuthenticationApi;
 import com.akvamarin.clientappfriends.domain.dto.User;
 import com.akvamarin.clientappfriends.utils.CheckerFields;
 import com.akvamarin.clientappfriends.utils.Constants;
@@ -45,7 +45,7 @@ public class RegisterCityActivity extends AppCompatActivity {
     private PreferenceManager preferenceManager;
 
     private RetrofitService retrofitService;
-    private UserApi userApi;
+    private AuthenticationApi userApi;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,8 +80,8 @@ public class RegisterCityActivity extends AppCompatActivity {
         mAutoCompleteAdapter = new ArrayAdapter<>(RegisterCityActivity.this,
                 android.R.layout.simple_dropdown_item_1line, mCities);
         preferenceManager = new PreferenceManager(getApplicationContext());
-        retrofitService = new RetrofitService(getApplicationContext());
-        userApi = retrofitService.getRetrofit().create(UserApi.class);
+        retrofitService = RetrofitService.getInstance(getApplicationContext());
+        userApi = retrofitService.getRetrofit().create(AuthenticationApi.class);
 
     }
 
@@ -94,7 +94,7 @@ public class RegisterCityActivity extends AppCompatActivity {
         preferenceManager.putString(Constants.KEY_CITY, autoCompleteTextViewCity.getText().toString());
 
         /*TODO: отправить данные на сервер */
-        userApi.save(user).enqueue(new Callback<User>() {
+        userApi.authUser(user).enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
                 Toast.makeText(RegisterCityActivity.this, "Save successful", Toast.LENGTH_SHORT).show();

@@ -3,8 +3,6 @@ package com.akvamarin.clientappfriends.vk.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import androidx.annotation.NonNull;
-
 import org.json.JSONObject;
 
 public class VKUser implements Parcelable {
@@ -13,17 +11,29 @@ public class VKUser implements Parcelable {
     public String lastName;
     public String photo;
     public String dateOfBirth;
-    public String email;
+    public String city;
+    public String cityTitle;
+    public String country;
+    public String countryTitle;
+    public int sex;
+    public String about;
     public boolean deactivated;
 
 
-    public VKUser(long id, String firstName, String lastName, String photo, String dateOfBirth, String email, boolean deactivated) {
+    public VKUser(long id, String firstName, String lastName, String photo, String dateOfBirth,
+                  String city, String cityTitle, String country, String countryTitle, int sex,
+                  String about, boolean deactivated) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.photo = photo;
         this.dateOfBirth = dateOfBirth;
-        this.email = email;
+        this.city = city;
+        this.cityTitle = cityTitle;
+        this.country = country;
+        this.countryTitle = countryTitle;
+        this.sex = sex;
+        this.about = about;
         this.deactivated = deactivated;
     }
 
@@ -33,7 +43,10 @@ public class VKUser implements Parcelable {
         lastName = in.readString();
         photo = in.readString();
         dateOfBirth = in.readString();
-        email = in.readString();
+        city = in.readString();
+        country = in.readString();
+        sex = in.readInt();
+        about = in.readString();
         deactivated = in.readByte() != 0;
     }
 
@@ -44,7 +57,10 @@ public class VKUser implements Parcelable {
         dest.writeString(lastName);
         dest.writeString(photo);
         dest.writeString(dateOfBirth);
-        dest.writeString(email);
+        dest.writeString(city);
+        dest.writeString(country);
+        dest.writeInt(sex);
+        dest.writeString(about);
         dest.writeByte((byte) (deactivated ? 1 : 0));
     }
 
@@ -71,9 +87,30 @@ public class VKUser implements Parcelable {
         String lastName = json.optString("last_name", "");
         String photo = json.optString("photo_200", "");
         String dateOfBirth = json.optString("bdate", "");
-        String email = json.optString("email", "");      // email
+        String city = json.optString("city", "");
+        String country = json.optString("country", "");
+        int sex = json.optInt("sex", 0);
+        String about = json.optString("about", "");
         boolean deactivated = json.optBoolean("deactivated", false);
-        return new VKUser(id, firstName, lastName, photo, dateOfBirth, email, deactivated);
+
+        String cityTitle = "";
+        if (!city.isEmpty()) {
+            JSONObject cityObject = json.optJSONObject("city");
+            if (cityObject != null) {
+                cityTitle = cityObject.optString("title", "");
+            }
+        }
+
+        String countryTitle = "";
+        if (!country.isEmpty()) {
+            JSONObject countryObject = json.optJSONObject("country");
+            if (countryObject != null) {
+                countryTitle = countryObject.optString("title", "");
+            }
+        }
+
+        return new VKUser(id, firstName, lastName, photo, dateOfBirth, city, cityTitle,
+                country, countryTitle, sex, about, deactivated);
     }
 
 

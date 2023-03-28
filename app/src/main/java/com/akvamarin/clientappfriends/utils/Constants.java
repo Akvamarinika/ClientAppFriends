@@ -4,12 +4,15 @@ public class Constants {
     public static final String KEY_COLLECTION_USERS = "users";
     public static final String KEY_NAME = "name";
     public static final String KEY_EMAIL = "email";
+    public static final String KEY_BIRTHDAY = "b-day";
+    public static final String KEY_CITY = "city";
+    public static final String KEY_COUNTRY = "country";
+    public static final String KEY_URL_AVATAR = "avatar";
+    public static final String KEY_VK_ID = "vk";
+
     public static final String KEY_PASSWORD = "pass";
     public static final String KEY_PHONE = "phone";
-    public static final String KEY_BIRTHDAY = "b-day";
     public static final String KEY_AGE = "age";
-    public static final String KEY_CITY = "city";
-    public static final String KEY_IMAGE = "image";
     public static final String KEY_IMAGE_BASE64 = "image";
     public static final String KEY_PREFERENCES_NAME = "chatAppPreference";
     public static final String KEY_IS_SIGNED_IN = "isSignedIn";

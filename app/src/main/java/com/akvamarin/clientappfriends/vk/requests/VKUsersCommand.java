@@ -17,10 +17,8 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class VKUsersCommand extends ApiCommand<List<VKUser>> {
     public static final int CHUNK_LIMIT = 900;
@@ -37,7 +35,7 @@ public class VKUsersCommand extends ApiCommand<List<VKUser>> {
             // if no uids, send user's data
             VKMethodCall call = new VKMethodCall.Builder()
                     .method("users.get")
-                    .args("fields", "photo_200, bdate, email")
+                    .args("fields", "photo_200, bdate, city, country, sex, about")
                     .version(manager.getConfig().getVersion())
                     .build();
             return manager.execute(call, new ResponseApiParser());
@@ -49,7 +47,7 @@ public class VKUsersCommand extends ApiCommand<List<VKUser>> {
                 VKMethodCall call = new VKMethodCall.Builder()
                         .method("users.get")
                         .args("user_ids", ids)
-                        .args("fields", "photo_200, bdate, email")
+                        .args("fields", "photo_200, bdate, city, country, sex, about")
                         .version(manager.getConfig().getVersion())
                         .build();
                 result.addAll(manager.execute(call, new ResponseApiParser()));
@@ -61,7 +59,7 @@ public class VKUsersCommand extends ApiCommand<List<VKUser>> {
     // Implementation of VKApiJSONResponseParser that parses the response into a List<VKUser>
     private static class ResponseApiParser implements VKApiJSONResponseParser<List<VKUser>> {
         @Override
-        public List<VKUser> parse(JSONObject responseJson) throws JSONException, VKApiIllegalResponseException {
+        public List<VKUser> parse(JSONObject responseJson) throws VKApiIllegalResponseException {
             try {
                 JSONArray jsonArray = responseJson.getJSONArray("response");
                 ArrayList<VKUser> r = new ArrayList<>(jsonArray.length());

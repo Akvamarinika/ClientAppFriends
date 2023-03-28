@@ -3,7 +3,7 @@ package com.akvamarin.clientappfriends;
 import android.app.Application;
 import android.util.Log;
 
-import com.akvamarin.clientappfriends.view.AuthorizationActivity;
+import com.akvamarin.clientappfriends.view.AuthenticationActivity;
 import com.vk.api.sdk.VK;
 import com.vk.api.sdk.VKTokenExpiredHandler;
 
@@ -16,7 +16,7 @@ public class FriendsAppApplication extends Application {
     //когда срок действия токена истек
     private final VKTokenExpiredHandler tokenTracker = () -> {
         Log.d(TAG, "onTokenExpired...");
-        AuthorizationActivity.startFrom(FriendsAppApplication.this);
+        AuthenticationActivity.startFrom(FriendsAppApplication.this);
     };
 
     @Override

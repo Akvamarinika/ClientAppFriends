@@ -19,7 +19,7 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
-import com.akvamarin.clientappfriends.view.AuthorizationActivity;
+import com.akvamarin.clientappfriends.view.AuthenticationActivity;
 import com.akvamarin.clientappfriends.R;
 import com.akvamarin.clientappfriends.domain.dto.User;
 import com.akvamarin.clientappfriends.utils.Constants;
@@ -56,7 +56,7 @@ public class ProfileFragment extends Fragment {
 
         linearLayoutLogOut.setOnClickListener(view -> {
             VK.logout();  // Log out of VK
-            AuthorizationActivity.startFrom(getActivity()); // Start AuthorizationActivity from this context
+            AuthenticationActivity.startFrom(getActivity()); // Start AuthorizationActivity from this context
             requireActivity().finish(); // Finish the current activity
         });
 
@@ -123,7 +123,8 @@ public class ProfileFragment extends Fragment {
                 if (!requireActivity().isFinishing() && !result.isEmpty()) {
                     //TextView nameTV = findViewById(R.id.nameTV);
                     VKUser user = result.get(0);
-                    String nameUser = String.format("%s %s, %s %s", user.firstName, user.lastName, getUserAgeVK(user.dateOfBirth), user.email);
+                    String nameUser = String.format("%s %s, %s %s %s %s", user.firstName, user.lastName,
+                            getUserAgeVK(user.dateOfBirth), user.cityTitle, user.countryTitle, user.sex);
                     tvProfileNameAge.setText(nameUser);
 
                     if (!TextUtils.isEmpty(user.photo)) {  // Check if the photo URL is not empty

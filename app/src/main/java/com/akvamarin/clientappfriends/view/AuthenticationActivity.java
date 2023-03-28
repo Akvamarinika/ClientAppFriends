@@ -1,12 +1,10 @@
 package com.akvamarin.clientappfriends.view;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.webkit.WebViewClient;
@@ -15,34 +13,43 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.akvamarin.clientappfriends.API.UserApi;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.akvamarin.clientappfriends.API.AuthenticationApi;
 import com.akvamarin.clientappfriends.API.connection.RetrofitService;
 import com.akvamarin.clientappfriends.R;
-import com.akvamarin.clientappfriends.domain.dto.User;
+import com.akvamarin.clientappfriends.domain.dto.AuthUserSocialDTO;
 import com.akvamarin.clientappfriends.domain.dto.UserSignInDTO;
-import com.akvamarin.clientappfriends.presenters.LoginPresenter;
-import com.akvamarin.clientappfriends.providers.LoginInfoProvider;
-import com.akvamarin.clientappfriends.view.register.RegisterActivity;
+import com.akvamarin.clientappfriends.domain.enums.Role;
+import com.akvamarin.clientappfriends.domain.enums.Sex;
 import com.akvamarin.clientappfriends.utils.CheckerFields;
 import com.akvamarin.clientappfriends.utils.PreferenceManager;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.akvamarin.clientappfriends.view.register.RegisterActivity;
+import com.akvamarin.clientappfriends.vk.models.VKUser;
+import com.akvamarin.clientappfriends.vk.requests.VKUsersCommand;
 import com.google.android.material.textfield.TextInputLayout;
 import com.vk.api.sdk.VK;
+import com.vk.api.sdk.VKApiCallback;
 import com.vk.api.sdk.auth.VKAccessToken;
 import com.vk.api.sdk.auth.VKAuthenticationResult;
 import com.vk.api.sdk.auth.VKScope;
 import com.vk.api.sdk.exceptions.VKAuthException;
 
-
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class AuthorizationActivity extends AppCompatActivity {
+public class AuthenticationActivity extends AppCompatActivity {
+    private static final String TAG = "AuthorizationActivity";
     private Button buttonSignIn;
     private Button buttonCreateAccount;
     private TextInputLayout textInputLayoutEmail;
@@ -52,17 +59,9 @@ public class AuthorizationActivity extends AppCompatActivity {
     private ImageView imageViewVK;
 
     private PreferenceManager preferenceManager;
-    private VKAccessToken access_token;
-    private GoogleSignInClient googleSignInClient;
-    private boolean toUpdateAuth;
-
-    private LoginPresenter loginPresenter;
-    private LoginInfoProvider loginInfoProvider;
     private ActivityResultLauncher<Collection<VKScope>> authLauncherVK;
-    private static final String TAG = "AuthorizationActivity";
-
     private RetrofitService retrofitService;
-    private UserApi userApi;
+    private AuthenticationApi authenticationApi;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,7 +88,15 @@ public class AuthorizationActivity extends AppCompatActivity {
                 Log.d(TAG, "uuid: " + uuid);
                 Log.d(TAG, "email: " + email);
 
+                AuthUserSocialDTO authUserSocialDTO = AuthUserSocialDTO.builder()
+                        .socialToken(token.getAccessToken())
+                        .vkId(uuid)
+                        .email(email)
+                        .username(email)
+                        .roles(new HashSet<>(Collections.singleton(Role.USER)))
+                        .build();
 
+                requestUsers(authUserSocialDTO);
 
                 onLogin();
             } else if (result instanceof VKAuthenticationResult.Failed) {
@@ -121,10 +128,8 @@ public class AuthorizationActivity extends AppCompatActivity {
         textInputLayoutPassword = findViewById(R.id.textInputLayoutPassword);
         imageViewVK = findViewById(R.id.imageViewVK);
         preferenceManager = new PreferenceManager(getApplicationContext());
-        loginPresenter = new LoginPresenter(preferenceManager, getApplicationContext());
-        loginInfoProvider = new LoginInfoProvider(preferenceManager, getApplicationContext());
-        retrofitService = new RetrofitService(getApplicationContext());
-        userApi = retrofitService.getRetrofit().create(UserApi.class);
+        retrofitService = RetrofitService.getInstance(getApplicationContext());
+        authenticationApi = retrofitService.getRetrofit().create(AuthenticationApi.class);
     }
 
     private void signInEmailListener(){
@@ -142,18 +147,18 @@ public class AuthorizationActivity extends AppCompatActivity {
                    1. email & password отправить на сервер и получить ответ
                 *  2. Выдать token
                 */
-                userApi.getUser(user).enqueue(new Callback<User>() {
+             /*   userApi.getUser(user).enqueue(new Callback<User>() {
                     @Override
                     public void onResponse(Call<User> call, Response<User> response) {
-                        Toast.makeText(AuthorizationActivity.this, "Save successful", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(AuthenticationActivity.this, "Save successful", Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
                     public void onFailure(Call<User> call, Throwable t) {
-                        Toast.makeText(AuthorizationActivity.this, "Save filed!!!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(AuthenticationActivity.this, "Save filed!!!", Toast.LENGTH_SHORT).show();
                         Log.d(TAG, "error: " + t.fillInStackTrace());
                     }
-                });
+                });*/
 
                 Intent intent = new Intent(this, AllEventsActivity.class);
                 startActivity(intent);
@@ -179,9 +184,9 @@ public class AuthorizationActivity extends AppCompatActivity {
     private List<VKScope> getVKPermissions() {
         List<VKScope> permissions = new ArrayList<>();
         permissions.add(VKScope.EMAIL);
-        //          permissions.add(VKScope.PHONE);
-//            permissions.add(VKScope.PHOTOS);
- //      permissions.add(VKScope.OFFLINE);
+        //permissions.add(VKScope.PHONE);
+        //permissions.add(VKScope.PHOTOS);
+        //permissions.add(VKScope.OFFLINE);
         return permissions;
     }
 
@@ -190,7 +195,7 @@ public class AuthorizationActivity extends AppCompatActivity {
      * Перенаправить в AllEventsActivity
      * **/
     private void onLogin() {
-        AllEventsActivity.startFrom(AuthorizationActivity.this);
+        AllEventsActivity.startFrom(AuthenticationActivity.this);
         finish();
     }
 
@@ -204,7 +209,7 @@ public class AuthorizationActivity extends AppCompatActivity {
                 descriptionResource = R.string.message_unknown_error;
             }
 
-            AlertDialog.Builder builder = new AlertDialog.Builder(AuthorizationActivity.this);
+            AlertDialog.Builder builder = new AlertDialog.Builder(AuthenticationActivity.this);
             builder.setMessage(descriptionResource);
 
             builder.setPositiveButton(R.string.vk_retry, new DialogInterface.OnClickListener() {  // retry button to re-initiate the authentication process with VKScope values
@@ -226,55 +231,49 @@ public class AuthorizationActivity extends AppCompatActivity {
     }
 
 
-    /*** Methods check fields: ***/
-    private boolean isEmptyEditText(EditText editText) {
-        int textLength = editText.getText().toString().trim().length();
-        return textLength == 0;
-    }
+    /** Все поля для VK API
+     * https://vk.com/dev.php?method=user&prefix=objects
+     * */
+    private void requestUsers(AuthUserSocialDTO authUserSocialDTO) {
+        VK.execute(new VKUsersCommand(new int[0]), new VKApiCallback<>() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public void success(List<VKUser> result) {
+                if (!isFinishing() && !result.isEmpty()) {
+                    VKUser user = result.get(0);
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-       /* if (toUpdateAuth) {
-            toUpdateAuth = false;
-            startMainActivityAllEvents();
-        }*/
-    }
+                    authUserSocialDTO.setFirstName(user.firstName);
+                    authUserSocialDTO.setLastName(user.lastName);
+                    authUserSocialDTO.setPhoto(user.photo);
+                    authUserSocialDTO.setDateOfBirth(user.dateOfBirth);
+                    authUserSocialDTO.setCity(user.cityTitle);
+                    authUserSocialDTO.setCountry(user.countryTitle);
+                    authUserSocialDTO.setSex(Sex.convertVKInAppValue(user.sex));
+                    Log.d(TAG, String.format("authUserSocialDTO = %s%n", authUserSocialDTO));
 
+                    authenticationApi.authUserWithSocial(authUserSocialDTO).enqueue(new Callback<>() {
+                        @Override
+                        public void onResponse(Call<Void> call, Response<Void> response) {
+                            Toast.makeText(AuthenticationActivity.this, "Save successful", Toast.LENGTH_SHORT).show();
+                            Log.d(TAG, String.format("Response: %s %s%n", response.code(), response.message()));
+                            Log.d(TAG, String.format("Response token: %s%n", response.body().toString()));
+                        }
 
-    /**
-     * Запуск активности VK SDK
-     * ***/
- /*   @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        VKAuthCallback vkCallback = loginPresenter.loginVkontakte(requestCode, resultCode, data);
-//data == null ||
-        if (!VK.onActivityResult(requestCode, resultCode, data, vkCallback)) { //если нет приложения ВК
-            super.onActivityResult(requestCode, resultCode, data);
-        }
+                        @Override
+                        public void onFailure(Call<Void> call, Throwable t) {
+                            Toast.makeText(AuthenticationActivity.this, "Save filed!!!", Toast.LENGTH_SHORT).show();
+                            Log.d(TAG, "error: " + t.fillInStackTrace());
+                        }
+                    });
 
-        //super.onActivityResult(requestCode, resultCode, data);
-    }*/
+                }
+            }
 
-    private void startMainActivityAllEvents(){
-        Intent intent = new Intent(AuthorizationActivity.this, AllEventsActivity.class);
-        startActivity(intent);
-        finish();
-    }
-
-
-    public static void signOut(Context context) {
-
-        if (VK.isLoggedIn()) {
-            VK.logout();
-        }
-    }
-
-
-    public void getAuthorizeData() {
-     if (loginInfoProvider.loadInfoAboutUserInVK()){
-            startMainActivityAllEvents();
-        }
+            @Override
+            public void fail(@NonNull Exception error) {
+                Log.e(TAG, error.toString());
+            }
+        });
     }
 
 
@@ -283,9 +282,33 @@ public class AuthorizationActivity extends AppCompatActivity {
      * очистит все существующие действия в верхней части стека, перед запуском нового
      * **/
     public static void startFrom(Context context) {
-        Intent intent = new Intent(context, AuthorizationActivity.class);
+        Intent intent = new Intent(context, AuthenticationActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         context.startActivity(intent);
     }
+
+
+
+
+    /*** Methods check fields: ***/
+    private boolean isEmptyEditText(EditText editText) {
+        int textLength = editText.getText().toString().trim().length();
+        return textLength == 0;
+    }
+
+
+    private void startMainActivityAllEvents(){
+        Intent intent = new Intent(AuthenticationActivity.this, AllEventsActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
+
+
+   /* public void getAuthorizeData() {
+     if (loginInfoProvider.loadInfoAboutUserInVK()){
+            startMainActivityAllEvents();
+        }
+    }*/
 
 }
