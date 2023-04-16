@@ -1,20 +1,15 @@
-package com.akvamarin.clientappfriends.API.connection;
+package com.akvamarin.clientappfriends.API;
 
 import android.content.Context;
 import android.util.Log;
 
-import com.akvamarin.clientappfriends.API.AuthInterceptor;
 import com.akvamarin.clientappfriends.utils.PreferenceManager;
 import com.akvamarin.clientappfriends.utils.PropertiesReader;
 import com.google.gson.Gson;
 
-import java.io.IOException;
 import java.util.Properties;
 
-import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -52,7 +47,7 @@ public class RetrofitService {
 
         retrofit = new Retrofit.Builder()
                 .baseUrl("http://" + ipAddress + ":" + port)
-                .client(okHttpbuilder.build()) // for interceptor
+                .client(okHttpbuilder.build()) // for interceptor (token)
                 .addConverterFactory(GsonConverterFactory.create(new Gson()))
                 .build();
     }
