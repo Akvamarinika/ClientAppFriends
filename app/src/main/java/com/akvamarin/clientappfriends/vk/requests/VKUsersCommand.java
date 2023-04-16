@@ -37,6 +37,7 @@ public class VKUsersCommand extends ApiCommand<List<VKUser>> {
                     .method("users.get")
                     .args("fields", "photo_200, bdate, city, country, sex, about")
                     .version(manager.getConfig().getVersion())
+                    .args("lang", "ru")
                     .build();
             return manager.execute(call, new ResponseApiParser());
         } else {
@@ -48,6 +49,7 @@ public class VKUsersCommand extends ApiCommand<List<VKUser>> {
                         .method("users.get")
                         .args("user_ids", ids)
                         .args("fields", "photo_200, bdate, city, country, sex, about")
+                        .args("lang", "ru")
                         .version(manager.getConfig().getVersion())
                         .build();
                 result.addAll(manager.execute(call, new ResponseApiParser()));
