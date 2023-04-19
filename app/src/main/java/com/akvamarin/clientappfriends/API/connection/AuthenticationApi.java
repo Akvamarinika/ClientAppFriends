@@ -1,8 +1,8 @@
-package com.akvamarin.clientappfriends.API;
+package com.akvamarin.clientappfriends.API.connection;
 
 import com.akvamarin.clientappfriends.domain.dto.AuthToken;
 import com.akvamarin.clientappfriends.domain.dto.AuthUserSocialDTO;
-import com.akvamarin.clientappfriends.domain.dto.User;
+import com.akvamarin.clientappfriends.domain.dto.UserDTO;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -12,10 +12,10 @@ public interface AuthenticationApi {
     String PATH_PREFIX = "api/v1/auth";
 
     @POST(PATH_PREFIX + "/registration")
-    Call<User> registerUser(@Body User user);
+    Call<Void> registerUser(@Body UserDTO user);
 
     @POST(PATH_PREFIX + "/login")
-    Call<User> authUser(@Body User user);
+    Call<AuthToken> authUser(@Body UserDTO user);
 
     @POST(PATH_PREFIX + "/oauth2")
     Call<AuthToken> authUserWithSocial(@Body AuthUserSocialDTO user);
