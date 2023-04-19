@@ -2,26 +2,22 @@ package com.akvamarin.clientappfriends.domain.enums;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.util.Log;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 
 import com.akvamarin.clientappfriends.R;
-import com.akvamarin.clientappfriends.domain.dto.Event;
 import com.akvamarin.clientappfriends.domain.dto.ViewEventDTO;
 import com.akvamarin.clientappfriends.view.ui.home.EventViewHolder;
 
 import java.io.Serializable;
 
-import lombok.extern.slf4j.Slf4j;
-
 public enum Partner implements Serializable {
     MAN("Парень"),
     WOMAN("Девушка"),
     COMPANY("Компания"),
-    ALL("Любой"),
+    ANY("Любой"),
     UNKNOWN("Неизвестно");
 
     private String rusName;

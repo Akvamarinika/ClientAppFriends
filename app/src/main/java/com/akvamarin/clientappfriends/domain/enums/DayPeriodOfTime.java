@@ -5,7 +5,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 
 import com.akvamarin.clientappfriends.R;
-import com.akvamarin.clientappfriends.domain.dto.Event;
 import com.akvamarin.clientappfriends.domain.dto.ViewEventDTO;
 
 import java.io.Serializable;
