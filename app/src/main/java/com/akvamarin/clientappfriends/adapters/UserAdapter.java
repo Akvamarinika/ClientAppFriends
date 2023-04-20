@@ -10,27 +10,28 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.akvamarin.clientappfriends.R;
-
 import com.akvamarin.clientappfriends.databinding.ItemContainerUserBinding;
-import com.akvamarin.clientappfriends.domain.dto.User;
+import com.akvamarin.clientappfriends.domain.dto.ViewUserSlimDTO;
+import com.akvamarin.clientappfriends.utils.Utils;
 import com.squareup.picasso.Picasso;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder>{
-    private final List<User> userListFromCityX;
+    private final List<ViewUserSlimDTO> userListFromCityX;
 
     /*selected item*/
     private boolean isSelectMode = false;
-    private final List<User> selectedUsers = new ArrayList<>();
+    private final List<ViewUserSlimDTO> selectedUsers = new ArrayList<>();
 
 
-    public UserAdapter(List<User> userListFromCityX) {
+    public UserAdapter(List<ViewUserSlimDTO> userListFromCityX) {
         this.userListFromCityX = userListFromCityX;
     }
 
-    public List<User> getSelectedUsers() {
+    public List<ViewUserSlimDTO> getSelectedUsers() {
         return selectedUsers;
     }
 
@@ -69,7 +70,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
                 @Override
                 public boolean onLongClick(View view) {
                     isSelectMode = true;
-                    User selectedUser = userListFromCityX.get(getAdapterPosition());
+                    ViewUserSlimDTO selectedUser = userListFromCityX.get(getAdapterPosition());
 
                     if (selectedUsers.contains(selectedUser)){
                         //View itemView
@@ -94,7 +95,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
                 public void onClick(View view) {
                     if (isSelectMode){
 
-                        User selectedUser = userListFromCityX.get(getAdapterPosition());
+                        ViewUserSlimDTO selectedUser = userListFromCityX.get(getAdapterPosition());
 
                         if (selectedUsers.contains(selectedUser)){
                             //View itemView
@@ -115,16 +116,21 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
         }
 
         @SuppressLint("SetTextI18n")
-        void setUserData(User user){
-            itemContainer.chatsUserName.setText(user.getName() + ", " + user.getAge());
-            itemContainer.chatsUserInterest.setText(user.getCity());
-           // itemContainer.chatsImageProfile.setImageBitmap(BitmapConvertor.convertFromBase64ToBitmap(user.getUrlAvatar())); ///////////////////////////////////
+        void setUserData(ViewUserSlimDTO slimUser){
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                LocalDate birthday = LocalDate.parse(slimUser.getDateOfBirthday());
+                int age = Utils.getAgeWithCalendar(birthday.getYear(), birthday.getMonthValue(), birthday.getDayOfMonth());
+                itemContainer.chatsUserName.setText(slimUser.getNickname() + ", " + age);
+            }
 
-            if (user.getUrlAvatar().isEmpty()){                                  //TODO вынести блок
+            itemContainer.chatsUserInterest.setText(slimUser.getCityDTO().getName());
+            //itemContainer.chatsImageProfile.setImageBitmap(BitmapConvertor.convertFromBase64ToBitmap(user.getUrlAvatar())); ///////////////////////////////////
+
+            if (slimUser.getUrlAvatar().isEmpty()){                                  //TODO вынести блок
                 itemContainer.chatsImageProfile.setImageResource(R.drawable.no_avatar);
             } else {
                 Picasso.get()
-                        .load(user.getUrlAvatar())
+                        .load(slimUser.getUrlAvatar())
                         .fit()
                         .error(R.drawable.error_loading_image)
                         .into(itemContainer.chatsImageProfile);   //.setLoggingEnabled(true)
