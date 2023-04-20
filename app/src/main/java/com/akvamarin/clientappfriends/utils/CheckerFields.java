@@ -5,6 +5,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.akvamarin.clientappfriends.R;
+import com.akvamarin.clientappfriends.domain.dto.CityDTO;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.List;
@@ -101,12 +102,12 @@ public class CheckerFields {
         return true;
     }
 
-    public boolean containsCityInList(TextView textView, TextInputLayout textInputLayout, List<String> cities) {
+    public boolean containsCityInList(TextView textView, TextInputLayout textInputLayout, List<CityDTO> cities) {
         String error = context.getString(R.string.error_check_city);
         String cityName = textView.getText().toString().trim();
 
-        for (String city : cities) {
-            if (cityName.equalsIgnoreCase(city)) {
+        for (CityDTO city : cities) {
+            if (cityName.equalsIgnoreCase(city.getName())) {
                 textInputLayout.setError(EMPTY_STRING);
                 return true;
             }
