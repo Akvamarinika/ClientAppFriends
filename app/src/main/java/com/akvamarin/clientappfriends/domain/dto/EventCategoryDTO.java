@@ -1,5 +1,7 @@
 package com.akvamarin.clientappfriends.domain.dto;
 
+import androidx.annotation.NonNull;
+
 import java.io.Serializable;
 
 import lombok.AllArgsConstructor;
@@ -16,4 +18,9 @@ public class EventCategoryDTO implements Serializable {
     private String name;
     private String urlIcon;
 
+    @NonNull
+    @Override
+    public String toString() {
+        return name;
+    }
 }
