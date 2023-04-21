@@ -13,17 +13,17 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toolbar;
 
+import androidx.appcompat.widget.Toolbar;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 
-import com.akvamarin.clientappfriends.view.AuthenticationActivity;
 import com.akvamarin.clientappfriends.R;
-import com.akvamarin.clientappfriends.domain.dto.User;
+import com.akvamarin.clientappfriends.domain.dto.UserDTO;
 import com.akvamarin.clientappfriends.utils.Constants;
 import com.akvamarin.clientappfriends.utils.PreferenceManager;
+import com.akvamarin.clientappfriends.view.AuthenticationActivity;
 import com.akvamarin.clientappfriends.vk.models.VKUser;
 import com.akvamarin.clientappfriends.vk.requests.VKUsersCommand;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -35,7 +35,7 @@ import java.util.List;
 
 public class ProfileFragment extends Fragment {
     private static final String TAG = "ProfileFragment";
-    private User user;
+    private UserDTO user;
     private View viewProfileFragment;
     //private FragmentProfileBinding binding;
     private Toolbar toolbar;
