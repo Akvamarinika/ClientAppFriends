@@ -1,7 +1,6 @@
 package com.akvamarin.clientappfriends.view;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
 import android.widget.LinearLayout;
@@ -18,8 +17,6 @@ import com.akvamarin.clientappfriends.domain.dto.ViewUserSlimDTO;
 import com.akvamarin.clientappfriends.domain.enums.DayOfWeek;
 import com.akvamarin.clientappfriends.domain.enums.DayPeriodOfTime;
 import com.akvamarin.clientappfriends.domain.enums.Partner;
-import com.akvamarin.clientappfriends.utils.BitmapConvertor;
-import com.akvamarin.clientappfriends.utils.Constants;
 import com.akvamarin.clientappfriends.utils.PreferenceManager;
 import com.squareup.picasso.Picasso;
 

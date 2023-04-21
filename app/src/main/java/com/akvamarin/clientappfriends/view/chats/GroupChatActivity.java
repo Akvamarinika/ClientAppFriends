@@ -11,7 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.akvamarin.clientappfriends.adapters.GroupChatAdapter;
 import com.akvamarin.clientappfriends.databinding.ActivityGroupChatBinding;
-import com.akvamarin.clientappfriends.domain.dto.User;
+import com.akvamarin.clientappfriends.domain.dto.ViewUserSlimDTO;
 import com.akvamarin.clientappfriends.utils.Constants;
 import com.akvamarin.clientappfriends.utils.PreferenceManager;
 
@@ -25,7 +25,7 @@ import java.util.Locale;
 public class GroupChatActivity extends AppCompatActivity {
     private static final String TAG = "GroupChat";
     private ActivityGroupChatBinding binding;
-    private List<User> selectedUsers;
+    private List<ViewUserSlimDTO> selectedUsers;
     private List<GroupChatMessage> chatMessageList;
     private GroupChatAdapter groupChatAdapter;
     private PreferenceManager preferenceManager;
@@ -70,14 +70,14 @@ public class GroupChatActivity extends AppCompatActivity {
         binding.inputMessageEditText.setText(null);
 
 
-        for (User receiver : selectedUsers){
+        for (ViewUserSlimDTO receiver : selectedUsers){
             message.put(Constants.KEY_RECEIVER_ID, receiver.getId());
         }
     }
 
     private void loadReceiversDetails(){
         Intent intent = getIntent();
-        selectedUsers = (List<User>) intent.getSerializableExtra("selectedUsers");
+        selectedUsers = (List<ViewUserSlimDTO>) intent.getSerializableExtra("selectedUsers");
         binding.groupChatGroupName.setText("EventName"); //// название меропр-я
     }
 
