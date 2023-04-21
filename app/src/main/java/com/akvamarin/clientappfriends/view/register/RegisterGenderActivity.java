@@ -1,14 +1,21 @@
 package com.akvamarin.clientappfriends.view.register;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.widget.Button;
+
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.akvamarin.clientappfriends.R;
-import com.akvamarin.clientappfriends.domain.dto.User;
+import com.akvamarin.clientappfriends.domain.dto.UserDTO;
+import com.akvamarin.clientappfriends.domain.enums.Sex;
 import com.akvamarin.clientappfriends.utils.PreferenceManager;
+
+/***
+ * Регистрация "Классик", Gender
+ *  Шаг 2 из 6
+ * **/
 
 public class RegisterGenderActivity extends AppCompatActivity {
     private static final String MAN_VALUE = "man";
@@ -19,8 +26,7 @@ public class RegisterGenderActivity extends AppCompatActivity {
     private Button genderButtonRegContinueOne;
 
     boolean isMan = true;
-    private User user;
-    private String password;
+    private UserDTO user;
     private PreferenceManager preferenceManager;
 
     @Override
@@ -29,8 +35,7 @@ public class RegisterGenderActivity extends AppCompatActivity {
         setContentView(R.layout.activity_register_gender);
 
         Intent intent = getIntent();
-        user = (User) intent.getSerializableExtra("classUser");
-        password = intent.getStringExtra("password");
+        user = (UserDTO) intent.getSerializableExtra("classUser");
 
         initWidgets();
 
@@ -74,7 +79,7 @@ public class RegisterGenderActivity extends AppCompatActivity {
     }
 
     private void setSexAndDefaultAvatar(){
-        String ownSex = isMan ? MAN_VALUE : WOMAN_VALUE;
+        Sex ownSex = isMan ? Sex.MALE : Sex.FEMALE;
         user.setSex(ownSex);
 
         //set default avatar
@@ -84,7 +89,6 @@ public class RegisterGenderActivity extends AppCompatActivity {
 
     public void openNamePage() {
         Intent intent = new Intent(this, RegisterNameActivity.class);
-        intent.putExtra("password", password);
         intent.putExtra("classUser", user);
         startActivity(intent);
     }

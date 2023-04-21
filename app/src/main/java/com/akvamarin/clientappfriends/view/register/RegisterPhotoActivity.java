@@ -1,9 +1,5 @@
 package com.akvamarin.clientappfriends.view.register;
 
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-
 import android.Manifest;
 import android.app.Activity;
 import android.content.DialogInterface;
@@ -20,8 +16,12 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+
 import com.akvamarin.clientappfriends.R;
-import com.akvamarin.clientappfriends.domain.dto.User;
+import com.akvamarin.clientappfriends.domain.dto.UserDTO;
 import com.akvamarin.clientappfriends.utils.BitmapConvertor;
 import com.akvamarin.clientappfriends.utils.Constants;
 import com.akvamarin.clientappfriends.utils.PreferenceManager;
@@ -32,22 +32,28 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+/***
+ * Регистрация "Классик", photo
+ *  Шаг 5 из 6
+ * **/
 public class RegisterPhotoActivity extends AppCompatActivity {
-    private static final int REQUEST_CAMERA = 0, SELECT_FILE = 1;
+    private static final int REQUEST_CAMERA = 0;
+    private static final int SELECT_FILE = 1;
     private static final int PERMISSION_CALLBACK_CONSTANT = 100;
     private static final int REQUEST_PERMISSION_SETTING = 101;
 
-    private User user;
-    private String password;
+    private UserDTO user;
 
     private ImageView imageViewRegAvatar;
     private Button buttonRegContinueFour;
     private ImageView imageView;
-    private Uri mImageUri;
 
-    private final String[] permissionsRequired = new String[]{Manifest.permission.CAMERA,
+    private final String[] permissionsRequired = new String[]{
+            Manifest.permission.CAMERA,
             Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE};
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+    };
+
     private SharedPreferences permissionStatus;
     private boolean sentToSettings = false;
 
@@ -59,8 +65,7 @@ public class RegisterPhotoActivity extends AppCompatActivity {
         setContentView(R.layout.activity_register_photo);
 
         Intent intent = getIntent();
-        user = (User) intent.getSerializableExtra("classUser");
-        password = intent.getStringExtra("password");
+        user = (UserDTO) intent.getSerializableExtra("classUser");
 
         initWidgets();
 
@@ -73,7 +78,7 @@ public class RegisterPhotoActivity extends AppCompatActivity {
         });
 
         buttonRegContinueFour.setOnClickListener(view -> {
-            if (user.getUrlAvatar() != null){
+            if (user.getUrlAvatar() != null) {
                 openPageCity();
             }
         });
@@ -87,7 +92,6 @@ public class RegisterPhotoActivity extends AppCompatActivity {
 
     private void openPageCity(){
         Intent intent = new Intent(this, RegisterCityActivity.class);
-        intent.putExtra("password", password);
         intent.putExtra("classUser", user);
         startActivity(intent);
     }

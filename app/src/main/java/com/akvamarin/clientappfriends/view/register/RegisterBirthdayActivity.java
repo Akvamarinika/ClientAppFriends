@@ -8,24 +8,28 @@ import android.widget.Button;
 import android.widget.DatePicker;
 
 import com.akvamarin.clientappfriends.R;
-import com.akvamarin.clientappfriends.domain.dto.User;
+import com.akvamarin.clientappfriends.domain.dto.UserDTO;
 import com.akvamarin.clientappfriends.utils.Constants;
 import com.akvamarin.clientappfriends.utils.PreferenceManager;
 import com.akvamarin.clientappfriends.utils.Utils;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
+/***
+ * Регистрация "Классик", b-day
+ *  Шаг 4 из 6
+ * **/
 public class RegisterBirthdayActivity extends AppCompatActivity {
     private static final int AGE_LIMIT = 15;
     private final SimpleDateFormat dateFormatter = new SimpleDateFormat("MM-dd-yyyy", Locale.ENGLISH);
     private DatePicker datePickerRegAge;
     private Button buttonRegContinueThree;
 
-    private User user;
-    private String password;
+    private UserDTO user;
     private PreferenceManager preferenceManager;
 
     @Override
@@ -34,8 +38,7 @@ public class RegisterBirthdayActivity extends AppCompatActivity {
         setContentView(R.layout.activity_register_birthday);
 
         Intent intent = getIntent();
-        user = (User) intent.getSerializableExtra("classUser");
-        password = intent.getStringExtra("password");
+        user = (UserDTO) intent.getSerializableExtra("classUser");
 
         initWidgets();
 
@@ -63,12 +66,11 @@ public class RegisterBirthdayActivity extends AppCompatActivity {
         Date dateOfBirth = calendar.getTime();
         String strDateOfBirth = dateFormatter.format(dateOfBirth);
 
-        user.setDateOfBirthday(strDateOfBirth);
+        user.setDateOfBirthday(LocalDate.parse(strDateOfBirth));
     }
 
     private void openPhotoPage(){
         Intent intent = new Intent(this, RegisterPhotoActivity.class);
-        intent.putExtra("password", password);
         intent.putExtra("classUser", user);
         startActivity(intent);
     }

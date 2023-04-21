@@ -1,24 +1,29 @@
 package com.akvamarin.clientappfriends.view.register;
 
-import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
+
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.akvamarin.clientappfriends.R;
-import com.akvamarin.clientappfriends.domain.dto.User;
+import com.akvamarin.clientappfriends.domain.dto.UserDTO;
 import com.akvamarin.clientappfriends.utils.CheckerFields;
 import com.akvamarin.clientappfriends.utils.Constants;
 import com.akvamarin.clientappfriends.utils.PreferenceManager;
 import com.google.android.material.textfield.TextInputLayout;
 
+/***
+ * Регистрация "Классик", Name
+ *  Шаг 3 из 6
+ * **/
 public class RegisterNameActivity extends AppCompatActivity {
     private TextInputLayout textInputRegName;
     private EditText editTextRegName;
     private Button buttonRegContinueTwo;
 
-    private User user;
-    private String password;
+    private UserDTO user;
 
     private PreferenceManager preferenceManager;
 
@@ -28,8 +33,7 @@ public class RegisterNameActivity extends AppCompatActivity {
         setContentView(R.layout.activity_rigister_name);
 
         Intent intent = getIntent();
-        user = (User) intent.getSerializableExtra("classUser");
-        password = intent.getStringExtra("password");
+        user = (UserDTO) intent.getSerializableExtra("classUser");
 
         initWidgets();
 
@@ -55,7 +59,7 @@ public class RegisterNameActivity extends AppCompatActivity {
 
         if (isNotEmptyName && hasPatternName){
             String name = editTextRegName.getText().toString().trim();
-            user.setName(name);
+            user.setNickname(name);
             preferenceManager.putString(Constants.KEY_NAME, name); ////////////////////////////////////pref
             openPageBirthday();
         }
@@ -63,7 +67,6 @@ public class RegisterNameActivity extends AppCompatActivity {
 
    private void openPageBirthday(){
        Intent intent = new Intent(this, RegisterBirthdayActivity.class);
-       intent.putExtra("password", password);
        intent.putExtra("classUser", user);
        startActivity(intent);
    }

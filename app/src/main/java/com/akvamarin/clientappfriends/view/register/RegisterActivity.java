@@ -1,16 +1,22 @@
 package com.akvamarin.clientappfriends.view.register;
 
-import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
+
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.akvamarin.clientappfriends.R;
-import com.akvamarin.clientappfriends.domain.dto.User;
+import com.akvamarin.clientappfriends.domain.dto.UserDTO;
 import com.akvamarin.clientappfriends.utils.CheckerFields;
-import com.akvamarin.clientappfriends.utils.Constants;
 import com.akvamarin.clientappfriends.utils.PreferenceManager;
 import com.google.android.material.textfield.TextInputLayout;
+
+/***
+ * Регистрация "Классик", email
+ *  Шаг 1 из 6
+ * **/
 
 public class RegisterActivity extends AppCompatActivity {
     private static final String TAG = "RegisterActivity";
@@ -40,19 +46,17 @@ public class RegisterActivity extends AppCompatActivity {
         buttonRegContinue.setOnClickListener(view -> {
            if (checkEmptyFields() && checkInputEmailPass()){
                String email = editTextRegEmail.getText().toString();
-               String password = "pass";
+               String password = editTextRegPassword.getText().toString();
 
-               User user = new User();
+               UserDTO user = new UserDTO();
                user.setEmail(email);
+               user.setPassword(password);
 
-               /*TODO: добавить криптографию пароля*/
-
-               preferenceManager.putString(Constants.KEY_EMAIL, email);
-               preferenceManager.putString(Constants.KEY_PASSWORD, password);
+   //            preferenceManager.putString(Constants.KEY_EMAIL, email);
+   //            preferenceManager.putString(Constants.KEY_PASSWORD, password);
 
                Intent intent = new Intent(this, RegisterGenderActivity.class);
                intent.putExtra("classUser", user);
-               intent.putExtra("password", password);
                startActivity(intent);
                //finish();
            }
