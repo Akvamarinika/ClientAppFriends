@@ -1,6 +1,7 @@
 package com.akvamarin.clientappfriends.view;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -19,13 +20,17 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.akvamarin.clientappfriends.API.AuthenticationApi;
+import com.akvamarin.clientappfriends.API.ErrorResponse;
+import com.akvamarin.clientappfriends.API.ErrorUtils;
 import com.akvamarin.clientappfriends.API.connection.RetrofitService;
 import com.akvamarin.clientappfriends.R;
+import com.akvamarin.clientappfriends.domain.dto.AuthToken;
 import com.akvamarin.clientappfriends.domain.dto.AuthUserSocialDTO;
 import com.akvamarin.clientappfriends.domain.dto.UserSignInDTO;
 import com.akvamarin.clientappfriends.domain.enums.Role;
 import com.akvamarin.clientappfriends.domain.enums.Sex;
 import com.akvamarin.clientappfriends.utils.CheckerFields;
+import com.akvamarin.clientappfriends.utils.Constants;
 import com.akvamarin.clientappfriends.utils.PreferenceManager;
 import com.akvamarin.clientappfriends.view.register.RegisterActivity;
 import com.akvamarin.clientappfriends.vk.models.VKUser;
@@ -62,6 +67,7 @@ public class AuthenticationActivity extends AppCompatActivity {
     private ActivityResultLauncher<Collection<VKScope>> authLauncherVK;
     private RetrofitService retrofitService;
     private AuthenticationApi authenticationApi;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,7 +87,14 @@ public class AuthenticationActivity extends AppCompatActivity {
             if (result instanceof VKAuthenticationResult.Success) {
                 VKAccessToken token = ((VKAuthenticationResult.Success) result).getToken();
                 String uuid = token.getUserId().toString();
-                String email = token.getEmail();
+                String email = null;
+
+                try {
+                    email = token.getEmail();
+                } catch (RuntimeException ex) {
+                    Log.e(TAG, "Error getting email: " + ex.getMessage());
+                }
+
                 Log.d(TAG, "token: " + token.getAccessToken());
                 Log.d(TAG, "token Expired: " + token.getExpiresInSec()); //86400
                 Log.d(TAG, "token Secret: " + token.getSecret());
@@ -96,9 +109,9 @@ public class AuthenticationActivity extends AppCompatActivity {
                         .roles(new HashSet<>(Collections.singleton(Role.USER)))
                         .build();
 
+
                 requestUsers(authUserSocialDTO);
 
-                onLogin();
             } else if (result instanceof VKAuthenticationResult.Failed) {
                 onLoginFailed(((VKAuthenticationResult.Failed) result).getException());
             }
@@ -160,9 +173,9 @@ public class AuthenticationActivity extends AppCompatActivity {
                     }
                 });*/
 
-                Intent intent = new Intent(this, AllEventsActivity.class);
+                /*Intent intent = new Intent(this, AllEventsActivity.class);
                 startActivity(intent);
-                finish();
+                finish();*/
 
             }
         });
@@ -235,13 +248,15 @@ public class AuthenticationActivity extends AppCompatActivity {
      * https://vk.com/dev.php?method=user&prefix=objects
      * */
     private void requestUsers(AuthUserSocialDTO authUserSocialDTO) {
+        showProgressDialog("Loading...");
+
         VK.execute(new VKUsersCommand(new int[0]), new VKApiCallback<>() {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void success(List<VKUser> result) {
+
                 if (!isFinishing() && !result.isEmpty()) {
                     VKUser user = result.get(0);
-
                     authUserSocialDTO.setFirstName(user.firstName);
                     authUserSocialDTO.setLastName(user.lastName);
                     authUserSocialDTO.setPhoto(user.photo);
@@ -251,30 +266,46 @@ public class AuthenticationActivity extends AppCompatActivity {
                     authUserSocialDTO.setSex(Sex.convertVKInAppValue(user.sex));
                     Log.d(TAG, String.format("authUserSocialDTO = %s%n", authUserSocialDTO));
 
-                    authenticationApi.authUserWithSocial(authUserSocialDTO).enqueue(new Callback<>() {
-                        @Override
-                        public void onResponse(Call<Void> call, Response<Void> response) {
-                            Toast.makeText(AuthenticationActivity.this, "Save successful", Toast.LENGTH_SHORT).show();
-                            Log.d(TAG, String.format("Response: %s %s%n", response.code(), response.message()));
-                            Log.d(TAG, String.format("Response token: %s%n", response.body().toString()));
-                        }
+                    if (!isFinishing() && preferenceManager != null && preferenceManager.getString(Constants.KEY_APP_TOKEN) == null) {
+                        authenticationApi.authUserWithSocial(authUserSocialDTO).enqueue(new Callback<>() {
+                            @Override
+                            public void onResponse(@NonNull Call<AuthToken> call, @NonNull Response<AuthToken> response) {
+                                dismissProgressDialog();
+                                Toast.makeText(AuthenticationActivity.this, "Save successful", Toast.LENGTH_SHORT).show();
+                                Log.d(TAG, String.format("Response: %s %s%n", response.code(), response));
+                                Log.d(TAG, String.format("Response token: %s%n", response.body()));
 
-                        @Override
-                        public void onFailure(Call<Void> call, Throwable t) {
-                            Toast.makeText(AuthenticationActivity.this, "Save filed!!!", Toast.LENGTH_SHORT).show();
-                            Log.d(TAG, "error: " + t.fillInStackTrace());
-                        }
-                    });
+                                if(response.isSuccessful()){
+                                    AuthToken serverToken = response.body();
+                                    assert serverToken != null;
+                                    preferenceManager.putString(Constants.KEY_APP_TOKEN, serverToken.getToken()); //токен
+                                    onLogin(); //перейти на основную активность, когда прошла отправка на сервер
+                                } else {
+                                    ErrorResponse error = ErrorUtils.parseError(response, retrofitService);
+                                    Log.d(TAG, error.getStatusCode() + " " + error.getMessage());
+                                }
+                            }
 
+                            @Override
+                            public void onFailure(@NonNull Call<AuthToken> call, @NonNull Throwable t) {
+                                dismissProgressDialog();
+                                Toast.makeText(AuthenticationActivity.this, "onFailure!!!", Toast.LENGTH_SHORT).show();
+                                Log.d(TAG, "error: " + t.fillInStackTrace());
+                            }
+                        });
+                    }
                 }
             }
 
             @Override
             public void fail(@NonNull Exception error) {
+                dismissProgressDialog();
                 Log.e(TAG, error.toString());
             }
         });
     }
+
+
 
 
 
@@ -285,6 +316,23 @@ public class AuthenticationActivity extends AppCompatActivity {
         Intent intent = new Intent(context, AuthenticationActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         context.startActivity(intent);
+    }
+
+
+    private void showProgressDialog(String message) {
+        if (progressDialog == null) {
+            progressDialog = new ProgressDialog(AuthenticationActivity.this);
+            progressDialog.setCancelable(false);
+        }
+        progressDialog.setMessage(message);
+        progressDialog.show();
+    }
+
+    private void dismissProgressDialog() {
+        if (progressDialog != null && progressDialog.isShowing()) {
+            progressDialog.dismiss();
+        }
+        progressDialog = null;
     }
 
 

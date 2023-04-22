@@ -17,38 +17,40 @@ def lombokVersion = "1.18.20"
 
 android {
     namespace 'com.akvamarin.clientappfriends'
+    //noinspection GradleCompatible
     compileSdkVersion 33
 
     defaultConfig {
         applicationId "com.akvamarin.clientappfriends"
         minSdkVersion 24
-        targetSdkVersion 33
+        //noinspection ExpiredTargetSdkVersion
+        targetSdkVersion 28
         versionCode 1
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
-        javaCompileOptions {
+        /*javaCompileOptions {
             annotationProcessorOptions {
                 arguments = ["lombok.addLombokGeneratedAnnotation": "true"]
             }
-        }
+        }*/
     }
 
-    signingConfigs {
+    /*signingConfigs {
         release {
             storeFile file("my-release-key.keystore")
             storePassword "password"
             keyAlias "my-alias"
             keyPassword "password"
         }
-    }
+    }*/
 
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.release
+            //signingConfig signingConfigs.release
         }
     }
 
@@ -70,13 +72,18 @@ android {
 dependencies {
 
     // AndroidX
+    //noinspection GradleDependency
     implementation "androidx.appcompat:appcompat:$androidxAppcompatVersion"
     implementation "androidx.constraintlayout:constraintlayout:$androidxConstraintLayoutVersion"
+    //noinspection GradleDependency
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$androidxLifecycleVersion"
+    //noinspection GradleDependency
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$androidxLifecycleVersion"
+    //noinspection GradleDependency
     implementation "androidx.navigation:navigation-fragment:$androidxNavigationVersion"
+    //noinspection GradleDependency
     implementation "androidx.navigation:navigation-ui:$androidxNavigationVersion"
-    implementation "com.google.android.material:material:1.8.0-alpha01"
+    implementation "com.google.android.material:material:1.9.0-beta01"
     implementation "androidx.legacy:legacy-support-v4:1.0.0"
     implementation "androidx.core:core-ktx:1.9.0"
 

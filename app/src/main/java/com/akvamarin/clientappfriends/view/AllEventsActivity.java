@@ -4,9 +4,15 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.PopupWindow;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -33,7 +39,7 @@ public class AllEventsActivity extends AppCompatActivity {
     private BottomNavigationView bottomNavigation;
 
     //private InternetModeChangeReceiver internetModeChangeReceiver;
-    private BroadcastReceiver broadcastReceiver = null;
+    //private BroadcastReceiver broadcastReceiver = null;
 
 
     @Override
@@ -56,7 +62,7 @@ public class AllEventsActivity extends AppCompatActivity {
 
 
 
-        broadcastReceiver = new InternetReceiver();
+      //  broadcastReceiver = new InternetReceiver();
         //IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);//
         //registerReceiver(broadcastReceiver, filter);
         //broadcastReceiver.getResultData()
@@ -72,6 +78,7 @@ public class AllEventsActivity extends AppCompatActivity {
         // Toolbar: backArrow
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+
     }
 
     private void initBottomNavigationView(){
@@ -118,29 +125,29 @@ public class AllEventsActivity extends AppCompatActivity {
 
     @Override
     public void onResume() {
-        super.onResume();
-        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);//
-        registerReceiver(broadcastReceiver, filter);
+       super.onResume();
+       /*  IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);//
+        registerReceiver(broadcastReceiver, filter);*/
     }
 
     @Override
     public void onPause() {
-        super.onPause();
-        try {
+       super.onPause();
+       /* try {
             unregisterReceiver(broadcastReceiver);
         } catch (IllegalArgumentException ex) {
             ex.printStackTrace();
-        }
+        }*/
     }
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
-        try {
+       super.onDestroy();
+       /*  try {
             unregisterReceiver(broadcastReceiver);
         } catch (IllegalArgumentException ex) {
             ex.printStackTrace();
-        }
+        }*/
     }
 
     /** запускает AllEventsActivity из текущего Контекста
@@ -151,4 +158,6 @@ public class AllEventsActivity extends AppCompatActivity {
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         context.startActivity(intent);
     }
+
+
 }

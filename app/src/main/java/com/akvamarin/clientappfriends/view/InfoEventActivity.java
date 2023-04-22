@@ -12,16 +12,18 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.akvamarin.clientappfriends.R;
-import com.akvamarin.clientappfriends.domain.dto.Event;
-import com.akvamarin.clientappfriends.domain.dto.User;
+import com.akvamarin.clientappfriends.domain.dto.CityDTO;
+import com.akvamarin.clientappfriends.domain.dto.ViewEventDTO;
+import com.akvamarin.clientappfriends.domain.dto.ViewUserSlimDTO;
 import com.akvamarin.clientappfriends.domain.enums.DayOfWeek;
 import com.akvamarin.clientappfriends.domain.enums.DayPeriodOfTime;
-import com.akvamarin.clientappfriends.domain.dto.enums.Partner;
+import com.akvamarin.clientappfriends.domain.enums.Partner;
 import com.akvamarin.clientappfriends.utils.BitmapConvertor;
 import com.akvamarin.clientappfriends.utils.Constants;
 import com.akvamarin.clientappfriends.utils.PreferenceManager;
 import com.squareup.picasso.Picasso;
 
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -78,20 +80,23 @@ public class InfoEventActivity extends AppCompatActivity {
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void setValues(){
-        Event event = (Event) getIntent().getSerializableExtra("current_event"); // Parcelable ?
-        User user = event.getUser();
+        ViewEventDTO event = (ViewEventDTO) getIntent().getSerializableExtra("current_event"); // Parcelable ?
+        ViewUserSlimDTO user = event.getUserOwner();
+        CityDTO city = user.getCityDTO();
 
-        if (event.getUser().getUrlAvatar().isEmpty()){              //TODO вынести блок
+        if (user.getUrlAvatar().isEmpty()){              //TODO вынести блок
             circleAvatarBig.setImageResource(R.drawable.no_avatar); //R.drawable.no_avatar
         } else {
             Picasso.get()
-                    .load(event.getUser().getUrlAvatar())
+                    .load(user.getUrlAvatar())
                     .fit()
                     .error(R.drawable.error_loading_image)
                     .into(circleAvatarBig);
         }
 
         // костыль.....
+
+       /*
         String imgBase64 = preferenceManager.getString(Constants.KEY_IMAGE_BASE64);
         String email = preferenceManager.getString(Constants.KEY_EMAIL);
         String userEmail = event.getUser().getEmail();
@@ -100,19 +105,21 @@ public class InfoEventActivity extends AppCompatActivity {
             Bitmap bitmap = BitmapConvertor.convertFromBase64ToBitmap(preferenceManager.getString(Constants.KEY_IMAGE_BASE64));
             circleAvatarBig.setImageBitmap(bitmap);
         }
+        */
 
-        String cityCountry = String.format("%s, %s", user.getCountry(), user.getCity());
+        String cityCountry = String.format("%s, %s", city.getCountryName(), city.getName());
         textViewCountryCity.setText(cityCountry);
 
-        textViewUserName.setText(user.getName());
-        textViewEventTitle.setText(event.getEventName());
+        textViewUserName.setText(user.getNickname());
+        textViewEventTitle.setText(event.getName());
 
+        LocalDate eventDate = LocalDate.parse(event.getDate());
         DateTimeFormatter formatters = DateTimeFormatter.ofPattern(DATE_PATTERN);
-        String textDate = event.getDate().format(formatters);   // формат даты для польз-ля
+        String textDate = eventDate.format(formatters);   // формат даты для польз-ля
         textViewDate.setText(textDate);
 
-        textViewDayOfWeek.setText(DayOfWeek.valueOf(event.getDate().getDayOfWeek().name()).toString());
-        textViewDescription.setText(event.getEventDescription());
+        textViewDayOfWeek.setText(DayOfWeek.valueOf(eventDate.getDayOfWeek().name()).toString());
+        textViewDescription.setText(event.getDescription());
 
         Partner.setImagePartnerTextView(textViewPartner, event, this);
 

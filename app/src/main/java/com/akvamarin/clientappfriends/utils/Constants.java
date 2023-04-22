@@ -18,6 +18,7 @@ public class Constants {
     public static final String KEY_IS_SIGNED_IN = "isSignedIn";
     public static final String KEY_USER_ID = "userId";
     public static final String KEY_VK_TOKEN = "token";
+    public static final String KEY_APP_TOKEN = null;
     public static final String KEY_USER = "user";
 
     public static final String KEY_COLLECTION_CHAT = "chat";

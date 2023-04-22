@@ -26,12 +26,13 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import com.akvamarin.clientappfriends.domain.enums.Partner;
 import com.akvamarin.clientappfriends.view.AllEventsActivity;
 import com.akvamarin.clientappfriends.R;
 import com.akvamarin.clientappfriends.domain.dto.Event;
 import com.akvamarin.clientappfriends.domain.dto.User;
 import com.akvamarin.clientappfriends.domain.enums.DayPeriodOfTime;
-import com.akvamarin.clientappfriends.domain.dto.enums.Partner;
+import com.akvamarin.clientappfriends.domain.enums.Partner;
 import com.akvamarin.clientappfriends.view.ui.home.HomeAllEventsFragment;
 import com.akvamarin.clientappfriends.utils.Constants;
 import com.akvamarin.clientappfriends.utils.PreferenceManager;
@@ -141,7 +142,8 @@ public class AddEventActivity extends AppCompatActivity implements DatePickerDia
                 Log.d(TAG, "onClick: " + event);
 
                 /*TODO: event отправить на сервер */
-                HomeAllEventsFragment.getEventList().add(event);
+
+             //   HomeAllEventsFragment.getEventList().add(event);
 
                 Intent intent = new Intent(this, AllEventsActivity.class);
                 //intent.putExtra("Event_obj", event);

@@ -1,5 +1,6 @@
 package com.akvamarin.clientappfriends.API;
 
+import com.akvamarin.clientappfriends.domain.dto.AuthToken;
 import com.akvamarin.clientappfriends.domain.dto.AuthUserSocialDTO;
 import com.akvamarin.clientappfriends.domain.dto.User;
 
@@ -17,7 +18,7 @@ public interface AuthenticationApi {
     Call<User> authUser(@Body User user);
 
     @POST(PATH_PREFIX + "/oauth2")
-    Call<Void> authUserWithSocial(@Body AuthUserSocialDTO user);
+    Call<AuthToken> authUserWithSocial(@Body AuthUserSocialDTO user);
 
    /* @POST(PATH_PREFIX + "getUser")
     Call<User> getUser(@Body UserSignInDTO userSignInDTO);

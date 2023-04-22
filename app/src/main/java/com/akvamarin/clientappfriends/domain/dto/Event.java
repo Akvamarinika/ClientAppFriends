@@ -2,7 +2,7 @@ package com.akvamarin.clientappfriends.domain.dto;
 
 import androidx.annotation.NonNull;
 
-import com.akvamarin.clientappfriends.domain.dto.enums.Partner;
+import com.akvamarin.clientappfriends.domain.enums.Partner;
 import com.akvamarin.clientappfriends.domain.enums.DayPeriodOfTime;
 
 import java.io.Serializable;

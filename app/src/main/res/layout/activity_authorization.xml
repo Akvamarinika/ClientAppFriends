@@ -155,7 +155,8 @@
             android:layout_weight="1"
             android:gravity="center"
             android:orientation="horizontal"
-            android:paddingTop="6dp">
+            android:paddingTop="6dp"
+            android:paddingStart="@dimen/activity_left_right_margin">
 
             <ImageView
                 android:id="@+id/imageViewVK"
@@ -169,6 +170,7 @@
 
             <ImageView
                 android:id="@+id/imageViewGoogle"
+                android:alpha ="0.0"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_marginLeft="6dp"
@@ -241,6 +243,27 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/buttonSignIn"
+        />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/buttonSeeEvents"
+        style="@style/Widget.MaterialComponents.Button"
+        android:layout_width="match_parent"
+        android:layout_height="58dp"
+        android:layout_marginTop="@dimen/btn_margin_top"
+        android:layout_marginStart="@dimen/title_edit_margin"
+        android:layout_marginEnd="@dimen/title_edit_margin"
+        android:backgroundTint="@color/bgcolor"
+        android:textStyle="bold"
+        android:textColor="@color/colorPrimary"
+        android:textSize="18sp"
+        android:elevation="20dp"
+        android:text="@string/btn_create_account"
+        app:cornerRadius="@dimen/radius_button"
+        app:strokeColor="@color/colorPrimaryDark"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/buttonCreateAccount"
         />
 
 
