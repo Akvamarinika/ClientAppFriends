@@ -1,6 +1,5 @@
 package com.akvamarin.clientappfriends.view.ui.home;
 
-import android.graphics.Bitmap;
 import android.os.Build;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,11 +11,8 @@ import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.akvamarin.clientappfriends.R;
-import com.akvamarin.clientappfriends.domain.dto.Event;
 import com.akvamarin.clientappfriends.domain.dto.ViewEventDTO;
 import com.akvamarin.clientappfriends.domain.enums.Partner;
-import com.akvamarin.clientappfriends.utils.BitmapConvertor;
-import com.akvamarin.clientappfriends.utils.Constants;
 import com.akvamarin.clientappfriends.utils.PreferenceManager;
 import com.akvamarin.clientappfriends.utils.Utils;
 import com.squareup.picasso.Picasso;
@@ -63,7 +59,6 @@ public class EventAdapter extends RecyclerView.Adapter<EventViewHolder>{
         holder.getTextViewUserName().setText(event.getUserOwner().getNickname());
 
         LocalDate birthday = LocalDate.parse(event.getUserOwner().getDateOfBirthday());
-
         int age = Utils.getAgeWithCalendar(birthday.getYear(), birthday.getMonthValue(), birthday.getDayOfMonth());
         holder.getTextViewAge().setText(String.format("%s", age));
 
