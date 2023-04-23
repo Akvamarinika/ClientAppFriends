@@ -1,5 +1,6 @@
 package com.akvamarin.clientappfriends.view.ui.home;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
@@ -24,10 +25,9 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.akvamarin.clientappfriends.API.EventsApi;
-import com.akvamarin.clientappfriends.API.connection.RetrofitService;
+import com.akvamarin.clientappfriends.API.RetrofitService;
+import com.akvamarin.clientappfriends.API.connection.EventApi;
 import com.akvamarin.clientappfriends.R;
-import com.akvamarin.clientappfriends.domain.dto.Event;
 import com.akvamarin.clientappfriends.domain.dto.ViewEventDTO;
 import com.akvamarin.clientappfriends.view.InfoEventActivity;
 import com.akvamarin.clientappfriends.view.addevent.AddEventActivity;
@@ -53,7 +53,7 @@ public class HomeAllEventsFragment extends Fragment implements IEventRecyclerLis
 
     /* соединяются адаптером Recycler & List: */
     private RecyclerView recyclerViewAllEvents;
-    private static List<ViewEventDTO> eventList = new ArrayList<>();
+    private List<ViewEventDTO> eventList = new ArrayList<>();
 
     private IEventRecyclerListener eventListener;
 
@@ -61,7 +61,7 @@ public class HomeAllEventsFragment extends Fragment implements IEventRecyclerLis
     private EventAdapter eventAdapter;
 
     private RetrofitService retrofitService;
-    private EventsApi eventsApi;
+    private EventApi eventApi;
 
     public View onCreateView(@NonNull LayoutInflater layoutInflater,
                              ViewGroup container,
@@ -80,7 +80,7 @@ public class HomeAllEventsFragment extends Fragment implements IEventRecyclerLis
 
     private void init(){
         retrofitService = RetrofitService.getInstance(getContext());
-        eventsApi = retrofitService.getRetrofit().create(EventsApi.class);
+        eventApi = retrofitService.getRetrofit().create(EventApi.class);
     }
 
     private void updateToolbar(){
@@ -130,12 +130,16 @@ public class HomeAllEventsFragment extends Fragment implements IEventRecyclerLis
 
         if (eventList.isEmpty()) {
 
-            eventsApi.getAllEvents().enqueue(new Callback<List<ViewEventDTO>>() {
+            eventApi.getAllEvents().enqueue(new Callback<List<ViewEventDTO>>() {
+                @SuppressLint("NotifyDataSetChanged")
                 @Override
                 public void onResponse(@NonNull Call<List<ViewEventDTO>> call, @NonNull Response<List<ViewEventDTO>> response) {
 
                     if (response.isSuccessful()) {
-                        eventList = response.body();
+                        eventList.clear();
+                        assert response.body() != null;
+                        eventList.addAll(response.body());
+                        eventAdapter.notifyDataSetChanged(); // Notify the adapter that the data has changed
                     } else {
                         Toast.makeText(requireActivity(), "getAllEvents()", Toast.LENGTH_SHORT).show();
                     }
@@ -144,7 +148,7 @@ public class HomeAllEventsFragment extends Fragment implements IEventRecyclerLis
                 @Override
                 public void onFailure(@NonNull Call<List<ViewEventDTO>> call, @NonNull Throwable t) {
                     Toast.makeText(requireActivity(), "getAllEvents() --- Fail", Toast.LENGTH_SHORT).show();
-                    Log.d(TAG, "error: " + t.fillInStackTrace());
+                    Log.d(TAG, "Error fetching events: " + t.fillInStackTrace());
                 }
 
             });
@@ -226,7 +230,7 @@ public class HomeAllEventsFragment extends Fragment implements IEventRecyclerLis
 
 
     /** For ADD event from Client **/
-    public static List<ViewEventDTO> getEventList() {
+    public List<ViewEventDTO> getEventList() {
         return eventList;
     }
 
