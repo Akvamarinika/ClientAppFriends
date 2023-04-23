@@ -1,18 +1,9 @@
 package com.akvamarin.clientappfriends.view;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.graphics.drawable.ColorDrawable;
-import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Gravity;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.PopupWindow;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -21,7 +12,6 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.akvamarin.clientappfriends.R;
-import com.akvamarin.clientappfriends.receivers.InternetReceiver;
 import com.akvamarin.clientappfriends.view.ui.home.HomeAllEventsFragment;
 import com.akvamarin.clientappfriends.view.ui.myevents.MyEventsFragment;
 import com.akvamarin.clientappfriends.view.ui.notifications.NotificationsFragment;
