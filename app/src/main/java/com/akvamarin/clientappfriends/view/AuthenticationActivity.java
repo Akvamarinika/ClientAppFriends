@@ -23,6 +23,7 @@ import com.akvamarin.clientappfriends.API.connection.AuthenticationApi;
 import com.akvamarin.clientappfriends.API.ErrorResponse;
 import com.akvamarin.clientappfriends.API.ErrorUtils;
 import com.akvamarin.clientappfriends.API.RetrofitService;
+import com.akvamarin.clientappfriends.BaseActivity;
 import com.akvamarin.clientappfriends.R;
 import com.akvamarin.clientappfriends.domain.dto.AuthToken;
 import com.akvamarin.clientappfriends.domain.dto.AuthUserSocialDTO;
@@ -53,7 +54,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class AuthenticationActivity extends AppCompatActivity {
+public class AuthenticationActivity extends BaseActivity {
     private static final String TAG = "AuthorizationActivity";
     private Button buttonSignIn;
     private Button buttonCreateAccount;
@@ -67,34 +68,32 @@ public class AuthenticationActivity extends AppCompatActivity {
     private ActivityResultLauncher<Collection<VKScope>> authLauncherVK;
     private RetrofitService retrofitService;
     private AuthenticationApi authenticationApi;
-    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        VK.initialize(getApplicationContext());
-
-        if (VK.isLoggedIn()) {  // уже был ранее залогенен пользователь в ВК
+        if (VK.isLoggedIn()) { // already logged in
             AllEventsActivity.startFrom(this);
             finish();
-            return;
+        } else {
+            setContentView(R.layout.activity_authorization);
+            initWidgets();
+            initVKLauncher();
+            setListeners();
         }
+    }
 
-        setContentView(R.layout.activity_authorization);
-        initWidgets();
-
+    private void initVKLauncher() { //запуск активности ВК
         authLauncherVK = VK.login(this, result -> {
             if (result instanceof VKAuthenticationResult.Success) {
                 VKAccessToken token = ((VKAuthenticationResult.Success) result).getToken();
                 String uuid = token.getUserId().toString();
                 String email = null;
-
                 try {
                     email = token.getEmail();
                 } catch (RuntimeException ex) {
                     Log.e(TAG, "Error getting email: " + ex.getMessage());
                 }
-
                 Log.d(TAG, "token: " + token.getAccessToken());
                 Log.d(TAG, "token Expired: " + token.getExpiresInSec()); //86400
                 Log.d(TAG, "token Secret: " + token.getSecret());
@@ -109,28 +108,24 @@ public class AuthenticationActivity extends AppCompatActivity {
                         .roles(new HashSet<>(Collections.singleton(Role.USER)))
                         .build();
 
-
                 requestUsers(authUserSocialDTO);
 
             } else if (result instanceof VKAuthenticationResult.Failed) {
                 onLoginFailed(((VKAuthenticationResult.Failed) result).getException());
             }
         });
+    }
 
-
-        imageViewVK.setOnClickListener(view -> {    // Слушатель на кнопке ВК
+    private void setListeners() {
+        imageViewVK.setOnClickListener((view) -> { // Слушатель на кнопке ВК
             authLauncherVK.launch(getVKPermissions());
-            //Log.d(TAG, "VK Fingerprint: " + Arrays.toString(VKUtils.getCertificateFingerprint(this, this.getPackageName())));
             Log.d(TAG, "VKONTAKTE:  click button VK.login ");
         });
 
-        //AppEventsLogger.activateApp(this);
-
-
         signInEmailListener();
         createAccountListener();
-      //  getAuthorizeData();///////////////////////////////////////////////////////////
     }
+
 
     private void initWidgets(){
         buttonSignIn = findViewById(R.id.buttonSignIn);
@@ -250,54 +245,17 @@ public class AuthenticationActivity extends AppCompatActivity {
 
     /** Все поля для VK API
      * https://vk.com/dev.php?method=user&prefix=objects
+     * Получить инфу о пользователе от ВК API
      * */
     private void requestUsers(AuthUserSocialDTO authUserSocialDTO) {
-        showProgressDialog("Loading...");
-
         VK.execute(new VKUsersCommand(new int[0]), new VKApiCallback<>() {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void success(List<VKUser> result) {
-
                 if (!isFinishing() && !result.isEmpty()) {
                     VKUser user = result.get(0);
-                    authUserSocialDTO.setFirstName(user.firstName);
-                    authUserSocialDTO.setLastName(user.lastName);
-                    authUserSocialDTO.setPhoto(user.photo);
-                    authUserSocialDTO.setDateOfBirth(user.dateOfBirth);
-                    authUserSocialDTO.setCity(user.cityTitle);
-                    authUserSocialDTO.setCountry(user.countryTitle);
-                    authUserSocialDTO.setSex(Sex.convertVKInAppValue(user.sex));
-                    Log.d(TAG, String.format("authUserSocialDTO = %s%n", authUserSocialDTO));
-
-                    if (!isFinishing() && preferenceManager != null && preferenceManager.getString(Constants.KEY_APP_TOKEN) == null) {
-                        authenticationApi.authUserWithSocial(authUserSocialDTO).enqueue(new Callback<>() {
-                            @Override
-                            public void onResponse(@NonNull Call<AuthToken> call, @NonNull Response<AuthToken> response) {
-                                dismissProgressDialog();
-                                Toast.makeText(AuthenticationActivity.this, "Save successful", Toast.LENGTH_SHORT).show();
-                                Log.d(TAG, String.format("Response: %s %s%n", response.code(), response));
-                                Log.d(TAG, String.format("Response token: %s%n", response.body()));
-
-                                if(response.isSuccessful()){
-                                    AuthToken serverToken = response.body();
-                                    assert serverToken != null;
-                                    preferenceManager.putString(Constants.KEY_APP_TOKEN, serverToken.getToken()); //токен
-                                    onLogin(); //перейти на основную активность, когда прошла отправка на сервер
-                                } else {
-                                    ErrorResponse error = ErrorUtils.parseError(response, retrofitService);
-                                    Log.d(TAG, error.getStatusCode() + " " + error.getMessage());
-                                }
-                            }
-
-                            @Override
-                            public void onFailure(@NonNull Call<AuthToken> call, @NonNull Throwable t) {
-                                dismissProgressDialog();
-                                Toast.makeText(AuthenticationActivity.this, "onFailure!!!", Toast.LENGTH_SHORT).show();
-                                Log.d(TAG, "error: " + t.fillInStackTrace());
-                            }
-                        });
-                    }
+                    updateAuthUserSocialDTO(user, authUserSocialDTO);
+                    saveAuthToken(authUserSocialDTO);
                 }
             }
 
@@ -307,11 +265,65 @@ public class AuthenticationActivity extends AppCompatActivity {
                 Log.e(TAG, error.toString());
             }
         });
+        showProgressDialog("Loading...");
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void updateAuthUserSocialDTO(VKUser user, AuthUserSocialDTO authUserSocialDTO) {
+        authUserSocialDTO.setFirstName(user.firstName);
+        authUserSocialDTO.setLastName(user.lastName);
+        authUserSocialDTO.setPhoto(user.photo);
+        authUserSocialDTO.setDateOfBirth(user.dateOfBirth);
+        authUserSocialDTO.setCity(user.cityTitle);
+        authUserSocialDTO.setCountry(user.countryTitle);
+        authUserSocialDTO.setSex(Sex.convertVKInAppValue(user.sex));
+        Log.d(TAG, String.format("authUserSocialDTO = %s%n", authUserSocialDTO));
+    }
 
+    private void saveAuthToken(AuthUserSocialDTO authUserSocialDTO) {
+        if (!isFinishing() && preferenceManager != null && preferenceManager.getString(Constants.KEY_APP_TOKEN) == null) {
+            authenticationApi.authUserWithSocial(authUserSocialDTO).enqueue(new Callback<>() {
+                @Override
+                public void onResponse(@NonNull Call<AuthToken> call, @NonNull Response<AuthToken> response) {
+                    dismissProgressDialog();
+                    handleAuthTokenResponse(response);
+                }
 
+                @Override
+                public void onFailure(@NonNull Call<AuthToken> call, @NonNull Throwable t) {
+                    dismissProgressDialog();
+                    handleAuthTokenFailure(t);
+                }
+            });
+        }
+    }
 
+    private void handleAuthTokenResponse(Response<AuthToken> response) {
+        if (!isFinishing()) {
+            dismissProgressDialog();
+            Toast.makeText(AuthenticationActivity.this, "Save successful", Toast.LENGTH_SHORT).show();
+            Log.d(TAG, String.format("Response: %s %s%n", response.code(), response));
+            Log.d(TAG, String.format("Response token: %s%n", response.body()));
+
+            if(response.isSuccessful()){
+                AuthToken serverToken = response.body();
+                assert serverToken != null;
+                preferenceManager.putString(Constants.KEY_APP_TOKEN, serverToken.getToken()); //токен
+                onLogin(); //перейти на основную активность, когда прошла отправка на сервер
+            } else {
+                ErrorResponse error = ErrorUtils.parseError(response, retrofitService);
+                Log.d(TAG, error.getStatusCode() + " " + error.getMessage());
+            }
+        }
+    }
+
+    private void handleAuthTokenFailure(Throwable t) {
+        if (!isFinishing()) {
+            dismissProgressDialog();
+            Toast.makeText(AuthenticationActivity.this, "onFailure!!!", Toast.LENGTH_SHORT).show();
+            Log.d(TAG, "error: " + t.fillInStackTrace());
+        }
+    }
 
     /** запускает AuthorizationActivity из текущего Контекста
      * очистит все существующие действия в верхней части стека, перед запуском нового
@@ -323,22 +335,6 @@ public class AuthenticationActivity extends AppCompatActivity {
     }
 
 
-    private void showProgressDialog(String message) {
-        if (progressDialog == null) {
-            progressDialog = new ProgressDialog(AuthenticationActivity.this);
-            progressDialog.setCancelable(false);
-        }
-        progressDialog.setMessage(message);
-        progressDialog.show();
-    }
-
-    private void dismissProgressDialog() {
-        if (progressDialog != null && progressDialog.isShowing()) {
-            progressDialog.dismiss();
-        }
-        progressDialog = null;
-    }
-
 
 
 
@@ -348,19 +344,10 @@ public class AuthenticationActivity extends AppCompatActivity {
         return textLength == 0;
     }
 
-
     private void startMainActivityAllEvents(){
         Intent intent = new Intent(AuthenticationActivity.this, AllEventsActivity.class);
         startActivity(intent);
         finish();
     }
-
-
-
-   /* public void getAuthorizeData() {
-     if (loginInfoProvider.loadInfoAboutUserInVK()){
-            startMainActivityAllEvents();
-        }
-    }*/
 
 }
