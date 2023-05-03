@@ -3,20 +3,19 @@ package com.akvamarin.clientappfriends.view.register;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.DatePicker;
 
 import com.akvamarin.clientappfriends.R;
 import com.akvamarin.clientappfriends.domain.dto.UserDTO;
-import com.akvamarin.clientappfriends.utils.Constants;
-import com.akvamarin.clientappfriends.utils.PreferenceManager;
 import com.akvamarin.clientappfriends.utils.Utils;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.util.Calendar;
-import java.util.Date;
+import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
 /***
@@ -24,13 +23,13 @@ import java.util.Locale;
  *  Шаг 4 из 6
  * **/
 public class RegisterBirthdayActivity extends AppCompatActivity {
+    private static final String TAG = "Register";
     private static final int AGE_LIMIT = 15;
-    private final SimpleDateFormat dateFormatter = new SimpleDateFormat("MM-dd-yyyy", Locale.ENGLISH);
+    private final SimpleDateFormat dateFormatter = new SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH);
     private DatePicker datePickerRegAge;
     private Button buttonRegContinueThree;
 
     private UserDTO user;
-    private PreferenceManager preferenceManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,33 +43,30 @@ public class RegisterBirthdayActivity extends AppCompatActivity {
 
         buttonRegContinueThree.setOnClickListener(view -> {
             setUserAge();
-            openPhotoPage();
+            openCityPage();
         });
     }
 
     private void initWidgets() {
         datePickerRegAge = findViewById(R.id.datePickerRegAge);
+        datePickerRegAge.init(2000, 0, 1, null); // 2000, January, 1
         buttonRegContinueThree = findViewById(R.id.buttonRegContinueThree);
-        preferenceManager = new PreferenceManager(getApplicationContext());
     }
 
     private void setUserAge() {
         int age = Utils.getAgeWithCalendar(datePickerRegAge.getYear(), datePickerRegAge.getMonth(), datePickerRegAge.getDayOfMonth()); // age function
-        preferenceManager.putString(Constants.KEY_AGE, String.valueOf(age)); ////////////////////////////////////pref
 
-        // converting date to string
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.YEAR, datePickerRegAge.getYear());
-        calendar.set(Calendar.MONTH, datePickerRegAge.getMonth());
-        calendar.set(Calendar.DAY_OF_MONTH, datePickerRegAge.getDayOfMonth());
-        Date dateOfBirth = calendar.getTime();
-        String strDateOfBirth = dateFormatter.format(dateOfBirth);
-
-        user.setDateOfBirthday(LocalDate.parse(strDateOfBirth));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            LocalDate dateOfBirth = LocalDate.of(datePickerRegAge.getYear(), datePickerRegAge.getMonth() + 1, datePickerRegAge.getDayOfMonth());
+            DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            String strDateOfBirth = dateFormatter.format(dateOfBirth);
+            Log.d(TAG, "Date Birthday: " + strDateOfBirth);
+            user.setDateOfBirthday(String.valueOf(dateOfBirth));
+        }
     }
 
-    private void openPhotoPage(){
-        Intent intent = new Intent(this, RegisterPhotoActivity.class);
+    private void openCityPage(){
+        Intent intent = new Intent(this, RegisterCityActivity.class);
         intent.putExtra("classUser", user);
         startActivity(intent);
     }

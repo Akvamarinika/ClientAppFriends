@@ -25,8 +25,6 @@ public class RegisterNameActivity extends AppCompatActivity {
 
     private UserDTO user;
 
-    private PreferenceManager preferenceManager;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,9 +35,7 @@ public class RegisterNameActivity extends AppCompatActivity {
 
         initWidgets();
 
-        buttonRegContinueTwo.setOnClickListener(view -> {
-            setUserNameAndNext();
-        });
+        buttonRegContinueTwo.setOnClickListener(view -> setUserNameAndNext());
 
 
     }
@@ -48,8 +44,6 @@ public class RegisterNameActivity extends AppCompatActivity {
         textInputRegName = findViewById(R.id.textInputRegName);
         editTextRegName = findViewById(R.id.editTextRegName);
         buttonRegContinueTwo = findViewById(R.id.buttonRegContinueTwo);
-        preferenceManager = new PreferenceManager(getApplicationContext());
-
     }
 
     private void setUserNameAndNext(){
@@ -60,7 +54,6 @@ public class RegisterNameActivity extends AppCompatActivity {
         if (isNotEmptyName && hasPatternName){
             String name = editTextRegName.getText().toString().trim();
             user.setNickname(name);
-            preferenceManager.putString(Constants.KEY_NAME, name); ////////////////////////////////////pref
             openPageBirthday();
         }
     }

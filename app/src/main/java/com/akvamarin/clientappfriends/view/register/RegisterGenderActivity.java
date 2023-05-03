@@ -18,16 +18,12 @@ import com.akvamarin.clientappfriends.utils.PreferenceManager;
  * **/
 
 public class RegisterGenderActivity extends AppCompatActivity {
-    private static final String MAN_VALUE = "man";
-    private static final String WOMAN_VALUE = "woman";
-
     private Button buttonRegMan;
     private Button buttonRegWoman;
     private Button genderButtonRegContinueOne;
 
     boolean isMan = true;
     private UserDTO user;
-    private PreferenceManager preferenceManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,10 +50,7 @@ public class RegisterGenderActivity extends AppCompatActivity {
         buttonRegMan = findViewById(R.id.buttonRegMan);
         buttonRegWoman = findViewById(R.id.buttonRegWoman);
         genderButtonRegContinueOne = findViewById(R.id.genderButtonRegContinueOne);
-
         //buttonRegWoman.setAlpha(.5f);
-        preferenceManager = new PreferenceManager(getApplicationContext());
-
     }
 
 
@@ -81,10 +74,6 @@ public class RegisterGenderActivity extends AppCompatActivity {
     private void setSexAndDefaultAvatar(){
         Sex ownSex = isMan ? Sex.MALE : Sex.FEMALE;
         user.setSex(ownSex);
-
-        //set default avatar
-        String defaultPhoto = isMan ? "defaultMan" : "defaultWoman";
-        user.setUrlAvatar(defaultPhoto);
     }
 
     public void openNamePage() {
