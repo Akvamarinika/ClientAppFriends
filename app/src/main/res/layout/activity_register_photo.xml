@@ -77,7 +77,8 @@
                 android:id="@+id/imageViewRegAvatar"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:scaleType="fitXY" />
+                android:scaleType="fitXY"
+                android:contentDescription="@string/register_avatar_img_description" />
         </RelativeLayout>
     </androidx.cardview.widget.CardView>
 
@@ -93,7 +94,7 @@
         android:textStyle="bold"
         android:textSize="18sp"
         android:elevation="20dp"
-        android:text="@string/reg_btn_text"
+        android:text="@string/register_btn_completed"
         app:cornerRadius="@dimen/radius_button"
         app:strokeColor="@color/colorPrimaryDark"
         app:strokeWidth="1dp"

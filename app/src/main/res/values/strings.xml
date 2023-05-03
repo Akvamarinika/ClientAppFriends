@@ -5,8 +5,8 @@
     <string name="facebook_client_token">ad7a8fbaac8c938e536cca5dca49d204</string>
     <integer name="com_vk_sdk_AppId">8182319</integer>
 
-    <string name="message_connection_error">Connection error</string>
-    <string name="message_unknown_error">Unknown error. Try again later.</string>
+    <string name="message_connection_error">Ошибка подключения</string>
+    <string name="message_unknown_error">Неизвестная ошибка. Попробуйте позже.</string>
     <string name="vk_retry">Retry</string>
 
     <string name="welcome_title">Добро пожаловать в приложение FriendsApp!</string>
@@ -54,14 +54,18 @@
     <string name="add_label_icon_night">Ночь</string>
     <string name="add_label_event_description">Описание:</string>
     <string name="add_hint_event_description">Расскажите о намечающемся мероприятии</string>
+
     <string name="error_count_symbols">Введите не менее 4-х символов</string>
     <string name="error_empty_field">Данное поле не может быть пустым</string>
     <string name="error_email">Неверно введен email</string>
+    <string name="error_duplicate_email">Этот email уже зарегистрирован</string>
+    <string name="error_login_or_pass">Неверно введен логин или пароль</string>
     <string name="error_two_pass">Извините, Ваши пароли не совпадают</string>
     <string name="error_check_pass">Пароль должен состоять из букв нижнего и верхнего регистра, цифр. И иметь не менее 5 символов.</string>
     <string name="error_check_name">Имя может состоять из букв нижнего и верхнего регистра.</string>
     <string name="error_check_city">Данный город не был найден в списке</string>
     <string name="error_radio">Выберете один из элементов</string>
+
     <string name="add_btn_label_done">Добавить</string>
     <string name="want_text">Желает:</string>
     <string name="about_event_label">О мероприятии:</string>
@@ -85,6 +89,19 @@
     <string name="reg_photo_text_description">Фото будет отображаться на Вашей аватарке. Вы можете изменить или добавить ещё фото в меню Профиль.</string>
     <string name="reg_photo_title">Чего-то не хватает… Точно! Вашего фото.</string>
     <string name="about_user_description">Вам будет задано несколько простых вопросов.Так пользователи FriendsApp будут знать то, что Вам нравится и какие мероприятия можно Вам предложить</string>
+    <string name="tv_see_events">Смотреть на приложение со стороны</string>
+    <string name="dialog_auth_sign_in">Войти</string>
+    <string name="dialog_auth_cancel">Отмена</string>
+    <string name="dialog_auth_description">Войдите с помощью своего аккаунта для использования данной функции</string>
+    <string name="dialog_auth_title">Вы не авторизованы</string>
+    <string name="dialog_del_title">Подтверждение</string>
+    <string name="dialog_del_description">Вы действительно хотите удалить? Данное действие нельзя будет отменить.</string>
+    <string name="dialog_del_btn_delete">Удалить</string>
+    <string name="register_btn_completed">Готово</string>
+    <string name="register_city_hint">Укажите свой город</string>
+    <string name="register_title_city">Почти готово! Ещё один вопрос. Откуда Вы?</string>
+    <string name="register_text_city">Укажте свое местоположение - это позволит найти созданные события из Вашего города</string>
+    <string name="register_avatar_img_description">Ваш аватар</string>
 
     <string-array name="event_categories_lst">
         <item>Бары, кафе и рестораны</item>

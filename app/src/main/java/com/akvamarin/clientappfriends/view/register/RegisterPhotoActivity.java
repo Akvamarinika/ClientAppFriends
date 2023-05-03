@@ -2,47 +2,63 @@ package com.akvamarin.clientappfriends.view.register;
 
 import android.Manifest;
 import android.app.Activity;
-import android.content.DialogInterface;
+import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.provider.Settings;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
+import com.akvamarin.clientappfriends.API.ErrorResponse;
+import com.akvamarin.clientappfriends.API.ErrorUtils;
+import com.akvamarin.clientappfriends.API.RetrofitService;
+import com.akvamarin.clientappfriends.API.connection.AuthenticationApi;
+import com.akvamarin.clientappfriends.API.connection.ImageApi;
+import com.akvamarin.clientappfriends.BaseActivity;
 import com.akvamarin.clientappfriends.R;
 import com.akvamarin.clientappfriends.domain.dto.UserDTO;
-import com.akvamarin.clientappfriends.utils.BitmapConvertor;
 import com.akvamarin.clientappfriends.utils.Constants;
 import com.akvamarin.clientappfriends.utils.PreferenceManager;
+import com.akvamarin.clientappfriends.view.AuthenticationActivity;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
+
+import lombok.SneakyThrows;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /***
  * Регистрация "Классик", photo
- *  Шаг 5 из 6
+ *  Шаг 6 из 6
  * **/
-public class RegisterPhotoActivity extends AppCompatActivity {
+public class RegisterPhotoActivity extends BaseActivity {
+    private static final String TAG = "PhotoRegister";
     private static final int REQUEST_CAMERA = 0;
     private static final int SELECT_FILE = 1;
     private static final int PERMISSION_CALLBACK_CONSTANT = 100;
     private static final int REQUEST_PERMISSION_SETTING = 101;
 
-    private UserDTO user;
+    private boolean sentToSettings = false;
+    private PreferenceManager preferenceManager;
 
     private ImageView imageViewRegAvatar;
     private Button buttonRegContinueFour;
@@ -54,10 +70,11 @@ public class RegisterPhotoActivity extends AppCompatActivity {
             Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
 
-    private SharedPreferences permissionStatus;
-    private boolean sentToSettings = false;
-
-    private PreferenceManager preferenceManager;
+    private String imagePath;
+    private UserDTO user;
+    private RetrofitService retrofitService;
+    private AuthenticationApi authenticationApi;
+    private ImageApi imageApi;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,8 +85,6 @@ public class RegisterPhotoActivity extends AppCompatActivity {
         user = (UserDTO) intent.getSerializableExtra("classUser");
 
         initWidgets();
-
-        permissionStatus = getSharedPreferences("permissionStatus", MODE_PRIVATE);
         requestMultiplePermissions();
 
         imageViewRegAvatar.setOnClickListener(view -> {
@@ -78,8 +93,12 @@ public class RegisterPhotoActivity extends AppCompatActivity {
         });
 
         buttonRegContinueFour.setOnClickListener(view -> {
-            if (user.getUrlAvatar() != null) {
-                openPageCity();
+            String userId = preferenceManager.getString(Constants.KEY_USER_ID);
+            Log.d(TAG, "imagePath: " + imagePath);
+
+            if (imagePath != null && !userId.equals("id")){
+                showProgressDialog("Upload avatar");
+                sendPhotoOnServer(imagePath, userId);
             }
         });
     }
@@ -87,111 +106,76 @@ public class RegisterPhotoActivity extends AppCompatActivity {
     private void initWidgets() {
         imageViewRegAvatar = findViewById(R.id.imageViewRegAvatar);
         buttonRegContinueFour = findViewById(R.id.buttonRegContinueFour);
+        retrofitService = RetrofitService.getInstance(getApplicationContext());
+        authenticationApi = retrofitService.getRetrofit().create(AuthenticationApi.class);
+        imageApi = retrofitService.getRetrofit().create(ImageApi.class);
         preferenceManager = new PreferenceManager(getApplicationContext());
     }
 
-    private void openPageCity(){
-        Intent intent = new Intent(this, RegisterCityActivity.class);
-        intent.putExtra("classUser", user);
-        startActivity(intent);
-    }
-
+    /***
+     * Получение разрешений
+     * к камере, местоположению
+     * **/
     private void requestMultiplePermissions() {
-        if (ActivityCompat.checkSelfPermission(RegisterPhotoActivity.this, permissionsRequired[0]) != PackageManager.PERMISSION_GRANTED
-                || ActivityCompat.checkSelfPermission(RegisterPhotoActivity.this, permissionsRequired[1]) != PackageManager.PERMISSION_GRANTED
-                || ActivityCompat.checkSelfPermission(RegisterPhotoActivity.this, permissionsRequired[2]) != PackageManager.PERMISSION_GRANTED) {
+        int permissionStatus = ActivityCompat.checkSelfPermission(RegisterPhotoActivity.this, permissionsRequired[0])
+                + ActivityCompat.checkSelfPermission(RegisterPhotoActivity.this, permissionsRequired[1])
+                + ActivityCompat.checkSelfPermission(RegisterPhotoActivity.this, permissionsRequired[2]);
+
+        if (permissionStatus != PackageManager.PERMISSION_GRANTED) {
             if (ActivityCompat.shouldShowRequestPermissionRationale(RegisterPhotoActivity.this, permissionsRequired[0])
                     || ActivityCompat.shouldShowRequestPermissionRationale(RegisterPhotoActivity.this, permissionsRequired[1])
                     || ActivityCompat.shouldShowRequestPermissionRationale(RegisterPhotoActivity.this, permissionsRequired[2])) {
-                //Show Information about why you need the permission
-                AlertDialog.Builder builder = new AlertDialog.Builder(RegisterPhotoActivity.this);
-                builder.setTitle("Need Multiple Permissions");
-                builder.setMessage("This app needs Camera and Location permissions.");
-                builder.setPositiveButton("Grant", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                        ActivityCompat.requestPermissions(RegisterPhotoActivity.this, permissionsRequired, PERMISSION_CALLBACK_CONSTANT);
-                    }
-                });
-                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
-                builder.show();
-            } else if (permissionStatus.getBoolean(permissionsRequired[0], false)) {
-                //Previously Permission Request was cancelled with 'Dont Ask Again',
-                // Redirect to Settings after showing Information about why you need the permission
-                AlertDialog.Builder builder = new AlertDialog.Builder(RegisterPhotoActivity.this);
-                builder.setTitle("Требуется несколько разрешений");
-                builder.setMessage("Этому приложению требуются права доступа к камере.");
-                builder.setPositiveButton("Разрешить", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                        sentToSettings = true;
-                        Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                        Uri uri = Uri.fromParts("package", getPackageName(), null);
-                        intent.setData(uri);
-                        startActivityForResult(intent, REQUEST_PERMISSION_SETTING);
-                        Toast.makeText(getBaseContext(), "Go to Permissions to Grant  Camera and Location", Toast.LENGTH_LONG).show();
-                    }
-                });
-                builder.setNegativeButton("Отмена", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
-                builder.show();
+                //Показать информацию о том, зачем нужно разрешение:
+                new AlertDialog.Builder(RegisterPhotoActivity.this)
+                        .setTitle("Требуется несколько разрешений")
+                        .setMessage("Этому приложению требуются права доступа к камере и местоположению.")
+                        .setPositiveButton("Разрешить", (dialog, which) -> {
+                            dialog.cancel();
+                            ActivityCompat.requestPermissions(RegisterPhotoActivity.this, permissionsRequired, PERMISSION_CALLBACK_CONSTANT);
+                        })
+                        .setNegativeButton("Отмена", (dialog, which) -> dialog.cancel())
+                        .show();
+            } else if (ActivityCompat.shouldShowRequestPermissionRationale(RegisterPhotoActivity.this, permissionsRequired[0])) {
+                //Ранее запрос на разрешение был отменен с помощью 'Dont Ask Again',
+                // Перенаправить в настройки после показа информации о том, зачем нам нужно разрешение
+                new AlertDialog.Builder(RegisterPhotoActivity.this)
+                        .setTitle("Требуется несколько разрешений")
+                        .setMessage("Этому приложению требуются права доступа к камере.")
+                        .setPositiveButton("Разрешить", (dialog, which) -> {
+                            dialog.cancel();
+                            sentToSettings = true;
+                            Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                            Uri uri = Uri.fromParts("package", getPackageName(), null);
+                            intent.setData(uri);
+                            startActivityForResult(intent, REQUEST_PERMISSION_SETTING);
+                            Log.d(TAG, "Перейдите в раздел «Разрешения для предоставления камеры и местоположения».");
+                        })
+                        .setNegativeButton("Отмена", (dialog, which) -> dialog.cancel())
+                        .show();
             } else {
-                //just request the permission
+                //запросить разрешения
                 ActivityCompat.requestPermissions(RegisterPhotoActivity.this, permissionsRequired, PERMISSION_CALLBACK_CONSTANT);
             }
-
-            // txtPermissions.setText("Permissions Required");
-
-            SharedPreferences.Editor editor = permissionStatus.edit();
-            editor.putBoolean(permissionsRequired[0], true);
-            editor.commit();
-        } else {
-            //You already have the permission, just go ahead.
-            //proceedAfterPermission();
         }
     }
 
+    /***
+     * Создание диалогового окна
+     * после получения необх. разрешений
+     *  См. options array
+     * **/
     private void proceedAfterPermission() {
         final CharSequence[] options = {"Сделать фото", "Загрузить фото из галереи", "Отмена"};
 
-        /* создание диалогового окна доб. фото */
-        AlertDialog.Builder builder = new AlertDialog.Builder(RegisterPhotoActivity.this);
-
-        builder.setTitle("Добавление основной фотографии: ");
-
-        builder.setItems(options, new DialogInterface.OnClickListener() {
-
-            @Override
-            public void onClick(DialogInterface dialog, int item) {
-
-                if (options[item].equals("Сделать фото")) {
-
-                    cameraIntent();
-
-                } else if (options[item].equals("Загрузить фото из галереи")) {
-
-                    galleryIntent();
-
-                } else if (options[item].equals("Отмена")) {
-
-                    dialog.dismiss();
-
-                }
-
-            }
-
-        });
+        AlertDialog.Builder builder = new AlertDialog.Builder(this)
+                .setTitle("Добавление основной фотографии: ")
+                .setItems(options, (dialog, item) -> {
+                    switch (item) {
+                        case 0 -> cameraIntent();
+                        case 1 -> galleryIntent();
+                        case 2 -> dialog.dismiss();
+                    }
+                });
 
         builder.show();
     }
@@ -211,12 +195,13 @@ public class RegisterPhotoActivity extends AppCompatActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
         if (requestCode == REQUEST_PERMISSION_SETTING) {
             if (ActivityCompat.checkSelfPermission(RegisterPhotoActivity.this, permissionsRequired[0]) == PackageManager.PERMISSION_GRANTED) {
-                //Got Permission
-                proceedAfterPermission();
+                proceedAfterPermission(); // когда получены разрешения
             }
         }
+
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == SELECT_FILE)
                 onSelectFromGalleryResult(data);
@@ -225,63 +210,114 @@ public class RegisterPhotoActivity extends AppCompatActivity {
         }
     }
 
+    /*** Get photo from camera:
+     * ***/
     private void onCaptureImageResult(Intent data) {
         Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        thumbnail.compress(Bitmap.CompressFormat.PNG, 100, bytes);
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        thumbnail.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
 
-        File destination = new File(Environment.getExternalStorageDirectory(),
+        File destination = new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES),
                 System.currentTimeMillis() + ".png");
+        imagePath = destination.getAbsolutePath();
 
-        FileOutputStream fileOutputStream;
-        try {
-            destination.createNewFile();
-            fileOutputStream = new FileOutputStream(destination);
-            fileOutputStream.write(bytes.toByteArray());
-            fileOutputStream.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
+        try (FileOutputStream fileOutputStream = new FileOutputStream(destination)) {
+            fileOutputStream.write(outputStream.toByteArray());
+            imageView.setImageBitmap(thumbnail);
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        imageView.setImageBitmap(thumbnail);
-        preferenceManager.putString(Constants.KEY_IMAGE_BASE64, BitmapConvertor.convertToBase64(thumbnail)); //preference
-        user.setUrlAvatar(destination.getAbsolutePath());
     }
 
 
+    /*** получить выбранное
+     * изображение (bitmap) из галереи:
+     * ***/
+    @SneakyThrows
     private void onSelectFromGalleryResult(Intent data) {
         Bitmap bitmap = null;
 
         if (data != null) {
             try {
-                //user.setUrlAvatar(data.getData().getPath());
-               // preferenceManager.putString(Constants.KEY_IMAGE, data.getData().getPath()); ////////////////////////////////////pref
-                bitmap = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), data.getData());
+                Uri uri = data.getData();
+                bitmap = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), uri);
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
 
-        assert bitmap != null;
-        preferenceManager.putString(Constants.KEY_IMAGE_BASE64, BitmapConvertor.convertToBase64(bitmap)); //preference
-        imageView.setImageBitmap(bitmap);
+        if (bitmap != null) {
+            File destination = new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES),
+                    System.currentTimeMillis() + ".png");
+            OutputStream outputStream = new FileOutputStream(destination);
+            bitmap.compress(Bitmap.CompressFormat.PNG, 80, outputStream);
+            outputStream.flush();
+            outputStream.close();
+
+            imagePath = destination.getAbsolutePath();
+
+            imageView.setImageBitmap(bitmap);
+        }
     }
 
+
+    /*** UserDTO send on Server:
+     * ***/
+    private void sendPhotoOnServer(String imagePath, String userId){
+        File file = new File(imagePath);
+        MultipartBody.Part filePart = MultipartBody.Part.createFormData("file", file.getName(),
+                RequestBody.create(MediaType.parse("image/*"), file));
+        Log.d(TAG, "USER login: " + user.getUsername());
+
+        imageApi.uploadNewAvatar(filePart, userId).enqueue(new Callback<>() {
+            @Override
+            public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
+                dismissProgressDialog();
+                Log.d(TAG, String.format("Response upload photo: %s %s%n", response.code(), response));
+
+                if(response.isSuccessful()){
+                    Log.d(TAG, response.code() + " complete upload photo ");
+                    startAuthenticationActivity();
+                } else {
+                    ErrorResponse error = ErrorUtils.parseError(response, retrofitService);
+                    Log.d(TAG, error.getStatusCode() + " " + error.getMessage());
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
+                dismissProgressDialog();
+                Log.d(TAG, "error upload photo: " + t.fillInStackTrace());
+            }
+        });
+    }
 
     @Override
     protected void onPostResume() {
         super.onPostResume();
         if (sentToSettings) {
             if (ActivityCompat.checkSelfPermission(RegisterPhotoActivity.this, permissionsRequired[0]) == PackageManager.PERMISSION_GRANTED) {
-                //Got Permission
-                proceedAfterPermission();
+                proceedAfterPermission(); // когда получены разрешения
             }
         }
     }
 
+    /***
+     * Когда только что зарегистрировался пользователь
+     * Перенаправить в AuthenticationActivity
+     * **/
+    private void startAuthenticationActivity() {
+        RegisterPhotoActivity.startFrom(getApplicationContext());
+        finish();
+    }
 
-
+    /** запускает RegisterPhotoActivity из текущего Контекста
+     * очистит все существующие действия в верхней части стека, перед запуском нового
+     * **/
+    public static void startFrom(Context context) {
+        Intent intent = new Intent(context, AuthenticationActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        context.startActivity(intent);
+    }
 
 }
