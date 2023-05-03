@@ -5,13 +5,12 @@ import android.util.Log;
 
 import com.akvamarin.clientappfriends.utils.PreferenceManager;
 import com.akvamarin.clientappfriends.utils.PropertiesReader;
-import com.google.gson.Gson;
 
 import java.util.Properties;
 
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.converter.jackson.JacksonConverterFactory;
 
 public class RetrofitService {
     private static final String TAG = "RetrofitService";
@@ -48,7 +47,8 @@ public class RetrofitService {
         retrofit = new Retrofit.Builder()
                 .baseUrl("http://" + ipAddress + ":" + port)
                 .client(okHttpbuilder.build()) // for interceptor (token)
-                .addConverterFactory(GsonConverterFactory.create(new Gson()))
+                .addConverterFactory(JacksonConverterFactory.create())
+                //.addConverterFactory(GsonConverterFactory.create(new Gson()))
                 .build();
     }
 

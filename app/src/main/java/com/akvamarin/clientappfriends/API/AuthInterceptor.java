@@ -1,8 +1,6 @@
 package com.akvamarin.clientappfriends.API;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 
 import com.akvamarin.clientappfriends.utils.Constants;
 import com.akvamarin.clientappfriends.utils.PreferenceManager;
@@ -34,32 +32,31 @@ public class AuthInterceptor implements Interceptor {
         }
 
         Response response = chain.proceed(request);
-        /*switch (response.code()) {
-            case 400 -> showDialog("Bad Request", "Do you want to retry?", chain);
-            case 401 -> showDialog("Unauthorized", "Do you want to login?", chain);
-            case 403 -> showDialog("Forbidden", "Do you want to try again?", chain);
-            case 404 -> showDialog("Not Found", "Do you want to search again?", chain);
-        }*/
-        return response; //ответ от сервера
+
+        // Handle errors
+        int responseCode = response.code();
+        String errorMessage = getErrorMessage(responseCode);
+        if (errorMessage != null) {
+            //displayError(errorMessage);
+        }
+
+        return response; // Response from the server
     }
 
-    private void showDialog(String title, String message, Interceptor.Chain chain) {
-        new AlertDialog.Builder(context)
-                .setTitle(title)
-                .setMessage(message)
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        // Retry the request
-                        try {
-                            Response response = chain.proceed(chain.request());
-                            // handle response
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                })
-                .setNegativeButton("Cancel", null)
-                .show();
+    private String getErrorMessage(int responseCode) {
+        return switch (responseCode) {
+            case 400 -> "400 Bad Request: что-то пошло не так.";
+            case 401 -> "401 Unauthorized: вы неавторизованы для данного действия.";
+            case 403 -> "403 Forbidden: у Вас нет доступа к этим ресурсам.";
+            case 404 -> "404 Not Found: данный объект не найден.";
+            default -> null;
+        };
     }
+
+//    private void displayError(String errorMessage) {
+//        ((Activity) context).runOnUiThread(() -> {
+//            errorTextView.setText(errorMessage);
+//            errorTextView.setVisibility(View.VISIBLE);
+//        });
+//    }
 }
