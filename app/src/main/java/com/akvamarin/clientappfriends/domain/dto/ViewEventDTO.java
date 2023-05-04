@@ -2,18 +2,14 @@ package com.akvamarin.clientappfriends.domain.dto;
 
 import com.akvamarin.clientappfriends.domain.enums.DayPeriodOfTime;
 import com.akvamarin.clientappfriends.domain.enums.Partner;
-import com.akvamarin.clientappfriends.domain.enums.Partner;
-import com.google.gson.annotations.SerializedName;
+
+import java.io.Serializable;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.io.Serializable;
-import java.time.LocalDate;
 
 @Builder
 @Getter
@@ -27,7 +23,6 @@ public class ViewEventDTO implements Serializable {
 
     private String description;
 
-    @SerializedName("date")
     private String date;
 
     private DayPeriodOfTime periodOfTime;

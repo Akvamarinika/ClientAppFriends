@@ -1,18 +1,18 @@
 package com.akvamarin.clientappfriends.domain.dto;
 
-import com.google.gson.annotations.SerializedName;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.io.Serializable;
 
 public class UserSignInDTO implements Serializable {
-    @SerializedName("id")
+    @JsonProperty("id")
     private long id;
 
-    @SerializedName("email")
-    private String email;
+    @JsonProperty("email")
+    private final String email;
 
-    @SerializedName("password")
-    private String password;
+    @JsonProperty("password")
+    private final String password;
 
     public UserSignInDTO(String email, String password) {
         this.email = email;

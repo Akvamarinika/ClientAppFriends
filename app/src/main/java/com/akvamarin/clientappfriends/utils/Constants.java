@@ -10,15 +10,12 @@ public class Constants {
     public static final String KEY_URL_AVATAR = "avatar";
     public static final String KEY_VK_ID = "vk";
 
-    public static final String KEY_PASSWORD = "pass";
     public static final String KEY_PHONE = "phone";
     public static final String KEY_AGE = "age";
     public static final String KEY_IMAGE_BASE64 = "image";
     public static final String KEY_PREFERENCES_NAME = "chatAppPreference";
     public static final String KEY_IS_SIGNED_IN = "isSignedIn";
-    public static final String KEY_USER_ID = "userId";
     public static final String KEY_VK_TOKEN = "token";
-    public static final String KEY_APP_TOKEN = null;
     public static final String KEY_USER = "user";
 
     public static final String KEY_COLLECTION_CHAT = "chat";
@@ -26,4 +23,9 @@ public class Constants {
     public static final String KEY_RECEIVER_ID = "receiverId";
     public static final String KEY_MESSAGE = "message";
     public static final String KEY_TIMESTAMP = "timestamp";
+
+    public static final String KEY_APP_TOKEN = null;
+    public static final String KEY_LOGIN = "login";
+    public static final String KEY_USER_ID = "id";
+    public static final String KEY_PASSWORD = "pass";
 }

@@ -1,9 +1,6 @@
 package com.akvamarin.clientappfriends.domain.dto;
 
-import com.google.gson.annotations.SerializedName;
-
 import java.io.Serializable;
-import java.time.LocalDate;
 import java.util.Set;
 
 import lombok.AllArgsConstructor;
@@ -19,7 +16,6 @@ public class ViewUserSlimDTO implements Serializable {
 
     private Long id;
 
-    @SerializedName("dateOfBirthday")
     private String dateOfBirthday;
 
     private String nickname;

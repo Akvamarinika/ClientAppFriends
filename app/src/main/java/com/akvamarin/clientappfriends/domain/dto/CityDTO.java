@@ -1,5 +1,7 @@
 package com.akvamarin.clientappfriends.domain.dto;
 
+import androidx.annotation.NonNull;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -33,4 +35,10 @@ public class CityDTO implements Serializable {
 
     private String countryName;
 
+
+    @NonNull
+    @Override
+    public String toString() {
+        return name;
+    }
 }
