@@ -15,16 +15,12 @@ public class CheckerFields {
     private static final int MIN_TEXT_LENGTH = 5;
     private static final String EMPTY_STRING = "";
     private static final String EMAIL_PATTERN = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
-    private static final String PASS_PATTERN = "[A-Za-z0-9 ]*";
-    private static final String NAME_PATTERN = "[A-Za-z]*";
+    private static final String PASS_PATTERN = "[A-Za-z0-9]*";
+    private static final String NAME_PATTERN = "[A-Za-zА-Яа-я]*";
     private final Context context;
 
     public CheckerFields(Context context) {
         this.context = context;
-    }
-
-    public void setTypeErrorInUI(){
-
     }
 
     /*** Methods check fields: ***/
@@ -87,6 +83,7 @@ public class CheckerFields {
         textInputLayout.setError(EMPTY_STRING);
         return  true;
     }
+
 
     public boolean checkSymbolsInName(EditText editText, TextInputLayout textInputLayout) {
         String error = context.getString(R.string.error_check_name);
