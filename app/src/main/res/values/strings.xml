@@ -102,6 +102,13 @@
     <string name="register_title_city">Почти готово! Ещё один вопрос. Откуда Вы?</string>
     <string name="register_text_city">Укажте свое местоположение - это позволит найти созданные события из Вашего города</string>
     <string name="register_avatar_img_description">Ваш аватар</string>
+    <string name="img_description_settings">Настройки приложения</string>
+    <string name="img_description_see_profile">Как видят Вас другие пользователи</string>
+    <string name="img_description_user_photos">Ваши фото</string>
+    <string name="img_description_exit">Выйти из аккаунта</string>
+    <string name="profile_text_exit">Выйти из аккаунта</string>
+    <string name="img_description_delete_profile">Удалить аккаунт</string>
+    <string name="profile_text_delete_profile">Удалить аккаунт</string>
 
     <string-array name="event_categories_lst">
         <item>Бары, кафе и рестораны</item>

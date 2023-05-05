@@ -36,7 +36,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/text_margin"
             android:gravity="center"
-            android:text="Test app, 27"
+            android:text=""
             android:textColor="@color/white"
             android:textSize="@dimen/subtitle_size"
             android:textStyle="bold" />
@@ -56,7 +56,8 @@
                 android:background="@drawable/shape_circle_background"
                 android:gravity="center"
                 android:padding="25dp"
-                android:src="@drawable/ic_profile_settings" />
+                android:src="@drawable/ic_profile_settings"
+                android:contentDescription="@string/img_description_settings" />
 
             <ImageButton
                 android:id="@+id/imageBtnEditProfile"
@@ -66,7 +67,8 @@
                 android:background="@drawable/shape_circle_background"
                 android:gravity="center"
                 android:padding="30dp"
-                android:src="@drawable/ic_profile_see_eye" />
+                android:src="@drawable/ic_profile_see_eye"
+                android:contentDescription="@string/img_description_see_profile" />
 
             <ImageButton
                 android:id="@+id/imageBtnEditPhoto"
@@ -76,7 +78,8 @@
                 android:gravity="center"
                 android:padding="25dp"
                 android:src="@drawable/ic_profile_photo"
-                tools:ignore="NotSibling" />
+                tools:ignore="NotSibling"
+                android:contentDescription="@string/img_description_user_photos" />
 
 
         </LinearLayout>
@@ -111,7 +114,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginTop="10dp"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            tools:ignore="UseCompoundDrawables">
 
             <ImageView
                 android:id="@+id/imageViewLogout"
@@ -119,7 +123,8 @@
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_logout"
                 android:layout_gravity="center"
-                android:layout_marginStart="70dp" />
+                android:layout_marginStart="70dp"
+                android:contentDescription="@string/img_description_exit" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -127,7 +132,7 @@
                 android:textSize="@dimen/subtitle_size"
                 android:textColor="@color/colorPrimaryDark"
                 android:textStyle="bold"
-                android:text="Выйти из аккаунта"
+                android:text="@string/profile_text_exit"
                 android:padding="5dp"
                 android:layout_marginStart="20dp"
                 />
@@ -135,18 +140,21 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/layoutDeleteAccount"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginTop="20dp"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            tools:ignore="UseCompoundDrawables">
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_delete"
                 android:layout_gravity="center_vertical"
-                android:layout_marginStart="70dp" />
+                android:layout_marginStart="70dp"
+                android:contentDescription="@string/img_description_delete_profile" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -154,7 +162,7 @@
                 android:textSize="@dimen/subtitle_size"
                 android:textStyle="bold"
                 android:textColor="@color/colorAccent"
-                android:text="Удалить аккаунт"
+                android:text="@string/profile_text_delete_profile"
                 android:layout_marginStart="20dp"
                 android:padding="5dp" />
 

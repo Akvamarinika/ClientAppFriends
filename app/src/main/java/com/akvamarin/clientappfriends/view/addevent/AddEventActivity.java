@@ -2,17 +2,13 @@ package com.akvamarin.clientappfriends.view.addevent;
 
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.Rect;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
-import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -24,7 +20,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.akvamarin.clientappfriends.API.ErrorResponse;
@@ -32,6 +27,7 @@ import com.akvamarin.clientappfriends.API.ErrorUtils;
 import com.akvamarin.clientappfriends.API.RetrofitService;
 import com.akvamarin.clientappfriends.API.connection.EventApi;
 import com.akvamarin.clientappfriends.API.connection.EventCategoryApi;
+import com.akvamarin.clientappfriends.BaseActivity;
 import com.akvamarin.clientappfriends.R;
 import com.akvamarin.clientappfriends.domain.dto.AuthToken;
 import com.akvamarin.clientappfriends.domain.dto.EventCategoryDTO;
@@ -41,7 +37,6 @@ import com.akvamarin.clientappfriends.domain.enums.Partner;
 import com.akvamarin.clientappfriends.utils.Constants;
 import com.akvamarin.clientappfriends.utils.PreferenceManager;
 import com.akvamarin.clientappfriends.view.AllEventsActivity;
-import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.text.SimpleDateFormat;
@@ -55,7 +50,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class AddEventActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener{
+public class AddEventActivity extends BaseActivity implements DatePickerDialog.OnDateSetListener{
     private static final String TAG = "AddEvent";
     private static final int MIN_TEXT_LENGTH = 1;
     private static final int MAX_COUNT_LINE = 10;
@@ -126,8 +121,6 @@ public class AddEventActivity extends AppCompatActivity implements DatePickerDia
                 finish();
             }
         });
-
-
 
         editTextEventDescription.setOnTouchListener((v, event) -> {
             if (editTextEventDescription.hasFocus()) {
@@ -280,27 +273,7 @@ public class AddEventActivity extends AppCompatActivity implements DatePickerDia
         setNewDate();
     }
 
-    /*** Method hide keyboard, when editText not focus : ***/
-    @Override
-    public boolean dispatchTouchEvent(MotionEvent event) {
 
-        if (event.getAction() == MotionEvent.ACTION_DOWN && getCurrentFocus() != null) {
-            View view = getCurrentFocus();
-
-            if (view instanceof TextInputEditText) {
-                Rect outRect = new Rect();
-                view.getGlobalVisibleRect(outRect); //возвращает глобальную позицию представления контейнера
-
-                if(!outRect.contains((int) event.getRawX(), (int) event.getRawY())){
-                    InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                    inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
-                    view.clearFocus();
-                }
-            }
-        }
-
-        return super.dispatchTouchEvent(event);
-    }
 
     /*** Method count enters: ***/
     private void checkCountLinesInEventDescription(){
