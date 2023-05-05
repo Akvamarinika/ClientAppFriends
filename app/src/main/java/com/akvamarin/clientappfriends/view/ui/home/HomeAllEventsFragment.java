@@ -29,8 +29,13 @@ import com.akvamarin.clientappfriends.API.RetrofitService;
 import com.akvamarin.clientappfriends.API.connection.EventApi;
 import com.akvamarin.clientappfriends.R;
 import com.akvamarin.clientappfriends.domain.dto.ViewEventDTO;
+import com.akvamarin.clientappfriends.utils.Constants;
+import com.akvamarin.clientappfriends.utils.PreferenceManager;
+import com.akvamarin.clientappfriends.view.AllEventsActivity;
 import com.akvamarin.clientappfriends.view.InfoEventActivity;
 import com.akvamarin.clientappfriends.view.addevent.AddEventActivity;
+import com.akvamarin.clientappfriends.view.dialog.AuthDialog;
+import com.akvamarin.clientappfriends.view.ui.notifications.NotificationsFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -53,7 +58,7 @@ public class HomeAllEventsFragment extends Fragment implements IEventRecyclerLis
 
     /* соединяются адаптером Recycler & List: */
     private RecyclerView recyclerViewAllEvents;
-    private List<ViewEventDTO> eventList = new ArrayList<>();
+    private final List<ViewEventDTO> eventList = new ArrayList<>();
 
     private IEventRecyclerListener eventListener;
 
@@ -62,6 +67,8 @@ public class HomeAllEventsFragment extends Fragment implements IEventRecyclerLis
 
     private RetrofitService retrofitService;
     private EventApi eventApi;
+
+    private PreferenceManager preferenceManager;
 
     public View onCreateView(@NonNull LayoutInflater layoutInflater,
                              ViewGroup container,
@@ -79,6 +86,7 @@ public class HomeAllEventsFragment extends Fragment implements IEventRecyclerLis
     }
 
     private void init(){
+        preferenceManager = new PreferenceManager(requireActivity());
         retrofitService = RetrofitService.getInstance(getContext());
         eventApi = retrofitService.getRetrofit().create(EventApi.class);
     }
@@ -106,11 +114,25 @@ public class HomeAllEventsFragment extends Fragment implements IEventRecyclerLis
 
         floatingActionButton = requireActivity().findViewById(R.id.fab_btn);
         updateMainFAB();
-        floatingActionButton.setOnClickListener(view1 -> {
-            Intent intent = new Intent(getActivity(), AddEventActivity.class);
-            startActivity(intent);
+
+        floatingActionButton.setOnClickListener(v -> {
+            if (isAuthenticated()) {
+                Intent intent = new Intent(getActivity(), AddEventActivity.class);
+                startActivity(intent);
+            } else {
+                showAuthDialog();
+            }
         });
 
+    }
+
+    private boolean isAuthenticated() {
+        return preferenceManager != null && preferenceManager.getString(Constants.KEY_APP_TOKEN) != null;
+    }
+
+    private void showAuthDialog() {
+        AuthDialog dialog = new AuthDialog(requireActivity());
+        dialog.show();
     }
 
 //    @Override
@@ -130,7 +152,7 @@ public class HomeAllEventsFragment extends Fragment implements IEventRecyclerLis
 
         if (eventList.isEmpty()) {
 
-            eventApi.getAllEvents().enqueue(new Callback<List<ViewEventDTO>>() {
+            eventApi.getAllEvents().enqueue(new Callback<>() {
                 @SuppressLint("NotifyDataSetChanged")
                 @Override
                 public void onResponse(@NonNull Call<List<ViewEventDTO>> call, @NonNull Response<List<ViewEventDTO>> response) {
@@ -150,9 +172,7 @@ public class HomeAllEventsFragment extends Fragment implements IEventRecyclerLis
                     Toast.makeText(requireActivity(), "getAllEvents() --- Fail", Toast.LENGTH_SHORT).show();
                     Log.d(TAG, "Error fetching events: " + t.fillInStackTrace());
                 }
-
             });
-
 
         }
 

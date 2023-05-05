@@ -12,6 +12,9 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.akvamarin.clientappfriends.R;
+import com.akvamarin.clientappfriends.utils.Constants;
+import com.akvamarin.clientappfriends.utils.PreferenceManager;
+import com.akvamarin.clientappfriends.view.dialog.AuthDialog;
 import com.akvamarin.clientappfriends.view.ui.home.HomeAllEventsFragment;
 import com.akvamarin.clientappfriends.view.ui.myevents.MyEventsFragment;
 import com.akvamarin.clientappfriends.view.ui.notifications.NotificationsFragment;
@@ -27,6 +30,7 @@ public class AllEventsActivity extends AppCompatActivity {
 
     private Toolbar toolbar;
     private BottomNavigationView bottomNavigation;
+    private PreferenceManager preferenceManager;
 
     //private InternetModeChangeReceiver internetModeChangeReceiver;
     //private BroadcastReceiver broadcastReceiver = null;
@@ -41,6 +45,7 @@ public class AllEventsActivity extends AppCompatActivity {
         initBottomNavigationView();
         initToolbar();
 
+        preferenceManager = new PreferenceManager(getApplicationContext());
         notificationsViewModel = new ViewModelProvider(this).get(NotificationsViewModel.class);
         notificationsViewModel.getTitle().observe(this, titleNotifications -> {
             Log.d(TAG, "set title: оповещения ");
@@ -82,21 +87,45 @@ public class AllEventsActivity extends AppCompatActivity {
                     replaceFragment(homeAllEventsFragment);
                     return true;
                 case R.id.navigation_notifications:
-                    NotificationsFragment notificationsFragment = new NotificationsFragment();
-                    replaceFragment(notificationsFragment);
-                    return true;
+                    if (isAuthenticated()) {
+                        NotificationsFragment notificationsFragment = new NotificationsFragment();
+                        replaceFragment(notificationsFragment);
+                        return true;
+                    } else {
+                        showAuthDialog();
+                        return false;
+                    }
                 case R.id.navigation_my_events:
-                    MyEventsFragment myEventsFragment = new MyEventsFragment();
-                    replaceFragment(myEventsFragment);
-                    return true;
+                    if (isAuthenticated()) {
+                        MyEventsFragment myEventsFragment = new MyEventsFragment();
+                        replaceFragment(myEventsFragment);
+                        return true;
+                    } else {
+                        showAuthDialog();
+                        return false;
+                    }
                 case R.id.navigation_profile:
-                    ProfileFragment profileFragment = new ProfileFragment();
-                    replaceFragment(profileFragment);
-                    return true;
+                    if (isAuthenticated()) {
+                        ProfileFragment profileFragment = new ProfileFragment();
+                        replaceFragment(profileFragment);
+                        return true;
+                    } else {
+                        showAuthDialog();
+                        return false;
+                    }
             }
 
             return false;
         });
+    }
+
+    private boolean isAuthenticated() {
+        return preferenceManager != null && preferenceManager.getString(Constants.KEY_APP_TOKEN) != null;
+    }
+
+    private void showAuthDialog() {
+        AuthDialog dialog = new AuthDialog(AllEventsActivity.this);
+        dialog.show();
     }
 
     private void replaceFragment(Fragment fragment){
