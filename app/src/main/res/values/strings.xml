@@ -66,6 +66,8 @@
     <string name="error_check_city">Данный город не был найден в списке</string>
     <string name="error_radio">Выберете один из элементов</string>
 
+    <string name="loading">Загрузка данных</string>
+
     <string name="add_btn_label_done">Добавить</string>
     <string name="want_text">Желает:</string>
     <string name="about_event_label">О мероприятии:</string>
@@ -109,6 +111,11 @@
     <string name="profile_text_exit">Выйти из аккаунта</string>
     <string name="img_description_delete_profile">Удалить аккаунт</string>
     <string name="profile_text_delete_profile">Удалить аккаунт</string>
+    <string name="text_send_message">Ввод сообщения...</string>
+    <string name="text_title_comment">Комментарии</string>
+    <string name="options_edit">Редактировать</string>
+    <string name="options_delete">Удалить</string>
+    <string name="options_cancel">Отмена</string>
 
     <string-array name="event_categories_lst">
         <item>Бары, кафе и рестораны</item>

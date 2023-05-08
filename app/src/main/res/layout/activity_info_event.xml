@@ -3,26 +3,40 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/layoutInfoEvent"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@color/bgcolor">
+    android:layout_height="match_parent"
+    android:animateLayoutChanges="true"
+    android:elevation="8dp"
+    android:background="@color/colorPrimaryDark">
+
+    <View
+        android:id="@+id/viewBackground"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/chats_background_content_top"
+        app:layout_constraintBottom_toTopOf="@id/layoutSend"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0"
+        tools:layout_editor_absoluteX="16dp"/>
 
     <include
-        android:id="@+id/includeToolBar"
-        layout="@layout/toolbar_header"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"/>
+        android:id="@+id/includeCustomToolbar"
+        layout="@layout/toolbar_custom"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginBottom="0dp"
+        android:background="@color/colorPrimaryDark"
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <androidx.core.widget.NestedScrollView
         android:id="@+id/nestedScrollView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_alignParentBottom="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/includeToolBar">
+        app:layout_constraintTop_toBottomOf="@+id/includeCustomToolbar">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -33,10 +47,10 @@
                 android:id="@+id/layoutUserInfo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
                 android:layout_marginStart="@dimen/activity_left_right_margin"
-                android:layout_marginEnd="@dimen/activity_left_right_margin"
                 android:layout_marginTop="@dimen/activity_left_right_margin"
+                android:layout_marginEnd="@dimen/activity_left_right_margin"
+                android:orientation="horizontal"
                 app:layout_constrainedWidth="true"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
@@ -55,204 +69,284 @@
                     tools:src="@sample/avatars" />
 
                 <LinearLayout
-                    android:id="@+id/layoutEventInfoBase"
+                    android:id="@+id/layoutUserInfoBase"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:gravity="center_vertical"
                     android:layout_marginStart="@dimen/title_edit_margin"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical"
                     android:padding="6dp">
 
-                        <TextView
-                            android:id="@+id/textViewEventInfoUserName"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginEnd="@dimen/text_margin"
-                            android:text="@string/event_card_nickname"
-                            android:textSize="@dimen/subtitle_size"
-                            android:textStyle="bold"
-                            tools:text="@sample/user_names" />
+                    <TextView
+                        android:id="@+id/textViewEventInfoUserName"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/text_margin"
+                        android:text="@string/event_card_nickname"
+                        android:textSize="@dimen/subtitle_size"
+                        android:textStyle="bold"
+                        tools:text="@sample/user_names" />
 
-                        <TextView
-                            android:id="@+id/textViewEventInfoCountryCity"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:drawablePadding="@dimen/padding_icon_text_view"
-                            android:text="@string/event_card_event_name"
-                            android:textSize="@dimen/label_size"
-                            android:ellipsize="end"
-                            tools:text="Россия, Иркутск"
-                            app:drawableLeftCompat="@drawable/ic_location" />
+                    <TextView
+                        android:id="@+id/textViewEventInfoCountryCity"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:drawablePadding="@dimen/padding_icon_text_view"
+                        android:ellipsize="end"
+                        android:text="@string/event_card_event_name"
+                        android:textSize="@dimen/label_size"
+                        app:drawableLeftCompat="@drawable/ic_location"
+                        tools:text="Россия, Иркутск" />
                 </LinearLayout>
             </LinearLayout>
 
-                <androidx.cardview.widget.CardView
-                    android:id="@+id/cardViewInfoEvent"
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardViewInfoEvent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/activity_left_right_margin"
+                android:layout_marginTop="@dimen/activity_left_right_margin"
+                android:layout_marginEnd="@dimen/activity_left_right_margin"
+                android:paddingBottom="10dp"
+                app:cardBackgroundColor="@color/white"
+                app:cardCornerRadius="10dp"
+                app:cardElevation="2dp"
+                app:cardUseCompatPadding="true"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/layoutUserInfo">
+
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/activity_left_right_margin"
-                    android:layout_marginEnd="@dimen/activity_left_right_margin"
-                    android:layout_marginTop="@dimen/activity_left_right_margin"
-                    app:cardBackgroundColor="@color/white"
-                    app:cardCornerRadius="10dp"
-                    app:cardElevation="2dp"
-                    app:cardUseCompatPadding="true"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/layoutUserInfo">
+                    android:orientation="vertical">
 
-                    <LinearLayout
+                    <TextView
+                        android:id="@+id/eventInfoLabelTitle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical">
+                        android:layout_marginStart="@dimen/title_edit_margin"
+                        android:layout_marginTop="@dimen/title_edit_margin"
+                        android:layout_marginEnd="@dimen/title_edit_margin"
+                        android:text="@string/want_text"
+                        android:textSize="@dimen/label_size"
+                        android:textStyle="bold" />
 
-                        <TextView
-                            android:id="@+id/eventInfoLabelTitle"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/title_edit_margin"
-                            android:layout_marginTop="@dimen/title_edit_margin"
-                            android:layout_marginEnd="@dimen/title_edit_margin"
-                            android:text="@string/want_text"
-                            android:textSize="@dimen/label_size"
-                            android:textStyle="bold" />
+                    <TextView
+                        android:id="@+id/eventInfoTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/title_edit_margin"
+                        android:layout_marginEnd="@dimen/title_edit_margin"
+                        android:padding="@dimen/padding_card"
+                        android:text="@string/event_card_nickname"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:textSize="@dimen/info_size"
+                        android:textStyle="bold"
+                        tools:text="@sample/event_names" />
 
-                        <TextView
-                            android:id="@+id/eventInfoTitle"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/title_edit_margin"
-                            android:layout_marginEnd="@dimen/title_edit_margin"
-                            android:text="@string/event_card_nickname"
-                            android:textSize="@dimen/subtitle_size"
-                            android:textStyle="bold"
-                            android:textColor="@color/colorPrimaryDark"
-                            tools:text="@sample/event_names"
-                            android:padding="@dimen/padding_card"/>
+                    <TextView
+                        android:id="@+id/eventInfoLabelPartner"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/title_edit_margin"
+                        android:layout_marginTop="@dimen/title_edit_margin"
+                        android:layout_marginEnd="@dimen/title_edit_margin"
+                        android:text="@string/label_with"
+                        android:textSize="@dimen/label_size"
+                        android:textStyle="bold" />
 
-                        <TextView
-                            android:id="@+id/eventInfoLabelPartner"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/title_edit_margin"
-                            android:layout_marginTop="@dimen/title_edit_margin"
-                            android:layout_marginEnd="@dimen/title_edit_margin"
-                            android:text="@string/label_with"
-                            android:textSize="@dimen/label_size"
-                            android:textStyle="bold" />
+                    <TextView
+                        android:id="@+id/textViewEventInfoPartner"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/title_edit_margin"
+                        android:layout_marginEnd="@dimen/title_edit_margin"
+                        android:drawablePadding="@dimen/padding_icon_text_view"
+                        android:gravity="center_vertical|start"
+                        android:padding="@dimen/padding_card"
+                        android:text=""
+                        android:textColor="@color/colorPrimaryDark"
+                        android:textSize="@dimen/info_size"
+                        app:drawableLeftCompat="@drawable/ic_add_active_girl" />
 
-                        <TextView
-                            android:id="@+id/textViewEventInfoPartner"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/title_edit_margin"
-                            android:layout_marginEnd="@dimen/title_edit_margin"
-                            android:gravity="center_vertical|start"
-                            android:text=""
-                            android:textSize="@dimen/subtitle_size"
-                            android:textColor="@color/colorPrimaryDark"
-                            android:padding="@dimen/padding_card"
-                            android:drawablePadding="@dimen/padding_icon_text_view"
-                            app:drawableLeftCompat="@drawable/ic_add_active_girl" />
+                    <TextView
+                        android:id="@+id/eventInfoLabelDate"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/title_edit_margin"
+                        android:layout_marginTop="@dimen/title_edit_margin"
+                        android:layout_marginEnd="@dimen/title_edit_margin"
+                        android:text="@string/add_date_label"
+                        android:textSize="@dimen/label_size"
+                        android:textStyle="bold" />
 
-                        <TextView
-                            android:id="@+id/eventInfoLabelDate"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/title_edit_margin"
-                            android:layout_marginTop="@dimen/title_edit_margin"
-                            android:layout_marginEnd="@dimen/title_edit_margin"
-                            android:text="@string/add_date_label"
-                            android:textSize="@dimen/label_size"
-                            android:textStyle="bold" />
+                    <TextView
+                        android:id="@+id/textViewEventInfoDate"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/title_edit_margin"
+                        android:layout_marginEnd="@dimen/title_edit_margin"
+                        android:padding="@dimen/padding_card"
+                        android:text="@string/event_card_nickname"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:textSize="@dimen/info_size"
+                        android:textStyle="bold"
+                        tools:text="@tools:sample/date/ddmmyy" />
 
-                        <TextView
-                            android:id="@+id/textViewEventInfoDate"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/title_edit_margin"
-                            android:layout_marginEnd="@dimen/title_edit_margin"
-                            android:text="@string/event_card_nickname"
-                            android:textSize="@dimen/subtitle_size"
-                            android:textStyle="bold"
-                            android:textColor="@color/colorPrimaryDark"
-                            tools:text="@tools:sample/date/ddmmyy"
-                            android:padding="@dimen/padding_card"/>
+                    <TextView
+                        android:id="@+id/eventInfoLabelDayOfWeek"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/title_edit_margin"
+                        android:layout_marginTop="@dimen/title_edit_margin"
+                        android:layout_marginEnd="@dimen/title_edit_margin"
+                        android:text="@string/label_day_of_week"
+                        android:textSize="@dimen/label_size"
+                        android:textStyle="bold" />
 
-                        <TextView
-                            android:id="@+id/eventInfoLabelDayOfWeek"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/title_edit_margin"
-                            android:layout_marginTop="@dimen/title_edit_margin"
-                            android:layout_marginEnd="@dimen/title_edit_margin"
-                            android:text="@string/label_day_of_week"
-                            android:textSize="@dimen/label_size"
-                            android:textStyle="bold" />
+                    <TextView
+                        android:id="@+id/textViewEventInfoDayOfWeek"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/title_edit_margin"
+                        android:layout_marginEnd="@dimen/title_edit_margin"
+                        android:padding="@dimen/padding_card"
+                        android:text=""
+                        android:textColor="@color/colorPrimaryDark"
+                        android:textSize="@dimen/info_size"
+                        tools:text="@tools:sample/date/day_of_week" />
 
-                        <TextView
-                            android:id="@+id/textViewEventInfoDayOfWeek"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/title_edit_margin"
-                            android:layout_marginEnd="@dimen/title_edit_margin"
-                            android:text=""
-                            android:textSize="@dimen/subtitle_size"
-                            android:textColor="@color/colorPrimaryDark"
-                            tools:text="@tools:sample/date/day_of_week"
-                            android:padding="@dimen/padding_card"/>
+                    <TextView
+                        android:id="@+id/eventInfoLabelTwentyFourHours"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/title_edit_margin"
+                        android:layout_marginTop="@dimen/title_edit_margin"
+                        android:layout_marginEnd="@dimen/title_edit_margin"
+                        android:text="@string/add_label_hours"
+                        android:textSize="@dimen/label_size"
+                        android:textStyle="bold" />
 
-                        <TextView
-                            android:id="@+id/eventInfoLabelTwentyFourHours"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/title_edit_margin"
-                            android:layout_marginTop="@dimen/title_edit_margin"
-                            android:layout_marginEnd="@dimen/title_edit_margin"
-                            android:text="@string/add_label_hours"
-                            android:textSize="@dimen/label_size"
-                            android:textStyle="bold" />
+                    <TextView
+                        android:id="@+id/textViewEventInfoTwentyFourHours"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/title_edit_margin"
+                        android:layout_marginEnd="@dimen/title_edit_margin"
+                        android:drawablePadding="@dimen/padding_icon_text_view"
+                        android:gravity="center_vertical|start"
+                        android:padding="@dimen/padding_card"
+                        android:text=""
+                        android:textColor="@color/colorPrimaryDark"
+                        android:textSize="@dimen/info_size"
+                        app:drawableLeftCompat="@drawable/ic_add_hours_evening_active" />
 
-                        <TextView
-                            android:id="@+id/textViewEventInfoTwentyFourHours"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/title_edit_margin"
-                            android:layout_marginEnd="@dimen/title_edit_margin"
-                            android:text=""
-                            android:gravity="center_vertical|start"
-                            android:textSize="@dimen/subtitle_size"
-                            android:textColor="@color/colorPrimaryDark"
-                            android:padding="@dimen/padding_card"
-                            android:drawablePadding="@dimen/padding_icon_text_view"
-                            app:drawableLeftCompat="@drawable/ic_add_hours_evening_active" />
+                    <TextView
+                        android:id="@+id/eventInfoLabelDescription"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/title_edit_margin"
+                        android:layout_marginTop="@dimen/title_edit_margin"
+                        android:layout_marginEnd="@dimen/title_edit_margin"
+                        android:text="@string/about_event_label"
+                        android:textSize="@dimen/label_size"
+                        android:textStyle="bold" />
 
-                        <TextView
-                            android:id="@+id/eventInfoLabelDescription"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/title_edit_margin"
-                            android:layout_marginTop="@dimen/title_edit_margin"
-                            android:layout_marginEnd="@dimen/title_edit_margin"
-                            android:text="@string/about_event_label"
-                            android:textSize="@dimen/label_size"
-                            android:textStyle="bold" />
+                    <TextView
+                        android:id="@+id/textViewEventInfoDescription"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/title_edit_margin"
+                        android:layout_marginEnd="@dimen/title_edit_margin"
+                        android:padding="@dimen/padding_card"
+                        android:text=""
+                        android:textColor="@color/colorPrimaryDark"
+                        android:textSize="@dimen/info_size"
+                        tools:text="@sample/event_names" />
+                </LinearLayout>
 
-                        <TextView
-                            android:id="@+id/textViewEventInfoDescription"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/title_edit_margin"
-                            android:layout_marginEnd="@dimen/title_edit_margin"
-                            android:text=""
-                            android:textColor="@color/colorPrimaryDark"
-                            android:textSize="@dimen/subtitle_size"
-                            tools:text="@sample/event_names"
-                            android:padding="@dimen/padding_card"/>
-                    </LinearLayout>
+            </androidx.cardview.widget.CardView>
 
-                </androidx.cardview.widget.CardView>
+            <TextView
+                android:id="@+id/titleComment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:textColor="@color/grey"
+                android:textStyle="bold"
+                android:textSize="@dimen/title_size"
+                android:text="@string/text_title_comment"
+                android:paddingStart="18dp"
+                android:padding="5dp"
+                tools:ignore="RtlSymmetry" />
+
+            <!-- Comment RecyclerView -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewComments"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clipToPadding="false"
+                android:nestedScrollingEnabled="false"
+                android:orientation="vertical"
+                android:overScrollMode="never"
+                android:padding="15dp"
+                android:layout_marginBottom="155dp"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintBottom_toTopOf="@id/layoutSend"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/nestedScrollView"
+                tools:itemCount="5"
+                tools:listitem="@layout/item_comment" />
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
+
+
+
+    <!-- Comment submission form -->
+    <FrameLayout
+        android:id="@+id/layoutSend"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="12dp"
+        android:background="@drawable/chats_background_input"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/chatsImageSend"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="fill"
+            android:layout_marginStart="4dp"
+            android:padding="5dp"
+            android:src="@drawable/ic_chats_send"
+            android:tint="@color/white"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </FrameLayout>
+
+    <EditText
+        android:id="@+id/inputMessageEditText"
+        android:layout_width="0dp"
+        android:layout_height="45dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="12dp"
+        android:background="@drawable/chats_background_input"
+        android:hint="@string/text_send_message"
+        android:imeOptions="actionDone"
+        android:importantForAutofill="no"
+        android:inputType="text"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:textColor="@color/white"
+        android:textColorHint="@color/light_grey"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/layoutSend"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

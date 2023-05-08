@@ -4,13 +4,12 @@
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
-        android:usesCleartextTraffic="true"
         android:name=".FriendsAppApplication"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -20,14 +19,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/FriendsAppTheme"
+        android:usesCleartextTraffic="true"
         tools:targetApi="25">
-
 
         <activity
             android:name=".SplashScreen"
             android:exported="true"
-            android:theme="@style/splashTheme"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/splashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -38,7 +37,6 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
-
         <activity
             android:name=".view.ui.profile.ViewProfileActivity"
             android:exported="false"
@@ -52,8 +50,13 @@
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".view.ui.profile.ViewUserInfoActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"/>
+        <activity
             android:name=".view.InfoEventActivity"
             android:exported="false"
+
             android:screenOrientation="portrait" />
         <activity
             android:name=".view.addevent.AddEventActivity"
@@ -72,17 +75,15 @@
             android:name=".view.AuthenticationActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
-
-
         <activity
             android:name=".view.chats.GroupChatActivity"
-            android:windowSoftInputMode="adjustResize"
+            android:exported="false"
             android:screenOrientation="portrait"
-            android:exported="false" />
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".view.chats.AddUsersActivity"
-            android:screenOrientation="portrait"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".view.register.RegisterPhotoActivity"
             android:exported="false"
@@ -103,6 +104,8 @@
             android:name=".view.register.RegisterNameActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
+
+
     </application>
 
 </manifest>

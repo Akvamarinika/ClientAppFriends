@@ -14,9 +14,10 @@
     <dimen name="padding_icon_text_view">2dp</dimen>
 
 
+    <dimen name="info_size">16sp</dimen>
     <dimen name="subtitle_size">20sp</dimen>
     <dimen name="title_size">24sp</dimen>
-    <dimen name="label_size">16sp</dimen>
+    <dimen name="label_size">14sp</dimen>
     <dimen name="text">14sp</dimen>
     <dimen name="button_text">0sp</dimen>
     <dimen name="hint_text">0sp</dimen>
