@@ -5,6 +5,8 @@ import android.util.Log;
 
 import com.akvamarin.clientappfriends.utils.PreferenceManager;
 import com.akvamarin.clientappfriends.utils.PropertiesReader;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import java.util.Properties;
 
@@ -47,7 +49,7 @@ public class RetrofitService {
         retrofit = new Retrofit.Builder()
                 .baseUrl("http://" + ipAddress + ":" + port)
                 .client(okHttpbuilder.build()) // for interceptor (token)
-                .addConverterFactory(JacksonConverterFactory.create())
+                .addConverterFactory(JacksonConverterFactory.create(new ObjectMapper().registerModule(new JavaTimeModule())))
                 //.addConverterFactory(GsonConverterFactory.create(new Gson()))
                 .build();
     }
