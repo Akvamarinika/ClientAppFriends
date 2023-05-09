@@ -22,6 +22,9 @@ public interface UserApi {
     @GET(PATH_PREFIX + "/login/{login}")
     Call<ViewUserDTO> getUserByLogin(@Path("login") String login, @Header("Authorization") AuthToken authToken);
 
+    @GET(PATH_PREFIX + "/slim/login/{login}")
+    Call<ViewUserSlimDTO> getSlimUserByLogin(@Path("login") String login, @Header("Authorization") AuthToken authToken);
+
     @DELETE(PATH_PREFIX + "/{id}")
     Call<Void> deleteUser(@Path("id") String id, @Header("Authorization") AuthToken authToken);
 

@@ -11,9 +11,9 @@ import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.akvamarin.clientappfriends.R;
+import com.akvamarin.clientappfriends.domain.dto.ViewCommentDTO;
 import com.akvamarin.clientappfriends.domain.dto.ViewEventDTO;
 import com.akvamarin.clientappfriends.domain.enums.Partner;
-import com.akvamarin.clientappfriends.utils.PreferenceManager;
 import com.akvamarin.clientappfriends.utils.Utils;
 import com.squareup.picasso.Picasso;
 
@@ -29,15 +29,9 @@ public class EventAdapter extends RecyclerView.Adapter<EventViewHolder>{
     private final IEventRecyclerListener eventListener;
     private static final String DATE_PATTERN = "d/MM/uuuu";
 
-    private PreferenceManager preferenceManager;
-    //private final List<Event> eventListAll;
-
     public EventAdapter(List<ViewEventDTO> eventList, IEventRecyclerListener eventListener) {
         this.eventList = eventList;
         this.eventListener = eventListener;
-
-        //this.eventListAll = new ArrayList<>();
-        //eventListAll.addAll(0, eventList);
     }
 
     /* инициализация views и создание viewHolder */
@@ -45,7 +39,6 @@ public class EventAdapter extends RecyclerView.Adapter<EventViewHolder>{
     @Override
     public EventViewHolder onCreateViewHolder(@NonNull ViewGroup root, int viewType) {
         View view = LayoutInflater.from(root.getContext()).inflate(R.layout.item_event_recycler, root, false);
-        preferenceManager = new PreferenceManager(root.getContext()); /// preference
         return new EventViewHolder(view, eventListener);
     }
 
@@ -83,20 +76,6 @@ public class EventAdapter extends RecyclerView.Adapter<EventViewHolder>{
                     .error(R.drawable.error_loading_image)
                     .into(holder.getUserAvatar());   //.setLoggingEnabled(true)
         }
-
-        // костыль.....
-       /* String imgBase64 = preferenceManager.getString(Constants.KEY_IMAGE_BASE64);
-        String email = preferenceManager.getString(Constants.KEY_EMAIL);
-        String userEmail = event.getUserOwner().getEmail();
-
-        Log.d(TAG, "onBindViewHolder EMAIL: " + userEmail );
-
-        if (imgBase64 != null && userEmail != null && !imgBase64.equalsIgnoreCase("image")
-                && (event.getUserOwner().getEmail().equalsIgnoreCase(email))){
-            Bitmap bitmap = BitmapConvertor.convertFromBase64ToBitmap(preferenceManager.getString(Constants.KEY_IMAGE_BASE64));
-            holder.getUserAvatar().setImageBitmap(bitmap);
-        }*/
-
     }
 
     @Override
@@ -109,4 +88,11 @@ public class EventAdapter extends RecyclerView.Adapter<EventViewHolder>{
         eventList.addAll(newListEvent);
         notifyDataSetChanged();
     }
+
+    public void updateEventComments(int position, List<ViewCommentDTO> comments) {
+        ViewEventDTO event = eventList.get(position);
+        event.setComments(comments);
+        notifyItemChanged(position);
+    }
+
 }

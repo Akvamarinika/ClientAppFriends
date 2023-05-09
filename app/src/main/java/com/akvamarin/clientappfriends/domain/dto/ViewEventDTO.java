@@ -4,6 +4,7 @@ import com.akvamarin.clientappfriends.domain.enums.DayPeriodOfTime;
 import com.akvamarin.clientappfriends.domain.enums.Partner;
 
 import java.io.Serializable;
+import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -37,6 +38,6 @@ public class ViewEventDTO implements Serializable {
 
     private Double lon;
 
-
+    private List<ViewCommentDTO> comments; // use only client
 
 }

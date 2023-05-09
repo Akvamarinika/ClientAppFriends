@@ -16,6 +16,8 @@ public class ViewUserSlimDTO implements Serializable {
 
     private Long id;
 
+    private String username;
+
     private String dateOfBirthday;
 
     private String nickname;

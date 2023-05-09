@@ -5,9 +5,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.akvamarin.clientappfriends.R;
+import com.akvamarin.clientappfriends.domain.dto.ViewCommentDTO;
+
+import java.util.List;
 
 public class EventViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 

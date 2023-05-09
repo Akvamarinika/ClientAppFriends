@@ -15,7 +15,9 @@
         android:layout_marginBottom="16dp"
         android:background="@drawable/chats_background_content_top"
         app:layout_constraintBottom_toTopOf="@id/layoutSend"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0"
+        tools:layout_editor_absoluteX="16dp" />
 
     <View
         android:id="@+id/headerBackground"

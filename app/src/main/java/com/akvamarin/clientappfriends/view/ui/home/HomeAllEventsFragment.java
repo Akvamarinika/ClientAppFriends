@@ -26,8 +26,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.akvamarin.clientappfriends.API.RetrofitService;
+import com.akvamarin.clientappfriends.API.connection.CommentApi;
 import com.akvamarin.clientappfriends.API.connection.EventApi;
 import com.akvamarin.clientappfriends.R;
+import com.akvamarin.clientappfriends.domain.dto.ViewCommentDTO;
 import com.akvamarin.clientappfriends.domain.dto.ViewEventDTO;
 import com.akvamarin.clientappfriends.utils.Constants;
 import com.akvamarin.clientappfriends.utils.PreferenceManager;
@@ -59,14 +61,14 @@ public class HomeAllEventsFragment extends Fragment implements IEventRecyclerLis
     /* соединяются адаптером Recycler & List: */
     private RecyclerView recyclerViewAllEvents;
     private final List<ViewEventDTO> eventList = new ArrayList<>();
-
+    private EventAdapter eventAdapter;
     private IEventRecyclerListener eventListener;
 
     private FloatingActionButton floatingActionButton;
-    private EventAdapter eventAdapter;
 
     private RetrofitService retrofitService;
     private EventApi eventApi;
+    private CommentApi commentApi;
 
     private PreferenceManager preferenceManager;
 
@@ -89,6 +91,7 @@ public class HomeAllEventsFragment extends Fragment implements IEventRecyclerLis
         preferenceManager = new PreferenceManager(requireActivity());
         retrofitService = RetrofitService.getInstance(getContext());
         eventApi = retrofitService.getRetrofit().create(EventApi.class);
+        commentApi = retrofitService.getRetrofit().create(CommentApi.class);
     }
 
     private void updateToolbar(){
@@ -106,8 +109,8 @@ public class HomeAllEventsFragment extends Fragment implements IEventRecyclerLis
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        eventListener = this;
         initEventList();
+        eventListener = this;
         eventAdapter = new EventAdapter(eventList, eventListener);
         recyclerViewAllEvents.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerViewAllEvents.setAdapter(eventAdapter);
@@ -135,19 +138,8 @@ public class HomeAllEventsFragment extends Fragment implements IEventRecyclerLis
         dialog.show();
     }
 
-//    @Override
-//    public void onDestroyView() {
-//        super.onDestroyView();
-//        binding = null;
-//    }
-
-
-
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void initEventList(){
-
-        /* ++++ TODO получить события с сервера и распарсить +++++ */
-
         Log.d(TAG, "init event list: preparing ...");
 
         if (eventList.isEmpty()) {
@@ -184,12 +176,14 @@ public class HomeAllEventsFragment extends Fragment implements IEventRecyclerLis
     @Override
     public void onClickRecyclerEventSelected(int index){
         //Toast.makeText(getActivity(), "Click on " + index, Toast.LENGTH_SHORT).show();
-
-        ViewEventDTO currentEvent = eventList.get(index);
-        Intent intent = new Intent(getActivity(), InfoEventActivity.class);
-        intent.putExtra("current_event", currentEvent);
-        startActivity(intent);
-
+        if (isAuthenticated()) {
+            ViewEventDTO currentEvent = eventList.get(index);
+            Intent intent = new Intent(getActivity(), InfoEventActivity.class);
+            intent.putExtra("current_event", currentEvent);
+            startActivity(intent);
+        } else {
+            showAuthDialog();
+        }
     }
 
 
