@@ -4,6 +4,286 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorPrimary"
     tools:context=".view.ui.profile.EditProfileActivity">
 
+    <include
+        android:id="@+id/includeCustomToolbar"
+        layout="@layout/toolbar_custom"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginBottom="0dp"
+        android:background="@color/colorPrimaryDark"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/editProfileScrollView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_alignParentBottom="true"
+        android:fillViewport="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/includeCustomToolbar">
+
+        <LinearLayout
+            android:id="@+id/editProfileLinearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="60dp"
+            android:paddingTop="20dp"
+            android:paddingBottom="30dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/editProfileProfileAvatar"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="@dimen/image_margin"
+                android:contentDescription="@string/avatar_img_description"
+                android:scaleType="centerCrop"
+                android:src="@drawable/no_avatar"
+                app:layout_constraintDimensionRatio="h,1:1"
+                tools:src="@sample/avatars" />
+
+            <TextView
+                android:id="@+id/editProfileOnline"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/text_margin"
+                android:gravity="center"
+                android:text="* Active"
+                android:textColor="@color/white"
+                android:textSize="@dimen/subtitle_size"
+                android:textStyle="bold" />
+
+
+            <TextView
+                android:id="@+id/editProfileLabelUsername"
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:layout_marginStart="@dimen/title_edit_margin"
+                android:layout_marginTop="@dimen/title_edit_margin"
+                android:layout_marginEnd="@dimen/title_edit_margin"
+                android:text="Имя"
+                android:textColor="@color/white"
+                android:textSize="@dimen/label_size"
+                android:textStyle="bold" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/editProfileTextInputLayoutUserName"
+                style="@style/editTextStyleBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/title_edit_margin"
+                android:layout_marginEnd="@dimen/title_edit_margin"
+                app:boxBackgroundColor="@android:color/white"
+                app:boxCornerRadiusBottomEnd="@dimen/radius_form"
+                app:boxCornerRadiusBottomStart="@dimen/radius_form"
+                app:boxCornerRadiusTopEnd="@dimen/radius_form"
+                app:boxCornerRadiusTopStart="@dimen/radius_form"
+                app:counterEnabled="true"
+                app:counterMaxLength="70"
+                app:counterTextColor="@color/white"
+                app:errorEnabled="true"
+                app:hintEnabled="false"
+                app:hintTextColor="@color/colorPrimaryDark">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/editTextEventName"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:ellipsize="end"
+                    android:imeOptions="actionGo"
+                    android:inputType="text"
+                    android:lines="1"
+                    android:maxLength="70"
+                    android:maxLines="1"
+                    android:minLines="1"
+                    app:counterOverflowTextAppearance="@style/MyCounterText"
+                    tools:ignore="KeyboardInaccessibleWidget" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <TextView
+                android:id="@+id/editProfileLabelGender"
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:layout_marginStart="@dimen/title_edit_margin"
+                android:layout_marginTop="@dimen/title_edit_margin"
+                android:layout_marginEnd="@dimen/title_edit_margin"
+                android:text="Пол: "
+                android:textColor="@color/white"
+                android:textSize="@dimen/label_size"
+                android:textStyle="bold" />
+
+            <RadioGroup
+                android:id="@+id/editProfileRadioGroupGender"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/title_edit_margin"
+                android:layout_marginEnd="@dimen/title_edit_margin"
+                android:background="@android:color/transparent"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/editProfilerRadioMen"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/activity_horizontal_margin"
+                    android:layout_weight="1"
+                    android:background="@android:color/transparent"
+                    android:button="@android:color/transparent"
+                    android:drawableTop="@drawable/edit_profile_radio_selector_men"
+                    android:gravity="center"
+                    android:text="@string/icon_label_men"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text" />
+
+                <RadioButton
+                    android:id="@+id/editProfilerRadioGirl"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/activity_horizontal_margin"
+                    android:layout_weight="1"
+                    android:background="@android:color/transparent"
+                    android:button="@android:color/transparent"
+                    android:drawableTop="@drawable/edit_profile_radio_selector_girl"
+                    android:gravity="center"
+                    android:text="@string/icon_label_girl"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text" />
+            </RadioGroup>
+
+
+            <TextView
+                android:id="@+id/editUserProfileLabelCity"
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:layout_marginStart="@dimen/title_edit_margin"
+                android:layout_marginTop="@dimen/title_edit_margin"
+                android:layout_marginEnd="@dimen/title_edit_margin"
+                android:text="Город:"
+                android:textColor="@color/white"
+                android:textSize="@dimen/label_size"
+                android:textStyle="bold" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/textInputLayoutRegCity"
+                style="@style/editTextStyleBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/activity_left_right_margin"
+                android:layout_marginEnd="@dimen/activity_left_right_margin"
+                app:boxBackgroundColor="@android:color/white"
+                app:boxCornerRadiusBottomEnd="@dimen/radius_form"
+                app:boxCornerRadiusBottomStart="@dimen/radius_form"
+                app:boxCornerRadiusTopEnd="@dimen/radius_form"
+                app:boxCornerRadiusTopStart="@dimen/radius_form"
+                app:counterEnabled="true"
+                app:counterMaxLength="35"
+                app:counterTextColor="@color/white"
+                app:errorEnabled="true"
+                app:hintTextColor="@color/colorPrimaryDark"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textViewWelcomeDescription"
+                app:startIconDrawable="@drawable/ic_search">
+
+                <AutoCompleteTextView
+                    android:id="@+id/autoCompleteTextViewCity"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:ellipsize="end"
+                    android:imeOptions="actionGo"
+                    android:inputType="textEmailAddress"
+                    android:lines="1"
+                    android:maxLength="35"
+                    android:maxLines="1"
+                    android:minLines="1"
+                    app:counterOverflowTextAppearance="@style/MyCounterText"
+                    tools:ignore="KeyboardInaccessibleWidget" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <TextView
+                android:id="@+id/editProfileLabelAboutMe"
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:layout_marginStart="@dimen/title_edit_margin"
+                android:layout_marginTop="@dimen/title_edit_margin"
+                android:layout_marginEnd="@dimen/title_edit_margin"
+                android:text="Обо мне:"
+                android:textColor="@color/white"
+                android:textSize="@dimen/label_size"
+                android:textStyle="bold" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/textInputLayoutEventDescription"
+                style="@style/editTextStyleBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/title_edit_margin"
+                android:layout_marginEnd="@dimen/title_edit_margin"
+                android:layout_marginBottom="@dimen/btn_margin_top"
+                android:isScrollContainer="true"
+                app:boxBackgroundColor="@android:color/white"
+                app:boxCornerRadiusBottomEnd="@dimen/radius_form"
+                app:boxCornerRadiusBottomStart="@dimen/radius_form"
+                app:boxCornerRadiusTopEnd="@dimen/radius_form"
+                app:boxCornerRadiusTopStart="@dimen/radius_form"
+                app:counterEnabled="true"
+                app:counterMaxLength="180"
+                app:counterTextColor="@color/white"
+                app:errorEnabled="true"
+                app:hintEnabled="false"
+                app:hintTextColor="@color/colorPrimaryDark">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/editTextEventDescription"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:gravity="top|start"
+                    android:inputType="textMultiLine"
+                    android:lineSpacingMultiplier="1"
+                    android:maxLength="200"
+                    android:maxLines="15"
+                    android:minLines="1"
+                    android:overScrollMode="always"
+                    android:scrollbarStyle="insideInset"
+                    android:scrollbars="vertical"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    app:counterOverflowTextAppearance="@style/MyCounterText"
+                    app:strokeColor="@color/grey"
+                    app:strokeWidth="1dp"
+                    tools:ignore="KeyboardInaccessibleWidget" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/buttonSaveNewEvent"
+                style="@style/Widget.MaterialComponents.Button"
+                android:layout_width="match_parent"
+                android:layout_height="58dp"
+                android:layout_marginStart="@dimen/title_edit_margin"
+                android:layout_marginEnd="@dimen/title_edit_margin"
+                android:backgroundTint="@color/colorVeryDark"
+                android:text="Сохранить изменения"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:cornerRadius="@dimen/radius_button"
+                app:strokeColor="@color/colorPrimaryDark"
+                app:strokeWidth="1dp" />
+
+        </LinearLayout>
+
+
+    </androidx.core.widget.NestedScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>
