@@ -5,6 +5,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -29,6 +31,7 @@ import com.akvamarin.clientappfriends.domain.dto.ViewUserSlimDTO;
 import com.akvamarin.clientappfriends.domain.enums.DayOfWeek;
 import com.akvamarin.clientappfriends.domain.enums.DayPeriodOfTime;
 import com.akvamarin.clientappfriends.domain.enums.Partner;
+import com.akvamarin.clientappfriends.utils.CommentTag;
 import com.akvamarin.clientappfriends.utils.Constants;
 import com.akvamarin.clientappfriends.utils.PreferenceManager;
 import com.akvamarin.clientappfriends.view.ui.home.CommentAdapter;
@@ -46,7 +49,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class InfoEventActivity extends BaseActivity {
-    private static final String TAG = "InfoEventActivity";
+    private static final String TAG = "TagInfoEventActivity";
     private static final String DATE_PATTERN = "d/MM/uuuu";
 
     private Toolbar toolbar;
@@ -62,6 +65,8 @@ public class InfoEventActivity extends BaseActivity {
     private TextView textViewTwentyFourHours;
     private TextView textViewDescription;
     private TextView textViewTitleComment;
+    private TextView textViewEditMode;
+    private AppCompatImageView imageModeEditCancel;
 
     private EditText inputMessageEditText;
     private ImageView chatsImageSend;
@@ -98,11 +103,25 @@ public class InfoEventActivity extends BaseActivity {
 
         chatsImageSend.setOnClickListener(v -> {
             String commentText = inputMessageEditText.getText().toString().trim();
+
             if (!TextUtils.isEmpty(commentText))  {
-                CommentDTO newComment = initCommentDTO(commentText);
-                sendNewCommentOnServer(newComment);
+                CommentDTO comment = initCommentDTO(commentText);
+
+                if (inputMessageEditText.getTag() instanceof CommentTag) {
+                    CommentTag commentTag = (CommentTag) inputMessageEditText.getTag();
+                    updateCommentOnServer(comment, commentTag);
+                } else {
+                    sendNewCommentOnServer(comment);
+                }
+
                 showProgressDialog(loading);
             }
+        });
+
+        imageModeEditCancel.setOnClickListener(view -> {
+            inputMessageEditText.setText(""); // clear input
+            inputMessageEditText.setTag(""); // clear
+            editModeGone();
         });
     }
 
@@ -123,6 +142,10 @@ public class InfoEventActivity extends BaseActivity {
         textViewTitleComment = findViewById(R.id.titleComment);
         inputMessageEditText = findViewById(R.id.inputMessageEditText);
         chatsImageSend = findViewById(R.id.chatsImageSend);
+
+        textViewEditMode = findViewById(R.id.textViewEditMode);
+        imageModeEditCancel = findViewById(R.id.imageModeEditCancel);
+        editModeGone();
 
         // comments
         recyclerViewComments = findViewById(R.id.recyclerViewComments);
@@ -211,13 +234,12 @@ public class InfoEventActivity extends BaseActivity {
     }
 
     private void sendNewCommentOnServer(CommentDTO newComment) {
-        String authToken = preferenceManager.getString(Constants.KEY_APP_TOKEN);
-
-        if (eventId != null && authToken != null) {
-            commentApi.createComment(eventId, newComment, new AuthToken(authToken)).enqueue(new Callback<>() {
+        if (eventId != null) {
+            commentApi.createComment(eventId, newComment, getAuthToken()).enqueue(new Callback<>() {
                 @Override
                 public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
                     dismissProgressDialog();
+                    Log.d(TAG, "sendNewCommentOnServer(), response code " + response.code());
 
                     if (response.isSuccessful()) {
                         String url = response.headers().get("Location");
@@ -251,7 +273,6 @@ public class InfoEventActivity extends BaseActivity {
                 if (response.isSuccessful()) {
                     ViewCommentDTO comment = response.body();
                     addCommentToList(comment); // add new comment to list
-                    inputMessageEditText.setText(""); // clear input
                 } else {
                     Log.d(TAG, "requestCommentById(), response code " + response.code());
                 }
@@ -270,7 +291,58 @@ public class InfoEventActivity extends BaseActivity {
             commentAdapter.notifyItemInserted(0); // Сообщаем адаптеру о новом элементе
             recyclerViewComments.scrollToPosition(0); // Прокрутить к началу списка
             textViewTitleComment.setText(String.format("%s %s", titleComment, commentAdapter.getItemCount()));
+            inputMessageEditText.setText(""); // Clear input
+            inputMessageEditText.setTag(""); // Clear
         }
     }
 
+    private AuthToken getAuthToken() {
+        String authToken = preferenceManager.getString(Constants.KEY_APP_TOKEN);
+        return new AuthToken(authToken);
+    }
+
+    private void updateCommentOnServer(CommentDTO comment, CommentTag commentTag){
+        Long commentId = commentTag.getCommentId();
+        int position = commentTag.getPosition();
+        comment.setId(commentId);
+
+        Call<ViewCommentDTO> call = commentApi.updateComment(comment.getId(), comment, getAuthToken());
+        call.enqueue(new Callback<>() {
+            @Override
+            public void onResponse(@NonNull Call<ViewCommentDTO> call, @NonNull Response<ViewCommentDTO> response) {
+                dismissProgressDialog();
+                Log.d(TAG, "updateCommentOnServer(CommentDTO comment), response code " + response.code());
+
+                if (response.isSuccessful()) {
+                    ViewCommentDTO updatedComment = response.body();
+                    //int position = commentList.indexOf(comment);
+                    Log.d(TAG, "position == " + position);
+
+                    if (position != -1) {
+                        commentList.set(position, updatedComment);
+                        commentAdapter.updateComment(position, updatedComment);
+                        recyclerViewComments.scrollToPosition(position); // scroll to the updated comment
+                        textViewTitleComment.setText(String.format("%s %s", titleComment, commentAdapter.getItemCount()));
+                        inputMessageEditText.setText(""); // clear input
+                        inputMessageEditText.setTag(""); // clear
+                        editModeGone();
+                    }
+
+                } else {
+
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<ViewCommentDTO> call, @NonNull Throwable t) {
+                dismissProgressDialog();
+            }
+        });
+    }
+
+    private void editModeGone(){
+        textViewEditMode.setVisibility(View.GONE);
+        imageModeEditCancel.setVisibility(View.GONE);
+        chatsImageSend.setImageResource(R.drawable.ic_chats_send);
+    }
 }

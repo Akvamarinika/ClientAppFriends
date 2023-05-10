@@ -1,5 +1,7 @@
 package com.akvamarin.clientappfriends.domain.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.time.LocalDateTime;
 
 import lombok.AllArgsConstructor;
@@ -23,4 +25,12 @@ public class ViewCommentDTO {
     private ViewUserSlimDTO userSlimDTO;
 
     private Long eventId;
+
+    @JsonProperty(value = "edited")
+    private boolean edited;
+
+    public boolean getEdited() {
+        return edited;
+    }
+
 }

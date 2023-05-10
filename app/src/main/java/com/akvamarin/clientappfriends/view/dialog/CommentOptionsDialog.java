@@ -1,11 +1,16 @@
 package com.akvamarin.clientappfriends.view.dialog;
 
+import static com.akvamarin.clientappfriends.domain.dto.CommentDTO.convertInSendServerDto;
+
 import android.app.Activity;
 import android.app.Dialog;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.AppCompatImageView;
 
 import com.akvamarin.clientappfriends.API.RetrofitService;
 import com.akvamarin.clientappfriends.API.connection.CommentApi;
@@ -13,6 +18,7 @@ import com.akvamarin.clientappfriends.R;
 import com.akvamarin.clientappfriends.domain.dto.AuthToken;
 import com.akvamarin.clientappfriends.domain.dto.CommentDTO;
 import com.akvamarin.clientappfriends.domain.dto.ViewCommentDTO;
+import com.akvamarin.clientappfriends.utils.CommentTag;
 import com.akvamarin.clientappfriends.utils.Constants;
 import com.akvamarin.clientappfriends.utils.PreferenceManager;
 import com.akvamarin.clientappfriends.view.ui.home.CommentAdapter;
@@ -23,26 +29,28 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class CommentOptionsDialog extends Dialog {
+public class CommentOptionsDialog extends Dialog{
     private final Activity activity;
-    private final CommentDTO comment;
+    private final ViewCommentDTO viewCommentDTO;
     private final RetrofitService retrofitService;
     private final CommentApi commentApi;
     private final List<ViewCommentDTO> commentList;
     private final CommentDeleteListener deleteListener;
     private final CommentAdapter commentAdapter;
+    private final int position;
 
-    public CommentOptionsDialog(Activity activity, CommentDTO comment, List<ViewCommentDTO> commentList,
-                                CommentAdapter commentAdapter,
+    public CommentOptionsDialog(Activity activity, ViewCommentDTO viewCommentDTO, List<ViewCommentDTO> commentList,
+                                CommentAdapter commentAdapter, int position,
                                 CommentDeleteListener deleteListener) {
         super(activity);
         this.activity = activity;
-        this.comment = comment;
+        this.viewCommentDTO = viewCommentDTO;
         this.retrofitService = RetrofitService.getInstance(activity);
         this.commentApi = retrofitService.getRetrofit().create(CommentApi.class);
         this.commentList = commentList;
         this.deleteListener = deleteListener;
         this.commentAdapter = commentAdapter;
+        this.position = position;
     }
 
     @Override
@@ -55,11 +63,14 @@ public class CommentOptionsDialog extends Dialog {
         TextView tvCancel = findViewById(R.id.textViewCancel);
 
         tvEdit.setOnClickListener(view -> {
+            editModeVisible();
+            CommentDTO comment = convertInSendServerDto(viewCommentDTO);
             editComment(comment);
             dismiss();
         });
 
         tvDelete.setOnClickListener(view -> {
+            CommentDTO comment = convertInSendServerDto(viewCommentDTO);
             deleteComment(comment);
             dismiss();
         });
@@ -68,22 +79,14 @@ public class CommentOptionsDialog extends Dialog {
     }
 
     private void editComment(CommentDTO comment) {
-        Call<ViewCommentDTO> call = commentApi.updateComment(comment.getId(), comment, getAuthToken());
-        call.enqueue(new Callback<>() {
-            @Override
-            public void onResponse(@NonNull Call<ViewCommentDTO> call, @NonNull Response<ViewCommentDTO> response) {
-                if (response.isSuccessful()) {
-                    ViewCommentDTO viewCommentDTO = response.body();
-                } else {
+        EditText inputMessageEditText = activity.findViewById(R.id.inputMessageEditText);
+        inputMessageEditText.setText(comment.getText());
 
-                }
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<ViewCommentDTO> call, @NonNull Throwable t) {
-
-            }
-        });
+        Long commentId = comment.getId();
+        if (commentId != null) {
+            CommentTag commentTag = new CommentTag(commentId, position);
+            inputMessageEditText.setTag(commentTag);
+        }
     }
 
     private void deleteComment(CommentDTO comment) {
@@ -121,6 +124,18 @@ public class CommentOptionsDialog extends Dialog {
         String authToken = preferenceManager.getString(Constants.KEY_APP_TOKEN);
         return new AuthToken(authToken);
     }
+
+    private void editModeVisible(){
+        TextView textViewEditMode = activity.findViewById(R.id.textViewEditMode);
+        AppCompatImageView imageModeEditCancel = activity.findViewById(R.id.imageModeEditCancel);
+        AppCompatImageView chatsImageSend = activity.findViewById(R.id.chatsImageSend);
+
+        textViewEditMode.setVisibility(View.VISIBLE);
+        imageModeEditCancel.setVisibility(View.VISIBLE);
+        chatsImageSend.setImageResource(R.drawable.ic_ok_check);
+    }
+
+
 }
 
 

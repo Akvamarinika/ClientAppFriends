@@ -38,6 +38,11 @@ public class CheckerFields {
         return true;
     }
 
+    public boolean isTextFieldsNotEmpty(EditText editText){
+        int textLength = editText.getText().toString().trim().length();
+        return textLength != 0;
+    }
+
     public boolean checkSymbolsInPassword(EditText editText, TextInputLayout textInputLayout) {
         //passLength > 0 && passLength < MIN_TEXT_LENGTH;
         String error = context.getString(R.string.error_check_pass);

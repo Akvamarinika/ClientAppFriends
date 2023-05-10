@@ -111,11 +111,12 @@
     <string name="profile_text_exit">Выйти из аккаунта</string>
     <string name="img_description_delete_profile">Удалить аккаунт</string>
     <string name="profile_text_delete_profile">Удалить аккаунт</string>
-    <string name="text_send_message">Ввод сообщения...</string>
+    <string name="text_send_message">Ввод сообщения…</string>
     <string name="text_title_comment">Комментарии</string>
     <string name="options_edit">Редактировать</string>
     <string name="options_delete">Удалить</string>
     <string name="options_cancel">Отмена</string>
+    <string name="mode_edit_comment">Режим редактирования</string>
 
     <string-array name="event_categories_lst">
         <item>Бары, кафе и рестораны</item>

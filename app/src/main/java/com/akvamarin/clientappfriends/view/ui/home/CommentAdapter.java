@@ -1,7 +1,5 @@
 package com.akvamarin.clientappfriends.view.ui.home;
 
-import static com.akvamarin.clientappfriends.domain.dto.CommentDTO.convertInSendServerDto;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
@@ -18,13 +16,11 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.akvamarin.clientappfriends.R;
-import com.akvamarin.clientappfriends.domain.dto.CommentDTO;
 import com.akvamarin.clientappfriends.domain.dto.ViewCommentDTO;
 import com.akvamarin.clientappfriends.domain.dto.ViewUserSlimDTO;
 import com.akvamarin.clientappfriends.utils.Constants;
 import com.akvamarin.clientappfriends.utils.PreferenceManager;
 import com.akvamarin.clientappfriends.utils.Utils;
-import com.akvamarin.clientappfriends.view.dialog.CommentDeleteListener;
 import com.akvamarin.clientappfriends.view.dialog.CommentOptionsDialog;
 import com.squareup.picasso.Picasso;
 
@@ -72,11 +68,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
         LocalDate birthday = LocalDate.parse(userSlimDTO.getDateOfBirthday());
         int age = Utils.getAgeWithCalendar(birthday.getYear(), birthday.getMonthValue(), birthday.getDayOfMonth());
         String nickAndAge = userSlimDTO.getNickname() + " " + age;
-
-        // Format the date and time
-        LocalDateTime dateTime = comment.getUpdatedAt();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy в HH:mm");
-        String formattedDateTime = dateTime.format(formatter);
+        String updateDateTime = formatDateTime(comment.getUpdatedAt());
 
         if (userSlimDTO.getUrlAvatar().isEmpty()) {
             holder.imageAvatar.setImageResource(R.drawable.no_avatar);
@@ -88,9 +80,19 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
                     .into(holder.imageAvatar);
         }
 
+        if (comment.getEdited()){
+            updateDateTime = updateDateTime + " (изменено)";
+        }
+
         holder.textUserName.setText(nickAndAge);
         holder.textComment.setText(comment.getText());
-        holder.textDateTime.setText(formattedDateTime);
+        holder.textDateTime.setText(updateDateTime);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private String formatDateTime(LocalDateTime dateTime) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy в HH:mm");
+        return dateTime.format(formatter);
     }
 
     @Override
@@ -110,6 +112,12 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
         }
     }
 
+    public void updateComment(int position, ViewCommentDTO updatedComment) {
+        if (position >= 0 && position < commentList.size()) {
+            commentList.set(position, updatedComment);
+            notifyItemChanged(position);
+        }
+    }
 
 
     public class CommentViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
@@ -140,20 +148,20 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
         }
 
         private void showCommentOptionsDialog(int position) {
-            ViewCommentDTO comment = commentList.get(position);
+            ViewCommentDTO viewCommentDTO = commentList.get(position);
             String currentUser = preferenceManager.getString(Constants.KEY_LOGIN);
 
-            if (comment.getUserSlimDTO().getUsername().equals(currentUser)) {
-                CommentDTO commentDTO = convertInSendServerDto(comment);
+            if (viewCommentDTO.getUserSlimDTO().getUsername().equals(currentUser)) {
                 CommentOptionsDialog dialog = new CommentOptionsDialog((Activity) itemView.getContext(),
-                        commentDTO, commentList, adapter, () -> {
-                            // Remove the comment from the adapter when delete is selected
-                            adapter.removeComment(getAdapterPosition());
+                        viewCommentDTO, commentList, adapter, position,
+                        () -> {
+                            adapter.removeComment(position);
                             updateUICountComments();
                         });
                 dialog.show();
             }
         }
+
 
         private void updateUICountComments() {
             String titleComment = itemView.getContext().getString(R.string.text_title_comment);

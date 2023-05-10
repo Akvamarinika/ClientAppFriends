@@ -18,7 +18,7 @@
         app:layout_constraintBottom_toTopOf="@id/layoutSend"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="1.0"
-        tools:layout_editor_absoluteX="16dp"/>
+        tools:layout_editor_absoluteX="16dp" />
 
     <include
         android:id="@+id/includeCustomToolbar"
@@ -286,12 +286,12 @@
                 android:id="@+id/recyclerViewComments"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="155dp"
                 android:clipToPadding="false"
                 android:nestedScrollingEnabled="false"
                 android:orientation="vertical"
                 android:overScrollMode="never"
                 android:padding="15dp"
-                android:layout_marginBottom="155dp"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 app:layout_constraintBottom_toTopOf="@id/layoutSend"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -303,6 +303,46 @@
     </androidx.core.widget.NestedScrollView>
 
 
+    <!-- edit mode -->
+
+    <TextView
+        android:id="@+id/textViewEditMode"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:drawablePadding="8dp"
+        android:padding="8dp"
+        android:text="@string/mode_edit_comment"
+        android:textStyle="bold"
+        android:textSize="20sp"
+        android:background="@color/white"
+        app:drawableStartCompat="@drawable/ic_mode_edit"
+        app:layout_constraintBottom_toBottomOf="@+id/viewBackground"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:drawableTint="@color/colorPrimary" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/imageModeEditCancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:padding="6dp"
+        android:layout_gravity="fill"
+        android:src="@drawable/ic_mode_cancel"
+        android:tint="@color/icons"
+        app:layout_constraintBottom_toTopOf="@+id/layoutSend"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+
+    <!-- message form background -->
+    <FrameLayout
+        android:id="@+id/layoutFormSendComment"
+        android:layout_width="match_parent"
+        android:layout_height="75dp"
+        android:background="@color/colorPrimaryDark"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <!-- Comment submission form -->
     <FrameLayout
