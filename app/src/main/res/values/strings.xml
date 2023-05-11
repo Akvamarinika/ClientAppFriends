@@ -118,6 +118,24 @@
     <string name="options_cancel">Отмена</string>
     <string name="mode_edit_comment">Режим редактирования</string>
 
+    <string name="btn_text_participate">Подать заявку на участие</string>
+    <string name="btn_text_participate_rejected">Создать аналог мероприятия</string>
+    <string name="btn_text_participate_approved">Покинуть список участников</string>
+    <string name="btn_text_participate_waiting">Отменить заявку на участие</string>
+    <string name="btn_text_participate_organizer">Редактировать мероприятие</string>
+
+    <string name="text_notification_title_organizer">Заявка на участие в мероприятии</string>
+    <string name="text_notification_text_organizer">Пользователь Nickname подал заявку на мероприятие Event</string>
+    <string name="text_hidden_btn_organizer_approve">Заявка была успешно подтверждена!</string>
+    <string name="text_hidden_btn_organizer_reject">Заявка была отклонена.</string>
+
+
+    <string name="text_notification_title_approved">Ваша заявка принята!</string>
+    <string name="text_notification_title_rejected">Ваша заявка отклонена!</string>
+    <string name="text_notification_text_approved">Вашу заявку на участие в мероприятии Event одобрили.</string>
+    <string name="text_notification_text_rejected">К сожалению, Ваша заявка на участие в мероприятии Event была отклонена.</string>
+    <string name="text_hidden_btn_participant">Это уведомление будет скрыто.</string>
+
     <string-array name="event_categories_lst">
         <item>Бары, кафе и рестораны</item>
         <item>Прогулки</item>

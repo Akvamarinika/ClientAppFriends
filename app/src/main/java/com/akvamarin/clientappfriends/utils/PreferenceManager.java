@@ -39,7 +39,7 @@ public class PreferenceManager {
     }
 
     public Long getLong(String key) {
-        return sharedPreferences.getLong(key, 0);
+        return sharedPreferences.getLong(key, 0L);
     }
 
     public void clear() {

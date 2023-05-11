@@ -16,5 +16,5 @@ public interface ImageApi {
 
     @Multipart
     @POST(PATH_PREFIX + "/{userId}/avatar")
-    Call<Void> uploadNewAvatar( @Part MultipartBody.Part file, @Path("userId") String userId);
+    Call<Void> uploadNewAvatar( @Part MultipartBody.Part file, @Path("userId") Long userId);
 }

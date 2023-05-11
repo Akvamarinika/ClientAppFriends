@@ -147,7 +147,7 @@ public class RegisterCityActivity extends BaseActivity {
 
                     if (url != null) {
                         String id = url.substring(url.lastIndexOf("/") + 1);
-                        preferenceManager.putString(Constants.KEY_USER_ID, id); // id
+                        preferenceManager.putLong(Constants.KEY_USER_ID, Long.valueOf(id)); // id
                     }
 
                     openPagePhoto();

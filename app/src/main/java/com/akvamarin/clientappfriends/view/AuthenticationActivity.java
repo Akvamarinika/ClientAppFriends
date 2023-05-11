@@ -87,8 +87,8 @@ public class AuthenticationActivity extends BaseActivity {
             setListeners();
 
             if (preferenceManager != null && preferenceManager.getString(Constants.KEY_APP_TOKEN) == null
-                    && !preferenceManager.getString(Constants.KEY_LOGIN).equals("login")
-                    && !preferenceManager.getString(Constants.KEY_PASSWORD).equals("pass")){
+                    && preferenceManager.getString(Constants.KEY_LOGIN) != null
+                    && preferenceManager.getString(Constants.KEY_PASSWORD) != null){
 
                 showProgressDialog("Loading");
                 String login = preferenceManager.getString(Constants.KEY_LOGIN);
@@ -318,7 +318,7 @@ public class AuthenticationActivity extends BaseActivity {
         if (!isFinishing()) {
             dismissProgressDialog();
             Toast.makeText(AuthenticationActivity.this, "onFailure!!!", Toast.LENGTH_SHORT).show();
-            preferenceManager.putString(Constants.KEY_LOGIN, "login"); // login delete
+            preferenceManager.putString(Constants.KEY_LOGIN, null); // login delete
             Log.d(TAG, "error: " + t.fillInStackTrace());
         }
     }
@@ -344,7 +344,7 @@ public class AuthenticationActivity extends BaseActivity {
                     textInputLayoutEmail.setError("");
                 }
 
-                if (preferenceManager.getString(Constants.KEY_LOGIN).equals("login")){
+                if (preferenceManager.getString(Constants.KEY_LOGIN) == null){
                     preferenceManager.putString(Constants.KEY_LOGIN, authUserParamDTO.getUsername()); // login save
                     preferenceManager.putString(Constants.KEY_PASSWORD, authUserParamDTO.getPassword());
                 }

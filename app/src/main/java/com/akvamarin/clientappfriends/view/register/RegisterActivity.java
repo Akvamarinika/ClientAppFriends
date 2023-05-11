@@ -73,7 +73,7 @@ public class RegisterActivity extends BaseActivity {
                user.setPassword(password);
                user.setRoles(new HashSet<>(Collections.singleton(Role.USER)));
 
-               preferenceManager.putString(Constants.KEY_APP_TOKEN, null);
+               preferenceManager.clear(); // all values clear
                preferenceManager.putString(Constants.KEY_LOGIN, user.getUsername()); // login
                preferenceManager.putString(Constants.KEY_PASSWORD, user.getPassword()); // pass
                Log.d(TAG, "Login user: " + user.getUsername());

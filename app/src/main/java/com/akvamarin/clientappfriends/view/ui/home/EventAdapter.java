@@ -11,7 +11,6 @@ import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.akvamarin.clientappfriends.R;
-import com.akvamarin.clientappfriends.domain.dto.ViewCommentDTO;
 import com.akvamarin.clientappfriends.domain.dto.ViewEventDTO;
 import com.akvamarin.clientappfriends.domain.enums.Partner;
 import com.akvamarin.clientappfriends.utils.Utils;
@@ -87,12 +86,6 @@ public class EventAdapter extends RecyclerView.Adapter<EventViewHolder>{
         eventList = new ArrayList<>();
         eventList.addAll(newListEvent);
         notifyDataSetChanged();
-    }
-
-    public void updateEventComments(int position, List<ViewCommentDTO> comments) {
-        ViewEventDTO event = eventList.get(position);
-        event.setComments(comments);
-        notifyItemChanged(position);
     }
 
 }

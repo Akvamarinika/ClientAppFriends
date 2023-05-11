@@ -29,15 +29,12 @@ import com.akvamarin.clientappfriends.API.RetrofitService;
 import com.akvamarin.clientappfriends.API.connection.CommentApi;
 import com.akvamarin.clientappfriends.API.connection.EventApi;
 import com.akvamarin.clientappfriends.R;
-import com.akvamarin.clientappfriends.domain.dto.ViewCommentDTO;
 import com.akvamarin.clientappfriends.domain.dto.ViewEventDTO;
 import com.akvamarin.clientappfriends.utils.Constants;
 import com.akvamarin.clientappfriends.utils.PreferenceManager;
-import com.akvamarin.clientappfriends.view.AllEventsActivity;
 import com.akvamarin.clientappfriends.view.InfoEventActivity;
 import com.akvamarin.clientappfriends.view.addevent.AddEventActivity;
 import com.akvamarin.clientappfriends.view.dialog.AuthDialog;
-import com.akvamarin.clientappfriends.view.ui.notifications.NotificationsFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -102,6 +99,7 @@ public class HomeAllEventsFragment extends Fragment implements IEventRecyclerLis
 
     private void updateMainFAB(){
         floatingActionButton.setImageResource(R.drawable.ic_add);
+        floatingActionButton.setVisibility(View.VISIBLE);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -149,9 +147,8 @@ public class HomeAllEventsFragment extends Fragment implements IEventRecyclerLis
                 @Override
                 public void onResponse(@NonNull Call<List<ViewEventDTO>> call, @NonNull Response<List<ViewEventDTO>> response) {
 
-                    if (response.isSuccessful()) {
+                    if (response.isSuccessful() && response.body() != null) {
                         eventList.clear();
-                        assert response.body() != null;
                         eventList.addAll(response.body());
                         eventAdapter.notifyDataSetChanged(); // Notify the adapter that the data has changed
                     } else {
@@ -175,11 +172,11 @@ public class HomeAllEventsFragment extends Fragment implements IEventRecyclerLis
     /*** Click card Event: ***/
     @Override
     public void onClickRecyclerEventSelected(int index){
-        //Toast.makeText(getActivity(), "Click on " + index, Toast.LENGTH_SHORT).show();
         if (isAuthenticated()) {
             ViewEventDTO currentEvent = eventList.get(index);
+            Long currentEventId = currentEvent.getId();
             Intent intent = new Intent(getActivity(), InfoEventActivity.class);
-            intent.putExtra("current_event", currentEvent);
+            intent.putExtra("current_event_id", currentEventId);
             startActivity(intent);
         } else {
             showAuthDialog();
@@ -271,6 +268,14 @@ public class HomeAllEventsFragment extends Fragment implements IEventRecyclerLis
 
         // Show the PopupWindow at the center of the screen
         popupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            initEventList();
+        }
     }
 
 }

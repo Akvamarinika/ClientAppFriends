@@ -15,6 +15,7 @@
     <color name="bgcolor">#F3F3F3</color>
     <color name="icons">#6A6A6A</color>
     <color name="colorAccent">#FF491B</color>
+    <color name="lightColorAccent">#FF7043</color>
     <color name="colorVeryDark">#0C3041</color>
     <color name="color_blue_light">#B702C3DC</color>
 </resources>

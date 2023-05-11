@@ -93,10 +93,10 @@ public class RegisterPhotoActivity extends BaseActivity {
         });
 
         buttonRegContinueFour.setOnClickListener(view -> {
-            String userId = preferenceManager.getString(Constants.KEY_USER_ID);
+            Long userId = preferenceManager.getLong(Constants.KEY_USER_ID);
             Log.d(TAG, "imagePath: " + imagePath);
 
-            if (imagePath != null && !userId.equals("id")){
+            if (imagePath != null && userId != 0L){
                 showProgressDialog("Upload avatar");
                 sendPhotoOnServer(imagePath, userId);
             }
@@ -263,7 +263,7 @@ public class RegisterPhotoActivity extends BaseActivity {
 
     /*** UserDTO send on Server:
      * ***/
-    private void sendPhotoOnServer(String imagePath, String userId){
+    private void sendPhotoOnServer(String imagePath, Long userId){
         File file = new File(imagePath);
         MultipartBody.Part filePart = MultipartBody.Part.createFormData("file", file.getName(),
                 RequestBody.create(MediaType.parse("image/*"), file));

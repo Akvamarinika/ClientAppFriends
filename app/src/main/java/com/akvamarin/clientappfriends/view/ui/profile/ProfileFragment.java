@@ -67,10 +67,7 @@ public class ProfileFragment extends Fragment implements DelDialogListener {
 
         linearLayoutLogOut.setOnClickListener(view -> {
             VK.logout();  // Log out of VK
-            preferenceManager.putString(Constants.KEY_APP_TOKEN, null);
-            preferenceManager.putString(Constants.KEY_USER_ID, "id");
-            preferenceManager.putString(Constants.KEY_LOGIN, "login");
-            preferenceManager.putString(Constants.KEY_PASSWORD, "pass");
+            preferenceManager.clear(); // all values clear
             AuthenticationActivity.startFrom(getActivity()); // Start AuthorizationActivity from this context
             requireActivity().finish(); // Finish the current activity
         });
@@ -107,6 +104,7 @@ public class ProfileFragment extends Fragment implements DelDialogListener {
 
     private void updateMainFAB(){
         floatingActionButton.setImageResource(R.drawable.ic_profile_edit);
+        floatingActionButton.setVisibility(View.VISIBLE);
     }
 
     private void startEditActivityWithFAB(){
@@ -130,7 +128,7 @@ public class ProfileFragment extends Fragment implements DelDialogListener {
                     if (response.isSuccessful()) {
                         assert response.body() != null;
                         user = response.body();
-                        preferenceManager.putString(Constants.KEY_USER_ID, Long.toString(user.getId())); // user id
+                        preferenceManager.putLong(Constants.KEY_USER_ID, user.getId()); // user id
                         Log.d(TAG, "Save user ID: " + user.getId());
 
                         CityDTO cityDTO = user.getCityDTO();
@@ -169,19 +167,17 @@ public class ProfileFragment extends Fragment implements DelDialogListener {
      * через коллбэк диалогового окна
      * */
     private void deleteUser() {
-        String id = preferenceManager.getString(Constants.KEY_USER_ID);
+        Long id = preferenceManager.getLong(Constants.KEY_USER_ID);
         String authToken = preferenceManager.getString(Constants.KEY_APP_TOKEN);
         Log.d(TAG, "ID user: " + id);
 
-        if (!id.equals("id") && authToken != null) {
+        if (id != 0 && authToken != null) {
             userApi.deleteUser(id, new AuthToken(authToken)).enqueue(new Callback<>() {
                 @Override
                 public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
 
                     if (response.isSuccessful()) {
-                        preferenceManager.putString(Constants.KEY_APP_TOKEN, null);
-                        preferenceManager.putString(Constants.KEY_USER_ID, "id");
-                        preferenceManager.putString(Constants.KEY_LOGIN, "login");
+                        preferenceManager.clear(); // all values clear
                         VK.logout();  // Log out of VK ==> for delete user
                         AuthenticationActivity.startFrom(getActivity()); // Start AuthorizationActivity from this context
                         requireActivity().finish(); // Finish the current activity
@@ -209,21 +205,3 @@ public class ProfileFragment extends Fragment implements DelDialogListener {
         dialog.show();
     }
 }
-
-
-
-
-//    NotificationsViewModel notificationsViewModel =
-//                new ViewModelProvider(this).get(NotificationsViewModel.class);
-//
-//        binding = FragmentProfileBinding.inflate(inflater, container, false);
-//        View root = binding.getRoot();
-//
-//        final TextView textView = binding.textProfile;
-//        notificationsViewModel.getTitle().observe(getViewLifecycleOwner(), textView::setText);
-
-//    @Override
-//    public void onDestroyView() {
-//        super.onDestroyView();
-//        binding = null;
-//    }

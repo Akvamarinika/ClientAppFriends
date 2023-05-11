@@ -20,9 +20,8 @@ public interface EventApi {
     Call<List<ViewEventDTO>> getAllEvents();
 
     @GET(PATH_PREFIX + "/{id}")
-    Call<ViewEventDTO> getEvent(@Path("id") Long id);
+    Call<ViewEventDTO> getEventById(@Path("id") Long id, @Header("Authorization") AuthToken authToken);
 
     @POST(PATH_PREFIX + "/")
     Call<Void> createEvent (@Body EventDTO event, @Header("Authorization") AuthToken authToken);
-
 }

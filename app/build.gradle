@@ -83,8 +83,10 @@ dependencies {
     implementation "androidx.navigation:navigation-fragment:$androidxNavigationVersion"
     //noinspection GradleDependency
     implementation "androidx.navigation:navigation-ui:$androidxNavigationVersion"
-    implementation "com.google.android.material:material:1.9.0-beta01"
+    //noinspection GradleDependency
+    implementation "com.google.android.material:material:1.7.0"
     implementation "androidx.legacy:legacy-support-v4:1.0.0"
+    //noinspection GradleDependency
     implementation "androidx.core:core-ktx:1.9.0"
 
     // CircleImageView
