@@ -6,20 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/bgcolor"
     tools:context=".view.ui.myevents.MyEventsFragment">
-<!--    <TextView-->
-<!--        android:id="@+id/text_my_events"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_marginStart="8dp"-->
-<!--        android:layout_marginTop="8dp"-->
-<!--        android:layout_marginEnd="8dp"-->
-<!--        android:textAlignment="center"-->
-<!--        android:textSize="20sp"-->
-<!--        android:text="Фрагмент для MyEvents"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toTopOf="parent" />-->
+
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/myEventsTabLayout"
@@ -40,34 +27,46 @@
         app:tabIndicatorHeight="4dp"
         app:tabIndicatorAnimationMode="linear"
         android:paddingStart="-1dp"
-        android:paddingEnd="-1dp"
-        >
-
+        android:paddingEnd="-1dp">
         <com.google.android.material.tabs.TabItem
-            android:id="@+id/myEventsTabChats"
+            android:id="@+id/myEventsTabParticipant"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:icon="@drawable/ic_myevents_i_go"
             app:tabGravity="fill"
-            android:text="Беседы" />
+            android:text="Вы участвуете" />
 
         <com.google.android.material.tabs.TabItem
-            android:id="@+id/myEventsTabStatus"
+            android:id="@+id/myEventsTabDesired"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:icon="@drawable/ic_myevents_desired_event"
             app:tabGravity="fill"
-            android:text="В ожидании"
-           />
-
-
+            android:text="В ожидании" />
     </com.google.android.material.tabs.TabLayout>
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/myEventsViewPager"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/myEventsTabLayout" />
 </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <!--    <TextView-->
+    <!--        android:id="@+id/text_my_events"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:layout_marginStart="8dp"-->
+    <!--        android:layout_marginTop="8dp"-->
+    <!--        android:layout_marginEnd="8dp"-->
+    <!--        android:textAlignment="center"-->
+    <!--        android:textSize="20sp"-->
+    <!--        android:text="Фрагмент для MyEvents"-->
+    <!--        app:layout_constraintBottom_toBottomOf="parent"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent"-->
+    <!--        app:layout_constraintStart_toStartOf="parent"-->
+    <!--        app:layout_constraintTop_toTopOf="parent" />-->

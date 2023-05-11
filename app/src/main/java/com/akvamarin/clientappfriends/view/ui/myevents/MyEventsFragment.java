@@ -25,14 +25,14 @@ public class MyEventsFragment extends Fragment {
 
     private static final String TAG = "MyEventsFragment";
     private View viewMyEventsFragment;
-    //private FragmentMyEventsBinding binding;
     private FloatingActionButton floatingActionButton;
     private Toolbar toolbar;
     private TabLayout tabLayout;
     private ViewPager2 viewPager2;
     private MyEventsPageAdapter myEventsPageAdapter;
-    private TabItem tabChats;
-    private TabItem tabStatus;
+    private TabItem tabParticipant;
+    private TabItem tabDesired;
+
 
     public View onCreateView(@NonNull LayoutInflater layoutInflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -44,14 +44,16 @@ public class MyEventsFragment extends Fragment {
 
         myEventsPageAdapter = new MyEventsPageAdapter(getChildFragmentManager(), getLifecycle(), tabLayout.getTabCount());
         viewPager2.setAdapter(myEventsPageAdapter);
+
+        viewPager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+            @Override
+            public void onPageSelected(int position) {
+                super.onPageSelected(position);
+                tabLayout.selectTab(tabLayout.getTabAt(position));
+            }
+        });
+
         setColorForTabLayout();
-
-
-
-
-
-
-
 
         return viewMyEventsFragment;
     }
@@ -60,11 +62,11 @@ public class MyEventsFragment extends Fragment {
     private void initWidgets(){
         floatingActionButton = requireActivity().findViewById(R.id.fab_btn);
         toolbar = requireActivity().findViewById(R.id.top_toolbar);
-        tabLayout = viewMyEventsFragment.findViewById(R.id.myEventsTabLayout);
-        tabChats = viewMyEventsFragment.findViewById(R.id.myEventsTabChats);
-        tabStatus = viewMyEventsFragment.findViewById(R.id.myEventsTabStatus);
-        viewPager2 = viewMyEventsFragment.findViewById(R.id.myEventsViewPager);
 
+        tabLayout = viewMyEventsFragment.findViewById(R.id.myEventsTabLayout);
+        tabParticipant = viewMyEventsFragment.findViewById(R.id.myEventsTabParticipant);
+        tabDesired = viewMyEventsFragment.findViewById(R.id.myEventsTabDesired);
+        viewPager2 = viewMyEventsFragment.findViewById(R.id.myEventsViewPager);
         //Log.i(TAG, "tabLayout.getTabCount: " + tabLayout.getTabCount());
         //Log.i(TAG, "tabLayout.getTabCount: " + viewPager2.toString());
     }
@@ -77,15 +79,13 @@ public class MyEventsFragment extends Fragment {
 
     private void updateMainFAB(){
         floatingActionButton.setImageResource(R.drawable.ic_chats_person_add);
+        floatingActionButton.setVisibility(View.GONE);
     }
 
     private void setListeners(){
-        floatingActionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(requireActivity(), AddUsersActivity.class);
-                startActivity(intent);
-            }
+        floatingActionButton.setOnClickListener(view -> {
+            Intent intent = new Intent(requireActivity(), AddUsersActivity.class);
+            startActivity(intent);
         });
     }
 
@@ -94,13 +94,13 @@ public class MyEventsFragment extends Fragment {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 viewPager2.setCurrentItem(tab.getPosition());
-                int tabIconColor = ContextCompat.getColor(getContext(), R.color.white);
+                int tabIconColor = ContextCompat.getColor(requireActivity(), R.color.white);
                 tab.getIcon().setColorFilter(tabIconColor, PorterDuff.Mode.SRC_IN);
             }
 
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
-                int tabIconColor = ContextCompat.getColor(getContext(), R.color.teal_200);
+                int tabIconColor = ContextCompat.getColor(requireActivity(), R.color.teal_200);
                 tab.getIcon().setColorFilter(tabIconColor, PorterDuff.Mode.SRC_IN);
             }
 
@@ -109,9 +109,9 @@ public class MyEventsFragment extends Fragment {
 
             }
         });
-
-
     }
+
+
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -121,29 +121,3 @@ public class MyEventsFragment extends Fragment {
     }
 }
 
-//    MyEventsViewModel myEventsViewModel =
-//                new ViewModelProvider(this).get(MyEventsViewModel.class);
-//
-//        binding = FragmentMyEventsBinding.inflate(inflater, container, false);
-//        View root = binding.getRoot();
-//
-//        final TextView textView = binding.textMyEvents;
-//        myEventsViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
-
-//    @Override
-//    public void onDestroyView() {
-//        super.onDestroyView();
-//        binding = null;
-//    }
-
-
-// TAB - COLORS
-//                if (tab.getPosition() == 1) {
-//                        toolbar.setBackgroundColor(ContextCompat.getColor(requireActivity(),
-//                        R.color.colorAccent));
-//                        tabLayout.setBackgroundColor(ContextCompat.getColor(requireActivity(),
-//                        R.color.colorAccent));
-//                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-//                        requireActivity().getWindow().setStatusBarColor(ContextCompat.getColor(requireActivity(),
-//                        R.color.colorAccent));
-//                        }

@@ -18,9 +18,9 @@ public class MyEventsPageAdapter extends FragmentStateAdapter {
     @Override
     public Fragment createFragment(int position) {
         return switch (position) {
-            case 0 -> ChatsFragment.newInstance();
+            case 0 -> ParticipantEventFragment.newInstance();
             case 1 -> DesiredEventsFragment.newInstance();
-            default -> throw new RuntimeException("Not supported");
+            default -> throw new IllegalArgumentException("Invalid position: " + position);
         };
     }
 
@@ -28,6 +28,7 @@ public class MyEventsPageAdapter extends FragmentStateAdapter {
     public int getItemCount() {
         return numOfTabs;
     }
+
 }
 
 
