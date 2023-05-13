@@ -4,18 +4,28 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/bgcolor"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".view.ui.myevents.tabs.DesiredEventsFragment">
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_view_my_events_desired"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/bgcolor"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintVertical_bias="0.0"
+        tools:itemCount="5"
+        tools:listitem="@layout/item_event_recycler" />
+
     <TextView
-        android:id="@+id/text_tab_DesiredEvents"
+        android:id="@+id/text_tab_desired_events"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:textAlignment="center"
         android:layout_gravity="center"
         android:textSize="20sp"
-        android:text="Здесь будут отображаться мероприятия, которые ожидают одобрения от их создателя" />
+        android:text="Здесь будут отображаться мероприятия, которые ожидают одобрения от их организатора" />
 
 </FrameLayout>
