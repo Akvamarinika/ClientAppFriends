@@ -135,6 +135,7 @@
     <string name="text_notification_text_approved">Вашу заявку на участие в мероприятии Event одобрили.</string>
     <string name="text_notification_text_rejected">К сожалению, Ваша заявка на участие в мероприятии Event была отклонена.</string>
     <string name="text_hidden_btn_participant">Это уведомление будет скрыто.</string>
+    <string name="participant_event_fragment_base_text">Здесь будут отображаться события, в которых вы участвуете</string>
 
     <string-array name="event_categories_lst">
         <item>Бары, кафе и рестораны</item>

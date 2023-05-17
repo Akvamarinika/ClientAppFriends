@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -15,21 +16,29 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.akvamarin.clientappfriends.API.ErrorResponse;
+import com.akvamarin.clientappfriends.API.ErrorUtils;
 import com.akvamarin.clientappfriends.API.RetrofitService;
 import com.akvamarin.clientappfriends.API.connection.CommentApi;
+import com.akvamarin.clientappfriends.API.connection.EventApi;
+import com.akvamarin.clientappfriends.API.connection.NotificationParticipantApi;
 import com.akvamarin.clientappfriends.BaseActivity;
 import com.akvamarin.clientappfriends.R;
 import com.akvamarin.clientappfriends.domain.dto.AuthToken;
 import com.akvamarin.clientappfriends.domain.dto.CityDTO;
 import com.akvamarin.clientappfriends.domain.dto.CommentDTO;
+import com.akvamarin.clientappfriends.domain.dto.NotificationDTO;
 import com.akvamarin.clientappfriends.domain.dto.ViewCommentDTO;
 import com.akvamarin.clientappfriends.domain.dto.ViewEventDTO;
+import com.akvamarin.clientappfriends.domain.dto.ViewNotificationDTO;
 import com.akvamarin.clientappfriends.domain.dto.ViewUserSlimDTO;
 import com.akvamarin.clientappfriends.domain.enums.DayOfWeek;
 import com.akvamarin.clientappfriends.domain.enums.DayPeriodOfTime;
+import com.akvamarin.clientappfriends.domain.enums.FeedbackType;
 import com.akvamarin.clientappfriends.domain.enums.Partner;
 import com.akvamarin.clientappfriends.utils.CommentTag;
 import com.akvamarin.clientappfriends.utils.Constants;
@@ -55,6 +64,7 @@ public class InfoEventActivity extends BaseActivity {
     private Toolbar toolbar;
     private LinearLayout linearLayoutUserInfo;
 
+    private Button buttonParticipate;
     private CircleImageView circleAvatarBig;
     private TextView textViewUserName;
     private TextView textViewCountryCity;
@@ -78,10 +88,15 @@ public class InfoEventActivity extends BaseActivity {
 
     private PreferenceManager preferenceManager;
     private RetrofitService retrofitService;
+    private EventApi eventApi;
     private CommentApi commentApi;
+    private NotificationParticipantApi notificationParticipantApi;
     private Long eventId;
     private String loading;
     private String titleComment;
+
+    private ViewEventDTO event;
+    private ViewNotificationDTO viewNotificationDTO;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -89,16 +104,38 @@ public class InfoEventActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_info_event);
 
+        eventId = (Long) getIntent().getSerializableExtra("current_event_id"); // Parcelable ?
+
         initWidgets();
-        setValuesEventInfo();
+        showProgressDialog(loading);
+        initEventFromServer();
 
         showProgressDialog(loading);
         requestCommentsFromServer();
+
+        showProgressDialog(loading);
+        requestNotificationFromServer();
 
         //просмотр анкеты пользователя
         linearLayoutUserInfo.setOnClickListener(view -> {
             Intent intent = new Intent(this, ViewUserInfoActivity.class);
             startActivity(intent);
+        });
+
+        buttonParticipate.setOnClickListener(view -> {
+            long userId = preferenceManager.getLong(Constants.KEY_USER_ID);
+
+            if (event != null && event.getUserOwner().getId() != null && userId == event.getUserOwner().getId()){
+                //TODO update event
+            } else if (viewNotificationDTO != null && viewNotificationDTO.getFeedbackType() == FeedbackType.WAITING ){
+                deleteNotificationOnServer();
+            } else if(viewNotificationDTO != null && viewNotificationDTO.getFeedbackType() == FeedbackType.APPROVED){
+                deleteNotificationOnServer();
+            } else if (viewNotificationDTO != null && viewNotificationDTO.getFeedbackType() == FeedbackType.REJECTED) {
+                //TODO create event
+            } else {
+                sendNotificationOnServer();
+            }
         });
 
         chatsImageSend.setOnClickListener(v -> {
@@ -130,6 +167,7 @@ public class InfoEventActivity extends BaseActivity {
         loading = getApplicationContext().getString(R.string.loading);
         toolbar = findViewById(R.id.top_toolbar);
         linearLayoutUserInfo = findViewById(R.id.layoutUserInfo);
+        buttonParticipate = findViewById(R.id.buttonParticipate);
         circleAvatarBig = findViewById(R.id.imageEventInfoAvatarBig);
         textViewUserName = findViewById(R.id.textViewEventInfoUserName);
         textViewCountryCity = findViewById(R.id.textViewEventInfoCountryCity);
@@ -156,16 +194,44 @@ public class InfoEventActivity extends BaseActivity {
 
         preferenceManager = new PreferenceManager(getApplicationContext());
         retrofitService = RetrofitService.getInstance(getApplicationContext());
+        eventApi = retrofitService.getRetrofit().create(EventApi.class);
         commentApi = retrofitService.getRetrofit().create(CommentApi.class);
+        notificationParticipantApi = retrofitService.getRetrofit().create(NotificationParticipantApi.class);
 
     }
 
+    private void initEventFromServer(){
+        Log.d(TAG, "init event from server...");
+
+        if (eventId != null) {
+            eventApi.getEventById(eventId, getAuthToken()).enqueue(new Callback<>() {
+                @RequiresApi(api = Build.VERSION_CODES.O)
+                @Override
+                public void onResponse(@NonNull Call<ViewEventDTO> call, @NonNull Response<ViewEventDTO> response) {
+                    dismissProgressDialog();
+
+                    if (response.isSuccessful() && response.body() != null) {
+                        ViewEventDTO viewEventDTO = response.body();
+                        event = viewEventDTO;
+                        setValuesEventInfo(viewEventDTO);
+                    } else {
+
+                    }
+                }
+
+                @Override
+                public void onFailure(@NonNull Call<ViewEventDTO> call, @NonNull Throwable t) {
+                    dismissProgressDialog();
+                    Log.d(TAG, "Error fetching one event: " + t.fillInStackTrace());
+                }
+            });
+        }
+    }
+
     @RequiresApi(api = Build.VERSION_CODES.O)
-    private void setValuesEventInfo(){
-        ViewEventDTO event = (ViewEventDTO) getIntent().getSerializableExtra("current_event"); // Parcelable ?
+    private void setValuesEventInfo(ViewEventDTO event){
         ViewUserSlimDTO user = event.getUserOwner();
         CityDTO city = user.getCityDTO();
-        eventId = event.getId();
 
         if (user.getUrlAvatar().isEmpty()){              //TODO вынести блок
             circleAvatarBig.setImageResource(R.drawable.no_avatar); //R.drawable.no_avatar
@@ -197,8 +263,6 @@ public class InfoEventActivity extends BaseActivity {
         DayPeriodOfTime.setImageTwentyFourHoursInTextView(textViewTwentyFourHours, event);
 
     }
-
-
 
     private void requestCommentsFromServer(){
         if (eventId != null) {
@@ -344,5 +408,146 @@ public class InfoEventActivity extends BaseActivity {
         textViewEditMode.setVisibility(View.GONE);
         imageModeEditCancel.setVisibility(View.GONE);
         chatsImageSend.setImageResource(R.drawable.ic_chats_send);
+    }
+
+    private void setParticipantButtonStyle(){
+        Log.d(TAG, "setParticipantButtonStyle() viewNotificationDTO: " + viewNotificationDTO);
+        Log.d(TAG, "setParticipantButtonStyle() eventID: " + eventId);
+        int colorBaseForText = ContextCompat.getColor(this, R.color.white);
+
+        if (viewNotificationDTO != null && viewNotificationDTO.getFeedbackType() == FeedbackType.WAITING ){
+            int color = ContextCompat.getColor(this, R.color.bgcolor);
+            int colorText = ContextCompat.getColor(this, R.color.colorPrimary);
+            buttonParticipate.setBackgroundColor(color);
+            buttonParticipate.setTextColor(colorText);
+            buttonParticipate.setText(R.string.btn_text_participate_waiting);
+        } else if(viewNotificationDTO != null && viewNotificationDTO.getFeedbackType() == FeedbackType.APPROVED) {
+            int color = ContextCompat.getColor(this, R.color.lightColorAccent);
+            buttonParticipate.setBackgroundColor(color);
+            buttonParticipate.setTextColor(colorBaseForText);
+            buttonParticipate.setText(R.string.btn_text_participate_approved);
+        } else if (viewNotificationDTO != null && viewNotificationDTO.getFeedbackType() == FeedbackType.REJECTED) {
+            int color = ContextCompat.getColor(this, R.color.colorPrimary);
+            buttonParticipate.setBackgroundColor(color);
+            buttonParticipate.setTextColor(colorBaseForText);
+            buttonParticipate.setText(R.string.btn_text_participate_rejected);  // "Вашу заявку отклонил орг"
+        } else {
+            int color = ContextCompat.getColor(this, R.color.colorPrimary);
+            buttonParticipate.setBackgroundColor(color);
+            buttonParticipate.setTextColor(colorBaseForText);
+            buttonParticipate.setText(R.string.btn_text_participate);
+        }
+
+        setButtonIfOrganizer();
+    }
+
+    private void setButtonIfOrganizer(){
+        long userId = preferenceManager.getLong(Constants.KEY_USER_ID);
+        if (event != null && event.getUserOwner().getId() != null && userId == event.getUserOwner().getId()){
+            buttonParticipate.setText(R.string.btn_text_participate_organizer);
+        }
+    }
+
+    private void requestNotificationFromServer() {
+        Long userId = preferenceManager.getLong(Constants.KEY_USER_ID);
+        String authToken = preferenceManager.getString(Constants.KEY_APP_TOKEN);
+        Log.d(TAG, "ID user: " + userId);
+
+        if (authToken != null && userId != 0L && eventId != null) {
+            notificationParticipantApi.findNotification(eventId, userId,
+                    new AuthToken(authToken)).enqueue(new Callback<>() {
+                @Override
+                public void onResponse(@NonNull Call<ViewNotificationDTO> call, @NonNull Response<ViewNotificationDTO> response) {
+                    dismissProgressDialog();
+
+                    if (response.isSuccessful() && response.body() != null) {
+                        Log.d(TAG, "requestNotificationFromServer() ");
+                        Log.d(TAG, "response.body() " + response.body());
+                        viewNotificationDTO = response.body();
+                        setParticipantButtonStyle();
+                    } else {
+                        setParticipantButtonStyle();
+                        ErrorResponse error = ErrorUtils.parseError(response, retrofitService);
+                        Log.d(TAG, error.getStatusCode() + " " + error.getMessage());
+                    }
+                }
+
+                @Override
+                public void onFailure(@NonNull Call<ViewNotificationDTO> call, @NonNull Throwable t) {
+                    dismissProgressDialog();
+                    Log.d(TAG, "Error requestNotificationFromServer(): " + t.fillInStackTrace());
+                }
+            });
+        }
+    }
+
+    private void sendNotificationOnServer() {
+        Long userId = preferenceManager.getLong(Constants.KEY_USER_ID);
+        String authToken = preferenceManager.getString(Constants.KEY_APP_TOKEN);
+        Log.d(TAG, "ID user: " + userId);
+
+        if (authToken != null && userId != 0L && eventId != null) {
+            notificationParticipantApi.createParticipantRequest(new NotificationDTO(eventId, userId),
+                    new AuthToken(authToken)).enqueue(new Callback<>() {
+                @Override
+                public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
+                    Log.d(TAG, "Response sendNotificationOnServer() " + response.headers());
+
+                    if (response.isSuccessful()) {
+                        Log.d(TAG, "Save notification " + response.headers());
+                        String url = response.headers().get("Location");
+
+                        if (url != null) {
+                            String requestId = url.substring(url.lastIndexOf("/") + 1);
+                            viewNotificationDTO = ViewNotificationDTO.builder()
+                                    .id(Long.valueOf(requestId))
+                                    .userId(userId)
+                                    .eventId(eventId)
+                                    .feedbackType(FeedbackType.WAITING)
+                                    .build();
+
+                            setParticipantButtonStyle();
+                        }
+                    } else {
+                        setParticipantButtonStyle();
+                        ErrorResponse error = ErrorUtils.parseError(response, retrofitService);
+                        Log.d(TAG, error.getStatusCode() + " " + error.getMessage());
+                    }
+                }
+
+                @Override
+                public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
+                    Log.d(TAG, "Error sendNotificationOnServer(): " + t.fillInStackTrace());
+                }
+            });
+        }
+    }
+
+    private void deleteNotificationOnServer() {
+        String authToken = preferenceManager.getString(Constants.KEY_APP_TOKEN);
+        Log.d(TAG, "Notification delete: " + viewNotificationDTO);
+
+        if (authToken != null && viewNotificationDTO != null) {
+            notificationParticipantApi.deleteParticipantRequest(viewNotificationDTO.getId(), new AuthToken(authToken)).enqueue(new Callback<>() {
+                @Override
+                public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
+                    Log.d(TAG, "deleteNotificationOnServer() " + response.headers());
+
+                    if (response.isSuccessful()) {
+                        viewNotificationDTO = null;
+                        setParticipantButtonStyle();
+                    } else {
+                        setParticipantButtonStyle();
+                        ErrorResponse error = ErrorUtils.parseError(response, retrofitService);
+                        Log.d(TAG, error.getStatusCode() + " " + error.getMessage());
+                    }
+                }
+
+                @Override
+                public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
+                    Log.d(TAG, "Error deleteNotificationOnServer(): " + t.fillInStackTrace());
+                }
+            });
+        }
     }
 }
