@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:layout_marginBottom="10dp"
+    android:padding="8dp">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/imageAvatarParticipant"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:contentDescription="@string/avatar_img_description"
+        android:elevation="1dp"
+        android:scaleType="centerCrop"
+        app:civ_border_color="@color/white"
+        app:civ_border_width="1dp"
+        tools:src="@sample/avatars" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layoutNotification"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@id/imageAvatarParticipant"
+        android:layout_centerVertical="true">
+
+        <TextView
+            android:id="@+id/textNotificationTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/grey"
+            android:text="Title"
+            android:padding="1dp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/textNotification"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textColor="@color/grey"
+            android:text="This is notification for EventName"
+            android:padding="1dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/textNotificationTitle" />
+
+        <TextView
+            android:id="@+id/textNotificationDateTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/grey"
+            android:textSize="12sp"
+            android:text="14.05.2023 в 10:30"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/textNotification"
+            android:layout_marginTop="1dp" />
+
+        <Button
+            android:id="@+id/buttonReject"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:backgroundTint="@color/bgcolor"
+            android:textColor="@color/colorPrimary"
+            android:textStyle="bold"
+            android:text="@string/btn_text_reject"
+            android:textSize="11sp"
+            app:layout_constraintTop_toBottomOf="@id/textNotificationDateTime"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <Button
+            android:id="@+id/buttonApprove"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:textStyle="bold"
+            android:text="@string/btn_text_approve"
+            android:textSize="11sp"
+            app:layout_constraintTop_toBottomOf="@id/textNotificationDateTime"
+            app:layout_constraintEnd_toStartOf="@id/buttonReject" />
+
+        <TextView
+            android:id="@+id/textNotificationBtnHidden"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textColor="@color/grey"
+            android:text=""
+            android:layout_marginTop="14dp"
+            android:layout_marginEnd="20dp"
+            android:padding="1dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/textNotificationDateTime" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</RelativeLayout>
+
