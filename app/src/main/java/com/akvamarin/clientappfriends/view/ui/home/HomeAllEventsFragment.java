@@ -32,7 +32,7 @@ import com.akvamarin.clientappfriends.R;
 import com.akvamarin.clientappfriends.domain.dto.ViewEventDTO;
 import com.akvamarin.clientappfriends.utils.Constants;
 import com.akvamarin.clientappfriends.utils.PreferenceManager;
-import com.akvamarin.clientappfriends.view.InfoEventActivity;
+import com.akvamarin.clientappfriends.view.infoevent.InfoEventActivity;
 import com.akvamarin.clientappfriends.view.addevent.AddEventActivity;
 import com.akvamarin.clientappfriends.view.dialog.AuthDialog;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -140,30 +140,26 @@ public class HomeAllEventsFragment extends Fragment implements IEventRecyclerLis
     private void initEventList(){
         Log.d(TAG, "init event list: preparing ...");
 
-        if (eventList.isEmpty()) {
+        eventApi.getAllEvents().enqueue(new Callback<>() {
+            @SuppressLint("NotifyDataSetChanged")
+            @Override
+            public void onResponse(@NonNull Call<List<ViewEventDTO>> call, @NonNull Response<List<ViewEventDTO>> response) {
 
-            eventApi.getAllEvents().enqueue(new Callback<>() {
-                @SuppressLint("NotifyDataSetChanged")
-                @Override
-                public void onResponse(@NonNull Call<List<ViewEventDTO>> call, @NonNull Response<List<ViewEventDTO>> response) {
-
-                    if (response.isSuccessful() && response.body() != null) {
-                        eventList.clear();
-                        eventList.addAll(response.body());
-                        eventAdapter.notifyDataSetChanged(); // Notify the adapter that the data has changed
-                    } else {
-                        Toast.makeText(requireActivity(), "getAllEvents()", Toast.LENGTH_SHORT).show();
-                    }
+                if (response.isSuccessful() && response.body() != null) {
+                    eventList.clear();
+                    eventList.addAll(response.body());
+                    eventAdapter.notifyDataSetChanged(); // Notify the adapter that the data has changed
+                } else {
+                    Toast.makeText(requireActivity(), "getAllEvents()", Toast.LENGTH_SHORT).show();
                 }
+            }
 
-                @Override
-                public void onFailure(@NonNull Call<List<ViewEventDTO>> call, @NonNull Throwable t) {
-                    Toast.makeText(requireActivity(), "getAllEvents() --- Fail", Toast.LENGTH_SHORT).show();
-                    Log.d(TAG, "Error fetching events: " + t.fillInStackTrace());
-                }
-            });
-
-        }
+            @Override
+            public void onFailure(@NonNull Call<List<ViewEventDTO>> call, @NonNull Throwable t) {
+                Toast.makeText(requireActivity(), "getAllEvents() --- Fail", Toast.LENGTH_SHORT).show();
+                Log.d(TAG, "Error fetching events: " + t.fillInStackTrace());
+            }
+        });
 
    //     eventList.sort((event, otherEvent) -> otherEvent.getDateTimeCreated().compareTo(event.getDateTimeCreated())); // DESC
 
@@ -270,12 +266,11 @@ public class HomeAllEventsFragment extends Fragment implements IEventRecyclerLis
         popupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onResume() {
         super.onResume();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            initEventList();
-        }
+        initEventList();
     }
 
 }

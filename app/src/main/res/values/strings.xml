@@ -23,6 +23,7 @@
     <string name="title_profile">Профиль</string>
     <string name="title_home">Главная</string>
     <string name="title_add_new_event">Новое событие</string>
+    <string name="title_update_event">Редактирование события</string>
 
     <string name="avatar_img_description">Аватар</string>
     <string name="text_filter">Настройки фильтрации</string>
@@ -69,6 +70,7 @@
     <string name="loading">Загрузка данных</string>
 
     <string name="add_btn_label_done">Добавить</string>
+    <string name="update_btn_label_done">Сохранить изменения</string>
     <string name="want_text">Желает:</string>
     <string name="about_event_label">О мероприятии:</string>
     <string name="label_day_of_week">День недели:</string>

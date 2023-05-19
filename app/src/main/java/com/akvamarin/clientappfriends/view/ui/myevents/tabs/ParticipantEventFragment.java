@@ -23,7 +23,7 @@ import com.akvamarin.clientappfriends.domain.dto.AuthToken;
 import com.akvamarin.clientappfriends.domain.dto.ViewEventDTO;
 import com.akvamarin.clientappfriends.utils.Constants;
 import com.akvamarin.clientappfriends.utils.PreferenceManager;
-import com.akvamarin.clientappfriends.view.InfoEventActivity;
+import com.akvamarin.clientappfriends.view.infoevent.InfoEventActivity;
 import com.akvamarin.clientappfriends.view.ui.home.EventAdapter;
 import com.akvamarin.clientappfriends.view.ui.home.IEventRecyclerListener;
 

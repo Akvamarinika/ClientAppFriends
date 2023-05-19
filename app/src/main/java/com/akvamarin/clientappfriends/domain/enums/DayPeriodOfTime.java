@@ -16,7 +16,7 @@ public enum DayPeriodOfTime implements Serializable {
     NIGHT("ночь"),
     UNKNOWN("Неопределен");
 
-    private String rusName;
+    private final String rusName;
 
     DayPeriodOfTime(String rusName) {
         this.rusName = rusName;
@@ -46,5 +46,19 @@ public enum DayPeriodOfTime implements Serializable {
         }
 
         return DayPeriodOfTime.UNKNOWN;
+    }
+
+    public static int getIdCheckedElement(DayPeriodOfTime dayPeriodOfTime){
+        int radioButtonMorningId = R.id.radioMorning;
+        int radioButtonDayId = R.id.radioDay;
+        int radioButtonEveningId = R.id.radioEvening;
+        int radioButtonNightId = R.id.radioNight;
+
+        return switch (dayPeriodOfTime) {
+            case MORNING -> radioButtonMorningId;
+            case AFTERNOON -> radioButtonDayId;
+            case NIGHT -> radioButtonNightId;
+            default -> radioButtonEveningId;
+        };
     }
 }

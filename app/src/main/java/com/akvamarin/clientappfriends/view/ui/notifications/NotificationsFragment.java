@@ -39,10 +39,8 @@ import retrofit2.Response;
 public class NotificationsFragment extends Fragment implements INotificationOrganizerListener, INotificationParticipantListener {
     private static final String TAG = "NotificationsFragment";
     private TextView textViewBaseText;
-
     private Toolbar toolbar;
     private FloatingActionButton floatingActionButton;
-    //private NotificationsViewModel viewModel;
 
     /* соединяются адаптером Recycler & List: */
     private RecyclerView recyclerViewNotification;
@@ -66,9 +64,6 @@ public class NotificationsFragment extends Fragment implements INotificationOrga
         updateMainFAB();
         init();
         initNotificationList();
-
-        //viewModel = new ViewModelProvider(this).get(NotificationsViewModel.class);
-        //viewModel.updateToolbarTitle("Оповещения");
 
         notificationListener = this;
         participantListener = this;

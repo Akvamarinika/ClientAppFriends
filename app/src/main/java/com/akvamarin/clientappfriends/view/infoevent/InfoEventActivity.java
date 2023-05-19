@@ -1,4 +1,4 @@
-package com.akvamarin.clientappfriends.view;
+package com.akvamarin.clientappfriends.view.infoevent;
 
 import android.content.Intent;
 import android.os.Build;
@@ -43,6 +43,7 @@ import com.akvamarin.clientappfriends.domain.enums.Partner;
 import com.akvamarin.clientappfriends.utils.CommentTag;
 import com.akvamarin.clientappfriends.utils.Constants;
 import com.akvamarin.clientappfriends.utils.PreferenceManager;
+import com.akvamarin.clientappfriends.view.addevent.AddEventActivity;
 import com.akvamarin.clientappfriends.view.ui.home.CommentAdapter;
 import com.akvamarin.clientappfriends.view.ui.profile.ViewUserInfoActivity;
 import com.squareup.picasso.Picasso;
@@ -103,11 +104,10 @@ public class InfoEventActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_info_event);
-
         eventId = (Long) getIntent().getSerializableExtra("current_event_id"); // Parcelable ?
+        Log.d(TAG, "current_event_id eventId = " + eventId);
 
         initWidgets();
-        showProgressDialog(loading);
         initEventFromServer();
 
         showProgressDialog(loading);
@@ -126,13 +126,13 @@ public class InfoEventActivity extends BaseActivity {
             long userId = preferenceManager.getLong(Constants.KEY_USER_ID);
 
             if (event != null && event.getUserOwner().getId() != null && userId == event.getUserOwner().getId()){
-                //TODO update event
+                startAddEventActivity(); // update
             } else if (viewNotificationDTO != null && viewNotificationDTO.getFeedbackType() == FeedbackType.WAITING ){
                 deleteNotificationOnServer();
             } else if(viewNotificationDTO != null && viewNotificationDTO.getFeedbackType() == FeedbackType.APPROVED){
                 deleteNotificationOnServer();
             } else if (viewNotificationDTO != null && viewNotificationDTO.getFeedbackType() == FeedbackType.REJECTED) {
-                //TODO create event
+                startAddEventActivity(); // create analog
             } else {
                 sendNotificationOnServer();
             }
@@ -197,13 +197,19 @@ public class InfoEventActivity extends BaseActivity {
         eventApi = retrofitService.getRetrofit().create(EventApi.class);
         commentApi = retrofitService.getRetrofit().create(CommentApi.class);
         notificationParticipantApi = retrofitService.getRetrofit().create(NotificationParticipantApi.class);
+    }
 
+    private void startAddEventActivity(){
+        Intent intent = new Intent(getApplicationContext(), AddEventActivity.class);
+        intent.putExtra("current_event_id", event.getId()); // event id
+        startActivity(intent);
     }
 
     private void initEventFromServer(){
-        Log.d(TAG, "init event from server...");
+        Log.d(TAG, "init event from server... eventId = " + eventId);
 
         if (eventId != null) {
+            showProgressDialog(loading);
             eventApi.getEventById(eventId, getAuthToken()).enqueue(new Callback<>() {
                 @RequiresApi(api = Build.VERSION_CODES.O)
                 @Override
@@ -214,6 +220,7 @@ public class InfoEventActivity extends BaseActivity {
                         ViewEventDTO viewEventDTO = response.body();
                         event = viewEventDTO;
                         setValuesEventInfo(viewEventDTO);
+                        setParticipantButtonStyle();
                     } else {
 
                     }
@@ -427,10 +434,15 @@ public class InfoEventActivity extends BaseActivity {
             buttonParticipate.setTextColor(colorBaseForText);
             buttonParticipate.setText(R.string.btn_text_participate_approved);
         } else if (viewNotificationDTO != null && viewNotificationDTO.getFeedbackType() == FeedbackType.REJECTED) {
-            int color = ContextCompat.getColor(this, R.color.colorPrimary);
+            int color = ContextCompat.getColor(this, R.color.grey);
             buttonParticipate.setBackgroundColor(color);
             buttonParticipate.setTextColor(colorBaseForText);
             buttonParticipate.setText(R.string.btn_text_participate_rejected);  // "Вашу заявку отклонил орг"
+        } else if (isOrganizer()) {
+            Log.d(TAG, "setButtonIfOrganizer, event.getUserOwner().getId(): " + event.getUserOwner().getId());
+            int color = ContextCompat.getColor(this, R.color.colorPrimaryDark);
+            buttonParticipate.setBackgroundColor(color);
+            buttonParticipate.setText(R.string.btn_text_participate_organizer);
         } else {
             int color = ContextCompat.getColor(this, R.color.colorPrimary);
             buttonParticipate.setBackgroundColor(color);
@@ -438,14 +450,11 @@ public class InfoEventActivity extends BaseActivity {
             buttonParticipate.setText(R.string.btn_text_participate);
         }
 
-        setButtonIfOrganizer();
     }
 
-    private void setButtonIfOrganizer(){
+    private boolean isOrganizer(){
         long userId = preferenceManager.getLong(Constants.KEY_USER_ID);
-        if (event != null && event.getUserOwner().getId() != null && userId == event.getUserOwner().getId()){
-            buttonParticipate.setText(R.string.btn_text_participate_organizer);
-        }
+        return event != null && event.getUserOwner().getId() != null && userId == event.getUserOwner().getId();
     }
 
     private void requestNotificationFromServer() {
@@ -549,5 +558,11 @@ public class InfoEventActivity extends BaseActivity {
                 }
             });
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        initEventFromServer();
     }
 }

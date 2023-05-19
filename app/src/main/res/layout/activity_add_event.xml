@@ -261,6 +261,7 @@
                         android:button="@android:color/transparent"
                         android:drawableTop="@drawable/add_radio_selector_hours_evening"
                         android:gravity="center"
+                        android:checked="true"
                         android:text="@string/add_label_icon_evening"
                         android:textColor="@color/grey"
                         android:textSize="@dimen/text" />
@@ -273,7 +274,6 @@
                         android:layout_weight="1"
                         android:background="@android:color/transparent"
                         android:button="@android:color/transparent"
-                        android:checked="true"
                         android:drawableTop="@drawable/add_radio_selector_hours_night"
                         android:gravity="center"
                         android:text="@string/add_label_icon_night"

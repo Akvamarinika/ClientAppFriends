@@ -20,7 +20,7 @@ public enum Partner implements Serializable {
     ANY("Любой"),
     UNKNOWN("Неизвестно");
 
-    private String rusName;
+    private final String rusName;
 
     Partner(String rusName) {
         this.rusName = rusName;
@@ -89,5 +89,19 @@ public enum Partner implements Serializable {
         }
 
         return Partner.UNKNOWN;
+    }
+
+    public static int getIdCheckedElement(Partner partner){
+        int radioButtonManId = R.id.radioMen;
+        int radioButtonGirlId = R.id.radioGirl;
+        int radioButtonCompanyId = R.id.radioCompany;
+        int radioButtonAnyId = R.id.radioAll;
+
+        return switch (partner) {
+            case MAN -> radioButtonManId;
+            case WOMAN -> radioButtonGirlId;
+            case COMPANY -> radioButtonCompanyId;
+            default -> radioButtonAnyId;
+        };
     }
 }

@@ -314,7 +314,7 @@ public class RegisterPhotoActivity extends BaseActivity {
     /** запускает RegisterPhotoActivity из текущего Контекста
      * очистит все существующие действия в верхней части стека, перед запуском нового
      * **/
-    public static void startFrom(Context context) {
+    private static void startFrom(Context context) {
         Intent intent = new Intent(context, AuthenticationActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         context.startActivity(intent);

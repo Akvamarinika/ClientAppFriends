@@ -21,7 +21,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.akvamarin.clientappfriends.R;
 import com.akvamarin.clientappfriends.domain.dto.ViewNotificationDTO;
 import com.akvamarin.clientappfriends.domain.enums.FeedbackType;
-import com.akvamarin.clientappfriends.view.InfoEventActivity;
+import com.akvamarin.clientappfriends.view.infoevent.InfoEventActivity;
 import com.squareup.picasso.Picasso;
 
 import java.time.LocalDateTime;
