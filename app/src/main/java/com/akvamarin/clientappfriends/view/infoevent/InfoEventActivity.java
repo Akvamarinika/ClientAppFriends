@@ -1,5 +1,6 @@
 package com.akvamarin.clientappfriends.view.infoevent;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -87,6 +88,11 @@ public class InfoEventActivity extends BaseActivity {
     private CommentAdapter commentAdapter;
     private List<ViewCommentDTO> commentList = new ArrayList<>();
 
+    private RecyclerView recyclerViewParticipant;
+    private OnlyAvatarAdapter onlyAvatarAdapter;
+    private final List<ViewUserSlimDTO> userSlimList = new ArrayList<>();
+    private TextView titleParticipant;
+
     private PreferenceManager preferenceManager;
     private RetrofitService retrofitService;
     private EventApi eventApi;
@@ -109,6 +115,7 @@ public class InfoEventActivity extends BaseActivity {
 
         initWidgets();
         initEventFromServer();
+        initParticipantListFromServer();
 
         showProgressDialog(loading);
         requestCommentsFromServer();
@@ -191,6 +198,14 @@ public class InfoEventActivity extends BaseActivity {
         commentAdapter = new CommentAdapter(getApplicationContext());
         commentAdapter.setCommentList(commentList);
         recyclerViewComments.setAdapter(commentAdapter);
+
+        // participants
+        recyclerViewParticipant = findViewById(R.id.recycler_view_participant);
+        recyclerViewParticipant.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        onlyAvatarAdapter = new OnlyAvatarAdapter(userSlimList);
+        recyclerViewParticipant.setAdapter(onlyAvatarAdapter);
+        titleParticipant = findViewById(R.id.titleParticipant);
+        onlyAvatarAdapter.setEventId(eventId);
 
         preferenceManager = new PreferenceManager(getApplicationContext());
         retrofitService = RetrofitService.getInstance(getApplicationContext());
@@ -560,9 +575,43 @@ public class InfoEventActivity extends BaseActivity {
         }
     }
 
+    private void initParticipantListFromServer() {
+        String authToken = preferenceManager.getString(Constants.KEY_APP_TOKEN);
+
+        if (authToken != null && eventId != null) {
+            showProgressDialog(loading);
+
+            notificationParticipantApi.findEventParticipantsWithApprovedFeedback(eventId, new AuthToken(authToken)).enqueue(new Callback<>() {
+                @SuppressLint("NotifyDataSetChanged")
+                @Override
+                public void onResponse(@NonNull Call<List<ViewUserSlimDTO>> call, @NonNull Response<List<ViewUserSlimDTO>> response) {
+                    dismissProgressDialog();
+
+                    if (response.isSuccessful() && response.body() != null) {
+                        userSlimList.clear();
+                        userSlimList.addAll(response.body());
+                        onlyAvatarAdapter.notifyDataSetChanged(); // Notify the adapter that the data has changed
+                        Log.d(TAG, "initParticipantListFromServer() size: " + userSlimList.size());
+                        titleParticipant.setVisibility(userSlimList.size() > 0 ? View.VISIBLE : View.GONE);
+                    } else {
+                        ErrorResponse error = ErrorUtils.parseError(response, retrofitService);
+                        Log.d(TAG, error.getStatusCode() + " " + error.getMessage());
+                    }
+                }
+
+                @Override
+                public void onFailure(@NonNull Call<List<ViewUserSlimDTO>> call, @NonNull Throwable t) {
+                    dismissProgressDialog();
+                    Log.d(TAG, "Error initParticipantListFromServer(): " + t.fillInStackTrace());
+                }
+            });
+        }
+    }
+
     @Override
     public void onResume() {
         super.onResume();
         initEventFromServer();
+        initParticipantListFromServer();
     }
 }

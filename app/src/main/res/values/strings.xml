@@ -142,6 +142,7 @@
     <string name="btn_text_reject">Отклонить</string>
     <string name="btn_text_approve">Принять</string>
     <string name="btn_text_hidden">Скрыть</string>
+    <string name="title_participant">Участники: </string>
 
     <string-array name="event_categories_lst">
         <item>Бары, кафе и рестораны</item>

@@ -21,7 +21,6 @@
         android:theme="@style/FriendsAppTheme"
         android:usesCleartextTraffic="true"
         tools:targetApi="25">
-
         <activity
             android:name=".SplashScreen"
             android:exported="true"
@@ -61,7 +60,11 @@
         <activity
             android:name=".view.infoevent.InfoEventActivity"
             android:exported="false"
-
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity" />
+        <activity
+            android:name=".view.infoevent.ParticipantActivity"
+            android:exported="false"
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity" />
         <activity
@@ -121,8 +124,6 @@
             android:exported="false"
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity" />
-
-
     </application>
 
 </manifest>

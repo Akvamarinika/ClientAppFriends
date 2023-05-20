@@ -65,7 +65,6 @@ public class HomeAllEventsFragment extends Fragment implements IEventRecyclerLis
 
     private RetrofitService retrofitService;
     private EventApi eventApi;
-    private CommentApi commentApi;
 
     private PreferenceManager preferenceManager;
 
@@ -88,7 +87,6 @@ public class HomeAllEventsFragment extends Fragment implements IEventRecyclerLis
         preferenceManager = new PreferenceManager(requireActivity());
         retrofitService = RetrofitService.getInstance(getContext());
         eventApi = retrofitService.getRetrofit().create(EventApi.class);
-        commentApi = retrofitService.getRetrofit().create(CommentApi.class);
     }
 
     private void updateToolbar(){
