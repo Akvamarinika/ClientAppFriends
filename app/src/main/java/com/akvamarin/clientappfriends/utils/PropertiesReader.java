@@ -3,14 +3,20 @@ package com.akvamarin.clientappfriends.utils;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.AssetManager;
+import android.os.Build;
 import android.util.Log;
+
+import androidx.annotation.RequiresApi;
+
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Objects;
 import java.util.Properties;
 
 public class PropertiesReader {
     private final Context context;
     private final Properties properties;
+    @SuppressLint("StaticFieldLeak")
     private static PropertiesReader prReader;
 
     public PropertiesReader(Context context) {
@@ -30,10 +36,8 @@ public class PropertiesReader {
         return properties;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.R)
     public static PropertiesReader getInstance(Context context){
-        if(prReader == null)
-            return new PropertiesReader(context);
-        else
-            return prReader;
+        return Objects.requireNonNullElseGet(prReader, () -> new PropertiesReader(context));
     }
 }
