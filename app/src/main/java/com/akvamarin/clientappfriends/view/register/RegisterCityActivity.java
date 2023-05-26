@@ -4,8 +4,6 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -13,27 +11,22 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
 
 import com.akvamarin.clientappfriends.API.ErrorResponse;
 import com.akvamarin.clientappfriends.API.ErrorUtils;
+import com.akvamarin.clientappfriends.API.RetrofitService;
 import com.akvamarin.clientappfriends.API.connection.AuthenticationApi;
 import com.akvamarin.clientappfriends.API.connection.CityApi;
-import com.akvamarin.clientappfriends.API.RetrofitService;
 import com.akvamarin.clientappfriends.BaseActivity;
 import com.akvamarin.clientappfriends.R;
-import com.akvamarin.clientappfriends.domain.dto.AuthToken;
-import com.akvamarin.clientappfriends.domain.dto.AuthUserSocialDTO;
 import com.akvamarin.clientappfriends.domain.dto.CityDTO;
 import com.akvamarin.clientappfriends.domain.dto.UserDTO;
 import com.akvamarin.clientappfriends.utils.CheckerFields;
 import com.akvamarin.clientappfriends.utils.Constants;
 import com.akvamarin.clientappfriends.utils.PreferenceManager;
-import com.akvamarin.clientappfriends.view.AllEventsActivity;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import retrofit2.Call;
@@ -41,7 +34,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 /***
- * Регистрация "Классик", photo
+ * Регистрация "Классик", city
  *  Шаг 5 из 6
  * **/
 public class RegisterCityActivity extends BaseActivity {

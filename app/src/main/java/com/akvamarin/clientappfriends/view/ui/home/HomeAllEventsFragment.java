@@ -13,7 +13,9 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.PopupWindow;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -26,18 +28,21 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.akvamarin.clientappfriends.API.RetrofitService;
-import com.akvamarin.clientappfriends.API.connection.CommentApi;
 import com.akvamarin.clientappfriends.API.connection.EventApi;
 import com.akvamarin.clientappfriends.R;
+import com.akvamarin.clientappfriends.domain.dto.EventFilter;
 import com.akvamarin.clientappfriends.domain.dto.ViewEventDTO;
 import com.akvamarin.clientappfriends.utils.Constants;
+import com.akvamarin.clientappfriends.utils.EventFilterPreferences;
 import com.akvamarin.clientappfriends.utils.PreferenceManager;
 import com.akvamarin.clientappfriends.view.infoevent.InfoEventActivity;
 import com.akvamarin.clientappfriends.view.addevent.AddEventActivity;
 import com.akvamarin.clientappfriends.view.dialog.AuthDialog;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import retrofit2.Call;
@@ -221,7 +226,7 @@ public class HomeAllEventsFragment extends Fragment implements IEventRecyclerLis
 
         switch (item.getItemId()){
             case R.id.event_filter:
-                showPopupWindow(rootViewFragmentHome);
+                showPopupWindow(rootViewFragmentHome);  // filters
             case R.id.event_search:
                 Log.i("item id ", item.getItemId() + "");
             default:
@@ -246,7 +251,7 @@ public class HomeAllEventsFragment extends Fragment implements IEventRecyclerLis
     public void showPopupWindow(View view) {
 
         // Create a new PopupWindow
-        View popupView = LayoutInflater.from(requireActivity()).inflate(R.layout.popup_window, (ViewGroup) rootViewFragmentHome, false);
+        View popupView = LayoutInflater.from(requireActivity()).inflate(R.layout.bottom_sheet_list_filters, (ViewGroup) rootViewFragmentHome, false);
         PopupWindow popupWindow = new PopupWindow(popupView, ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT, true);
 
@@ -262,6 +267,57 @@ public class HomeAllEventsFragment extends Fragment implements IEventRecyclerLis
 
         // Show the PopupWindow at the center of the screen
         popupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
+    }
+
+    private void showBottomSheetWithCustomItems() {
+        View bottomSheetView = getLayoutInflater().inflate(R.layout.bottom_sheet_list_filters, null);
+
+        BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(requireContext());
+        bottomSheetDialog.setContentView(bottomSheetView);
+
+        // Get references to the views in the bottom sheet layout
+        TextView textViewItem1 = bottomSheetView.findViewById(R.id.partnerLabel);
+        Button buttonCancel = bottomSheetView.findViewById(R.id.partnerLabel);
+        // Add more views as needed
+
+        // Set click listeners for the items
+        textViewItem1.setOnClickListener(v -> {
+            // Handle item 1 click
+            bottomSheetDialog.dismiss();
+        });
+
+        buttonCancel.setOnClickListener(v -> {
+            bottomSheetDialog.dismiss();
+        });
+
+        // Show the bottom sheet
+        bottomSheetDialog.show();
+    }
+
+
+    public void saveFiltersParams() {
+        EventFilter eventFilter = EventFilter.builder()
+                .cityId(1L)
+                .categoryIds(Arrays.asList(1L, 2L))
+                .isUserOrganizer(true)
+                // Set other properties
+                .build();
+
+        EventFilterPreferences preferences = new EventFilterPreferences(requireContext());
+        preferences.saveEventFilter(eventFilter);
+
+    }
+
+    public void applyFilteringOptions() {
+        EventFilterPreferences preferences = new EventFilterPreferences(requireContext());
+        EventFilter eventFilter = preferences.getEventFilter();
+
+        if (eventFilter != null) {
+            // Use the retrieved eventFilter object
+        } else {
+            // No saved eventFilter found
+        }
+
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)

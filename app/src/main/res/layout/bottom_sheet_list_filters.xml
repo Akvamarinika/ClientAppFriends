@@ -1,0 +1,198 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/popup_container"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@android:color/white"
+    android:elevation="8dp"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/textViewTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:gravity="center"
+        android:textStyle="bold"
+        android:text="Фильтры и сортировка мероприятий"
+        android:textColor="@color/grey"
+        android:paddingBottom="8dp" />
+
+    <!-- filter options: partner -->
+    <TextView
+        android:id="@+id/partnerLabel"
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:layout_marginStart="@dimen/title_edit_margin"
+        android:layout_marginTop="@dimen/title_edit_margin"
+        android:layout_marginEnd="@dimen/title_edit_margin"
+        android:text="Партнер:"
+        android:textSize="@dimen/label_size"
+        android:textStyle="bold" />
+
+    <RadioGroup
+        android:id="@+id/radioGroupPartner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/title_edit_margin"
+        android:layout_marginEnd="@dimen/title_edit_margin"
+        android:background="@android:color/transparent"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/radioMen"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/activity_horizontal_margin"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:button="@android:color/transparent"
+            android:drawableTop="@drawable/add_radio_selector_men"
+            android:gravity="center"
+            android:text="@string/icon_label_men"
+            android:textColor="@color/grey"
+            android:textSize="@dimen/text" />
+
+        <RadioButton
+            android:id="@+id/radioGirl"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/activity_horizontal_margin"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:button="@android:color/transparent"
+            android:drawableTop="@drawable/add_radio_selector_girl"
+            android:gravity="center"
+            android:text="@string/icon_label_girl"
+            android:textColor="@color/grey"
+            android:textSize="@dimen/text" />
+
+        <RadioButton
+            android:id="@+id/radioCompany"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/activity_horizontal_margin"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:button="@android:color/transparent"
+            android:drawableTop="@drawable/add_radio_selector_group"
+            android:gravity="center"
+            android:text="@string/icon_label_company"
+            android:textColor="@color/grey"
+            android:textSize="@dimen/text" />
+
+        <RadioButton
+            android:id="@+id/radioAll"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/activity_horizontal_margin"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:button="@android:color/transparent"
+            android:checked="true"
+            android:drawableTop="@drawable/add_radio_selector_all"
+            android:gravity="center"
+            android:text="@string/icon_label_all"
+            android:textColor="@color/grey"
+            android:textSize="@dimen/text" />
+    </RadioGroup>
+
+
+    <TextView
+        android:id="@+id/twentyFourHoursLabel"
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:layout_marginStart="@dimen/title_edit_margin"
+        android:layout_marginTop="@dimen/title_edit_margin"
+        android:layout_marginEnd="@dimen/title_edit_margin"
+        android:text="@string/add_label_hours"
+        android:textSize="@dimen/label_size"
+        android:textStyle="bold" />
+
+    <RadioGroup
+        android:id="@+id/radioGroupTwentyFourHours"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/radioMorning"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/activity_horizontal_margin"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:button="@android:color/transparent"
+            android:drawableTop="@drawable/add_radio_selector_hours_morning"
+            android:gravity="center"
+            android:text="@string/add_label_icon_morning"
+            android:textColor="@color/grey"
+            android:textSize="@dimen/text" />
+
+        <RadioButton
+            android:id="@+id/radioDay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/activity_horizontal_margin"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:button="@android:color/transparent"
+            android:drawableTop="@drawable/add_radio_selector_hours_day"
+            android:gravity="center"
+            android:text="@string/add_label_icon_day"
+            android:textColor="@color/grey"
+            android:textSize="@dimen/text" />
+
+        <RadioButton
+            android:id="@+id/radioEvening"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/activity_horizontal_margin"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:button="@android:color/transparent"
+            android:drawableTop="@drawable/add_radio_selector_hours_evening"
+            android:gravity="center"
+            android:checked="true"
+            android:text="@string/add_label_icon_evening"
+            android:textColor="@color/grey"
+            android:textSize="@dimen/text" />
+
+        <RadioButton
+            android:id="@+id/radioNight"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/activity_horizontal_margin"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:button="@android:color/transparent"
+            android:drawableTop="@drawable/add_radio_selector_hours_night"
+            android:gravity="center"
+            android:text="@string/add_label_icon_night"
+            android:textColor="@color/grey"
+            android:textSize="@dimen/text" />
+    </RadioGroup>
+
+
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/buttonFilterApply"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        style="@style/Widget.MaterialComponents.Button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:layout_marginStart="120dp"
+        android:layout_marginEnd="120dp"
+        android:layout_marginBottom="18dp"
+        android:backgroundTint="@color/colorPrimary"
+        android:textStyle="bold"
+        android:textSize="14sp"
+        android:elevation="10dp"
+        android:text="Применить"
+        app:cornerRadius="10dp"
+        app:strokeColor="@color/colorPrimaryDark"
+        app:strokeWidth="1dp"/>
+
+</LinearLayout>

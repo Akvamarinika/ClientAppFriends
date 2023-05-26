@@ -27,4 +27,14 @@ public enum Psychotype implements Serializable {
         };
     }
 
+    public static Psychotype findPsychotypeByValue(String value) {
+        for (Psychotype psychotype : Psychotype.values()) {
+            if (psychotype.rusValue.equals(value)) {
+                return psychotype;
+            }
+        }
+        return null; // not found
+    }
+
+
 }

@@ -13,6 +13,7 @@
     <color name="colorPrimary">#00A4B9</color>
     <color name="colorPrimaryDark">#185B7A</color>
     <color name="bgcolor">#F3F3F3</color>
+    <color name="bgcolor_radio">#8CE3EE</color>
     <color name="icons">#6A6A6A</color>
     <color name="colorAccent">#FF491B</color>
     <color name="lightColorAccent">#FF7043</color>

@@ -78,7 +78,7 @@
                     android:padding="6dp">
 
                     <TextView
-                        android:id="@+id/textViewEventInfoUserName"
+                        android:id="@+id/textViewInfoUserName"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="@dimen/text_margin"
@@ -88,7 +88,7 @@
                         tools:text="@sample/user_names" />
 
                     <TextView
-                        android:id="@+id/textViewEventInfoCountryCity"
+                        android:id="@+id/textViewInfoCountryCity"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:drawablePadding="@dimen/padding_icon_text_view"

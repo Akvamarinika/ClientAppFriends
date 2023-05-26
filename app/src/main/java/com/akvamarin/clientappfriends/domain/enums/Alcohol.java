@@ -28,4 +28,13 @@ public enum Alcohol implements Serializable {
             default -> 0;
         };
     }
+
+    public static Alcohol findAlcoholByValue(String value) {
+        for (Alcohol alcohol : Alcohol.values()) {
+            if (alcohol.rusValue.equals(value)) {
+                return alcohol;
+            }
+        }
+        return null; // not found
+    }
 }

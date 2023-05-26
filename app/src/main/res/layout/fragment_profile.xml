@@ -60,7 +60,7 @@
                 android:contentDescription="@string/img_description_settings" />
 
             <ImageButton
-                android:id="@+id/imageBtnEditProfile"
+                android:id="@+id/imageBtnEditProfileView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="20dp"

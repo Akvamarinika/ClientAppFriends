@@ -7,15 +7,6 @@
     android:background="@color/colorPrimary"
     tools:context=".view.ui.profile.EditProfileActivity">
 
-    <include
-        android:id="@+id/includeCustomToolbar"
-        layout="@layout/toolbar_custom"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginBottom="0dp"
-        android:background="@color/colorPrimaryDark"
-        app:layout_constraintTop_toTopOf="parent"/>
-
     <androidx.core.widget.NestedScrollView
         android:id="@+id/editProfileScrollView"
         android:layout_width="match_parent"
@@ -40,17 +31,38 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/editProfileProfileAvatar"
-                android:layout_width="150dp"
-                android:layout_height="150dp"
-                android:layout_gravity="center_horizontal"
-                android:layout_margin="@dimen/image_margin"
-                android:contentDescription="@string/avatar_img_description"
-                android:scaleType="centerCrop"
-                android:src="@drawable/no_avatar"
-                app:layout_constraintDimensionRatio="h,1:1"
-                tools:src="@sample/avatars" />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal">
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/editProfileProfileAvatar"
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginStart="@dimen/image_margin"
+                    android:layout_marginTop="@dimen/image_margin"
+                    android:layout_marginEnd="@dimen/image_margin"
+                    android:layout_marginBottom="@dimen/image_margin"
+                    android:contentDescription="@string/avatar_img_description"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/no_avatar"
+                    app:layout_constraintDimensionRatio="h,1:1"
+                    tools:src="@sample/avatars" />
+
+                <ImageView
+                    android:id="@+id/image_edit_avatar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    android:background="@drawable/shape_circle_background"
+                    android:src="@drawable/ic_mode_edit"
+                    android:layout_alignEnd="@id/editProfileProfileAvatar"
+                    android:layout_alignBottom="@id/editProfileProfileAvatar"
+                    android:padding="18dp" />
+
+            </RelativeLayout>
 
             <TextView
                 android:id="@+id/editProfileOnline"
@@ -58,6 +70,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/text_margin"
                 android:gravity="center"
+                android:visibility="gone"
                 android:text="* Active"
                 android:textColor="@color/white"
                 android:textSize="@dimen/subtitle_size"
@@ -71,7 +84,7 @@
                 android:layout_marginStart="@dimen/title_edit_margin"
                 android:layout_marginTop="@dimen/title_edit_margin"
                 android:layout_marginEnd="@dimen/title_edit_margin"
-                android:text="Имя"
+                android:text="@string/name"
                 android:textColor="@color/white"
                 android:textSize="@dimen/label_size"
                 android:textStyle="bold" />
@@ -96,7 +109,7 @@
                 app:hintTextColor="@color/colorPrimaryDark">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/editTextEventName"
+                    android:id="@+id/editTextName"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:ellipsize="end"
@@ -118,7 +131,7 @@
                 android:layout_marginStart="@dimen/title_edit_margin"
                 android:layout_marginTop="@dimen/title_edit_margin"
                 android:layout_marginEnd="@dimen/title_edit_margin"
-                android:text="Пол: "
+                android:text="@string/gender"
                 android:textColor="@color/white"
                 android:textSize="@dimen/label_size"
                 android:textStyle="bold" />
@@ -169,7 +182,7 @@
                 android:layout_marginStart="@dimen/title_edit_margin"
                 android:layout_marginTop="@dimen/title_edit_margin"
                 android:layout_marginEnd="@dimen/title_edit_margin"
-                android:text="Город:"
+                android:text="@string/city"
                 android:textColor="@color/white"
                 android:textSize="@dimen/label_size"
                 android:textStyle="bold" />
@@ -219,13 +232,13 @@
                 android:layout_marginStart="@dimen/title_edit_margin"
                 android:layout_marginTop="@dimen/title_edit_margin"
                 android:layout_marginEnd="@dimen/title_edit_margin"
-                android:text="Обо мне:"
+                android:text="@string/about_me"
                 android:textColor="@color/white"
                 android:textSize="@dimen/label_size"
                 android:textStyle="bold" />
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/textInputLayoutEventDescription"
+                android:id="@+id/textInputLayoutAboutMeDescription"
                 style="@style/editTextStyleBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -246,7 +259,7 @@
                 app:hintTextColor="@color/colorPrimaryDark">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/editTextEventDescription"
+                    android:id="@+id/editTextAboutMeDescription"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
@@ -266,15 +279,124 @@
                     tools:ignore="KeyboardInaccessibleWidget" />
             </com.google.android.material.textfield.TextInputLayout>
 
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="8dp"
+                app:cardElevation="4dp"
+                app:cardUseCompatPadding="true">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="8dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tv_personal_info"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="8dp"
+                        android:layout_marginEnd="@dimen/text_margin"
+                        android:text="@string/personal_information"
+                        android:textSize="@dimen/subtitle_size"
+                        android:textStyle="bold" />
+
+                    <LinearLayout
+                        android:id="@+id/layout_alcohol"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="8dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:drawablePadding="8dp"
+                            android:textStyle="bold"
+                            android:textSize="@dimen/info_size"
+                            android:text="@string/alcohol"
+                            app:drawableStartCompat="@drawable/ic_wine" />
+
+                        <TextView
+                            android:id="@+id/tv_alcohol"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="end"
+                            android:drawablePadding="8dp"
+                            android:text=""
+                            app:drawableEndCompat="@drawable/ic_arrow_right"
+                            tools:text="За компанию"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/layout_smoking"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="8dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:drawablePadding="8dp"
+                            android:textStyle="bold"
+                            android:textSize="@dimen/info_size"
+                            android:text="@string/smoking"
+                            app:drawableStartCompat="@drawable/ic_smoking" />
+
+                        <TextView
+                            android:id="@+id/tv_smoking"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="end"
+                            android:drawablePadding="8dp"
+                            android:text=""
+                            app:drawableEndCompat="@drawable/ic_arrow_right"
+                            tools:text="Иногда"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/layout_psychotype"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="8dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:drawablePadding="8dp"
+                            android:textStyle="bold"
+                            android:textSize="@dimen/info_size"
+                            android:text="@string/psychotype"
+                            app:drawableStartCompat="@drawable/ic_psychotype" />
+
+                        <TextView
+                            android:id="@+id/tv_psychotype"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="end"
+                            android:drawablePadding="8dp"
+                            android:text=""
+                            app:drawableEndCompat="@drawable/ic_arrow_right"
+                            tools:text="Интроверт"/>
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/buttonSaveNewEvent"
+                android:id="@+id/buttonUpdateUserProfile"
                 style="@style/Widget.MaterialComponents.Button"
                 android:layout_width="match_parent"
                 android:layout_height="58dp"
                 android:layout_marginStart="@dimen/title_edit_margin"
                 android:layout_marginEnd="@dimen/title_edit_margin"
                 android:backgroundTint="@color/colorVeryDark"
-                android:text="Сохранить изменения"
+                android:text="@string/btn_update_text"
                 android:textColor="@color/white"
                 android:textSize="18sp"
                 android:textStyle="bold"
@@ -283,7 +405,15 @@
                 app:strokeWidth="1dp" />
 
         </LinearLayout>
-
-
     </androidx.core.widget.NestedScrollView>
+
+    <include
+        android:id="@+id/includeCustomToolbar"
+        layout="@layout/toolbar_custom"
+        android:layout_width="match_parent"
+        android:elevation="5dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="0dp"
+        android:background="@color/colorPrimaryDark"
+        app:layout_constraintTop_toTopOf="parent"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

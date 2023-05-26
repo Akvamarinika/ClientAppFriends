@@ -29,7 +29,7 @@
         app:layout_constraintTop_toTopOf="parent"/>
 
     <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/groupChatImageBack"
+        android:id="@+id/iconImageBack"
         android:layout_width="35dp"
         android:layout_height="35dp"
         android:layout_marginStart="16dp"
@@ -68,10 +68,10 @@
         android:textColor="@color/white"
         android:textSize="@dimen/subtitle_size"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/groupChatImageBack"
-        app:layout_constraintTop_toTopOf="@+id/groupChatImageBack"
+        app:layout_constraintBottom_toBottomOf="@+id/iconImageBack"
+        app:layout_constraintTop_toTopOf="@+id/iconImageBack"
         app:layout_constraintEnd_toStartOf="@+id/groupChatAddNewUsers"
-        app:layout_constraintStart_toEndOf="@+id/groupChatImageBack"
+        app:layout_constraintStart_toEndOf="@+id/iconImageBack"
         />
 
     <View
@@ -80,7 +80,7 @@
         android:layout_height="1dp"
         android:layout_marginTop="12dp"
         android:background="@color/colorPrimaryDark"
-        app:layout_constraintTop_toBottomOf="@id/groupChatImageBack"
+        app:layout_constraintTop_toBottomOf="@id/iconImageBack"
         />
 
     <androidx.recyclerview.widget.RecyclerView

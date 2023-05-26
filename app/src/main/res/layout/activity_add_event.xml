@@ -215,8 +215,6 @@
                 android:textSize="@dimen/label_size"
                 android:textStyle="bold" />
 
-
-
                 <RadioGroup
                     android:id="@+id/radioGroupTwentyFourHours"
                     android:layout_width="match_parent"

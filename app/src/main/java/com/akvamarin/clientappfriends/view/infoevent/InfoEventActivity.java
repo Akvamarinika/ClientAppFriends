@@ -45,8 +45,9 @@ import com.akvamarin.clientappfriends.utils.CommentTag;
 import com.akvamarin.clientappfriends.utils.Constants;
 import com.akvamarin.clientappfriends.utils.PreferenceManager;
 import com.akvamarin.clientappfriends.view.addevent.AddEventActivity;
+import com.akvamarin.clientappfriends.view.dialog.ErrorDialog;
 import com.akvamarin.clientappfriends.view.ui.home.CommentAdapter;
-import com.akvamarin.clientappfriends.view.ui.profile.ViewUserInfoActivity;
+import com.akvamarin.clientappfriends.view.ui.profile.ViewProfileActivity;
 import com.squareup.picasso.Picasso;
 
 import java.time.LocalDate;
@@ -110,7 +111,7 @@ public class InfoEventActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_info_event);
-        eventId = (Long) getIntent().getSerializableExtra("current_event_id"); // Parcelable ?
+        eventId = (Long) getIntent().getSerializableExtra("current_event_id"); // extra
         Log.d(TAG, "current_event_id eventId = " + eventId);
 
         initWidgets();
@@ -125,8 +126,11 @@ public class InfoEventActivity extends BaseActivity {
 
         //просмотр анкеты пользователя
         linearLayoutUserInfo.setOnClickListener(view -> {
-            Intent intent = new Intent(this, ViewUserInfoActivity.class);
-            startActivity(intent);
+            if (event != null && event.getUserOwner().getId() != null) {
+                Intent intent = new Intent(this, ViewProfileActivity.class);
+                intent.putExtra("userId", event.getUserOwner().getId());
+                startActivity(intent);
+            }
         });
 
         buttonParticipate.setOnClickListener(view -> {
@@ -176,8 +180,8 @@ public class InfoEventActivity extends BaseActivity {
         linearLayoutUserInfo = findViewById(R.id.layoutUserInfo);
         buttonParticipate = findViewById(R.id.buttonParticipate);
         circleAvatarBig = findViewById(R.id.imageEventInfoAvatarBig);
-        textViewUserName = findViewById(R.id.textViewEventInfoUserName);
-        textViewCountryCity = findViewById(R.id.textViewEventInfoCountryCity);
+        textViewUserName = findViewById(R.id.textViewInfoUserName);
+        textViewCountryCity = findViewById(R.id.textViewInfoCountryCity);
         textViewEventTitle = findViewById(R.id.eventInfoTitle);
         textViewPartner = findViewById(R.id.textViewEventInfoPartner);
         textViewDate = findViewById(R.id.textViewEventInfoDate);
@@ -237,7 +241,8 @@ public class InfoEventActivity extends BaseActivity {
                         setValuesEventInfo(viewEventDTO);
                         setParticipantButtonStyle();
                     } else {
-
+                        Log.d(TAG, "initEventFromServer(), response code " + response.code());
+                        showErrorDialog(response.code());
                     }
                 }
 
@@ -245,6 +250,7 @@ public class InfoEventActivity extends BaseActivity {
                 public void onFailure(@NonNull Call<ViewEventDTO> call, @NonNull Throwable t) {
                     dismissProgressDialog();
                     Log.d(TAG, "Error fetching one event: " + t.fillInStackTrace());
+                    showErrorDialog(-1);
                 }
             });
         }
@@ -307,6 +313,7 @@ public class InfoEventActivity extends BaseActivity {
                 public void onFailure(@NonNull Call<List<ViewCommentDTO>> call, @NonNull Throwable t) {
                     dismissProgressDialog();
                     Log.d(TAG, "Error requestCommentsFromServer ViewCommentDTO: " + t.fillInStackTrace());
+                    showErrorDialog(-1);
                 }
             });
         }
@@ -335,15 +342,16 @@ public class InfoEventActivity extends BaseActivity {
                             showProgressDialog(loading);
                             requestCommentById(Long.valueOf(commentId));
                         }
-
                     } else {
                         Log.d(TAG, "sendNewCommentOnServer(), response code " + response.code());
+                        showErrorDialog(response.code());
                     }
                 }
 
                 @Override
                 public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
                     dismissProgressDialog();
+                    showErrorDialog(-1);
                 }
             });
 
@@ -361,12 +369,14 @@ public class InfoEventActivity extends BaseActivity {
                     addCommentToList(comment); // add new comment to list
                 } else {
                     Log.d(TAG, "requestCommentById(), response code " + response.code());
+                    showErrorDialog(response.code());
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<ViewCommentDTO> call, @NonNull Throwable t) {
                 dismissProgressDialog();
+                showErrorDialog(-1);
             }
         });
     }
@@ -413,15 +423,16 @@ public class InfoEventActivity extends BaseActivity {
                         inputMessageEditText.setTag(""); // clear
                         editModeGone();
                     }
-
                 } else {
-
+                    Log.d(TAG, "updateCommentOnServer(), response code " + response.code());
+                    showErrorDialog(response.code());
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<ViewCommentDTO> call, @NonNull Throwable t) {
                 dismissProgressDialog();
+                showErrorDialog(-1);
             }
         });
     }
@@ -500,6 +511,7 @@ public class InfoEventActivity extends BaseActivity {
                 public void onFailure(@NonNull Call<ViewNotificationDTO> call, @NonNull Throwable t) {
                     dismissProgressDialog();
                     Log.d(TAG, "Error requestNotificationFromServer(): " + t.fillInStackTrace());
+                    showErrorDialog(-1);
                 }
             });
         }
@@ -536,12 +548,14 @@ public class InfoEventActivity extends BaseActivity {
                         setParticipantButtonStyle();
                         ErrorResponse error = ErrorUtils.parseError(response, retrofitService);
                         Log.d(TAG, error.getStatusCode() + " " + error.getMessage());
+                        showErrorDialog(response.code());
                     }
                 }
 
                 @Override
                 public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
                     Log.d(TAG, "Error sendNotificationOnServer(): " + t.fillInStackTrace());
+                    showErrorDialog(-1);
                 }
             });
         }
@@ -564,12 +578,14 @@ public class InfoEventActivity extends BaseActivity {
                         setParticipantButtonStyle();
                         ErrorResponse error = ErrorUtils.parseError(response, retrofitService);
                         Log.d(TAG, error.getStatusCode() + " " + error.getMessage());
+                        showErrorDialog(response.code());
                     }
                 }
 
                 @Override
                 public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
                     Log.d(TAG, "Error deleteNotificationOnServer(): " + t.fillInStackTrace());
+                    showErrorDialog(-1);
                 }
             });
         }
@@ -596,12 +612,14 @@ public class InfoEventActivity extends BaseActivity {
                     } else {
                         ErrorResponse error = ErrorUtils.parseError(response, retrofitService);
                         Log.d(TAG, error.getStatusCode() + " " + error.getMessage());
+                        Log.d(TAG, "initParticipantListFromServer(), response code " + response.code());
                     }
                 }
 
                 @Override
                 public void onFailure(@NonNull Call<List<ViewUserSlimDTO>> call, @NonNull Throwable t) {
                     dismissProgressDialog();
+                    showErrorDialog(-1);
                     Log.d(TAG, "Error initParticipantListFromServer(): " + t.fillInStackTrace());
                 }
             });
@@ -613,5 +631,10 @@ public class InfoEventActivity extends BaseActivity {
         super.onResume();
         initEventFromServer();
         initParticipantListFromServer();
+    }
+
+    private void showErrorDialog(int responseCode) {
+        ErrorDialog dialog = new ErrorDialog(InfoEventActivity.this, responseCode);
+        dialog.show();
     }
 }

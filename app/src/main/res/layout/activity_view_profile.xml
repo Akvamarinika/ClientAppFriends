@@ -1,9 +1,168 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".view.ui.profile.ViewProfileActivity"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".view.ui.profile.ViewProfileActivity">
+    android:layout_height="match_parent">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <!-- Custom Toolbar -->
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <include
+            android:id="@+id/includeCustomToolbar"
+            layout="@layout/toolbar_custom"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimaryDark" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <!-- NestedScrollView content -->
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/profile_picture"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:padding="8dp"
+                android:background="@drawable/photo_rounded_bg"
+                android:src="@drawable/no_avatar"
+                android:scaleType="fitCenter"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <LinearLayout
+                android:id="@+id/layout_info_name_age"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/title_edit_margin"
+                android:gravity="center_vertical"
+                android:orientation="vertical"
+                android:padding="6dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/profile_picture">
+
+                <TextView
+                    android:id="@+id/textViewInfoUserName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/text_margin"
+                    android:text="@string/event_card_nickname"
+                    android:textSize="@dimen/subtitle_size"
+                    android:textStyle="bold"
+                    tools:text="@sample/user_names" />
+
+                <TextView
+                    android:id="@+id/textViewInfoCountryCity"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawablePadding="@dimen/padding_icon_text_view"
+                    android:ellipsize="end"
+                    android:text="@string/event_card_event_name"
+                    android:textSize="@dimen/label_size"
+                    app:drawableLeftCompat="@drawable/ic_location"
+                    tools:text="Россия, Иркутск" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/title_text_chips"
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:layout_marginStart="14dp"
+                android:layout_marginTop="@dimen/title_edit_margin"
+                android:layout_marginEnd="14dp"
+                android:text="@string/chips_title_main"
+                android:textSize="@dimen/label_size"
+                android:textStyle="bold"
+                app:layout_constraintTop_toBottomOf="@+id/layout_info_name_age"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/chip_group_info"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="14dp"
+                android:layout_marginEnd="14dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/title_text_chips"
+                app:layout_constraintVertical_bias="0.5">
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_info_gender"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    tools:text="Woman / man" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_info_alcohol"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    app:chipIcon="@drawable/ic_wine"
+                    tools:text="Alcohol" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_info_smoking"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    app:chipIcon="@drawable/ic_smoking"
+                    tools:text="Smoking" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_info_psychotype"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    app:chipIcon="@drawable/ic_psychotype"
+                    tools:text="Psychotype" />
+
+            </com.google.android.material.chip.ChipGroup>
+
+            <TextView
+                android:id="@+id/tv_info_title_about"
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:layout_marginStart="14dp"
+                android:layout_marginTop="@dimen/title_edit_margin"
+                android:layout_marginEnd="14dp"
+                android:text="@string/info_about_me"
+                android:textSize="@dimen/label_size"
+                android:textStyle="bold"
+                app:layout_constraintTop_toBottomOf="@+id/chip_group_info"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <TextView
+                android:id="@+id/tv_info_about_me"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="14dp"
+                android:layout_marginEnd="14dp"
+                android:padding="@dimen/padding_card"
+                android:text=""
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="@dimen/info_size"
+                app:layout_constraintTop_toBottomOf="@+id/tv_info_title_about"
+                app:layout_constraintStart_toStartOf="parent"
+                tools:text="about me text, text, text"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

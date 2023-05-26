@@ -81,11 +81,11 @@ public class ParticipantEventFragment extends Fragment implements IEventRecycler
     }
 
     private void initParticipantEventList() {
-        Long userId = preferenceManager.getLong(Constants.KEY_USER_ID);
+        Long userId = preferenceManager.getLong(Constants.KEY_USER_ID); // NULL ?
         String authToken = preferenceManager.getString(Constants.KEY_APP_TOKEN);
         Log.d(TAG, "ID user: " + userId);
 
-        if (authToken != null && userId != 0L) {
+        if (authToken != null && userId != null) {
             notificationParticipantApi.findParticipantWithApproved(userId, new AuthToken(authToken)).enqueue(new Callback<>() {
                 @SuppressLint("NotifyDataSetChanged")
                 @Override

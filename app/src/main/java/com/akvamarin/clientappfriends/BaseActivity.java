@@ -21,7 +21,7 @@ public class BaseActivity extends AppCompatActivity {
         //setContentView(R.layout.activity_main);
     }
 
-    protected void showProgressDialog(String message) {
+    public void showProgressDialog(String message) {
         if (progressDialog == null) {
             progressDialog = new ProgressDialog(this);
             progressDialog.setMessage(message);
@@ -30,7 +30,7 @@ public class BaseActivity extends AppCompatActivity {
         progressDialog.show();
     }
 
-    protected void dismissProgressDialog() {
+    public void dismissProgressDialog() {
         if (progressDialog != null) {
             progressDialog.dismiss();
             progressDialog = null;

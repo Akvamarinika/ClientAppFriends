@@ -28,4 +28,14 @@ public enum Smoking implements Serializable {
             default -> 0;
         };
     }
+
+    public static Smoking findSmokingByValue(String value) {
+        for (Smoking smoking : Smoking.values()) {
+            if (smoking.rusValue.equals(value)) {
+                return smoking;
+            }
+        }
+        return null; // not found
+    }
+
 }

@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.akvamarin.clientappfriends.BaseActivity;
 import com.akvamarin.clientappfriends.R;
 import com.akvamarin.clientappfriends.utils.Constants;
 import com.akvamarin.clientappfriends.utils.PreferenceManager;
@@ -24,13 +25,14 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.Objects;
 
-public class AllEventsActivity extends AppCompatActivity {
+public class AllEventsActivity extends BaseActivity {
     private static final String TAG = "viewModel";
     NotificationsViewModel notificationsViewModel;
 
     private Toolbar toolbar;
     private BottomNavigationView bottomNavigation;
     private PreferenceManager preferenceManager;
+    private String lastFragmentTag;
 
     //private InternetModeChangeReceiver internetModeChangeReceiver;
     //private BroadcastReceiver broadcastReceiver = null;
@@ -41,28 +43,24 @@ public class AllEventsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_all_events);
 
-        replaceFragment(new HomeAllEventsFragment());
+        replaceFragment(new HomeAllEventsFragment(), HomeAllEventsFragment.class.getSimpleName());
         initBottomNavigationView();
         initToolbar();
 
         preferenceManager = new PreferenceManager(getApplicationContext());
-        notificationsViewModel = new ViewModelProvider(this).get(NotificationsViewModel.class);
-        notificationsViewModel.getTitle().observe(this, titleNotifications -> {
-            Log.d(TAG, "set title: оповещения ");
-            Log.d(TAG, titleNotifications);
-            toolbar.setTitle(titleNotifications);
-        });
+        lastFragmentTag = preferenceManager.getString(Constants.PREF_LAST_FRAGMENT);
 
+        if (lastFragmentTag == null) {
+            lastFragmentTag = HomeAllEventsFragment.class.getSimpleName();
+        }
 
+        Fragment lastFragment = getSupportFragmentManager().findFragmentByTag(lastFragmentTag);
 
+        if (lastFragment == null) {
+            lastFragment = new HomeAllEventsFragment(); // Create a new fragment if it doesn't exist
+        }
 
-
-      //  broadcastReceiver = new InternetReceiver();
-        //IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);//
-        //registerReceiver(broadcastReceiver, filter);
-        //broadcastReceiver.getResultData()
-
-
+        replaceFragment(lastFragment, lastFragmentTag);
     }
 
     private void initToolbar(){
@@ -76,20 +74,17 @@ public class AllEventsActivity extends AppCompatActivity {
 
     }
 
-    private void initBottomNavigationView(){
+    private void initBottomNavigationView() {
         bottomNavigation = findViewById(R.id.bottom_navigation_view);
 
         bottomNavigation.setOnItemSelectedListener(item -> {
-
             switch (item.getItemId()) {
                 case R.id.navigation_home_all_events:
-                    HomeAllEventsFragment homeAllEventsFragment = new HomeAllEventsFragment();
-                    replaceFragment(homeAllEventsFragment);
+                    replaceFragment(new HomeAllEventsFragment(), HomeAllEventsFragment.class.getSimpleName());
                     return true;
                 case R.id.navigation_notifications:
                     if (isAuthenticated()) {
-                        NotificationsFragment notificationsFragment = new NotificationsFragment();
-                        replaceFragment(notificationsFragment);
+                        replaceFragment(new NotificationsFragment(), NotificationsFragment.class.getSimpleName());
                         return true;
                     } else {
                         showAuthDialog();
@@ -97,8 +92,7 @@ public class AllEventsActivity extends AppCompatActivity {
                     }
                 case R.id.navigation_my_events:
                     if (isAuthenticated()) {
-                        MyEventsFragment myEventsFragment = new MyEventsFragment();
-                        replaceFragment(myEventsFragment);
+                        replaceFragment(new MyEventsFragment(), MyEventsFragment.class.getSimpleName());
                         return true;
                     } else {
                         showAuthDialog();
@@ -106,18 +100,17 @@ public class AllEventsActivity extends AppCompatActivity {
                     }
                 case R.id.navigation_profile:
                     if (isAuthenticated()) {
-                        ProfileFragment profileFragment = new ProfileFragment();
-                        replaceFragment(profileFragment);
+                        replaceFragment(new ProfileFragment(), ProfileFragment.class.getSimpleName());
                         return true;
                     } else {
                         showAuthDialog();
                         return false;
                     }
             }
-
             return false;
         });
     }
+
 
     private boolean isAuthenticated() {
         return preferenceManager != null && preferenceManager.getString(Constants.KEY_APP_TOKEN) != null;
@@ -128,9 +121,10 @@ public class AllEventsActivity extends AppCompatActivity {
         dialog.show();
     }
 
-    private void replaceFragment(Fragment fragment){
+    private void replaceFragment(Fragment fragment, String tag) {
+        lastFragmentTag = tag; // update last displayed fragment tag
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.frame_layout_container, fragment);
+        fragmentTransaction.replace(R.id.frame_layout_container, fragment, tag);
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
     }
@@ -151,22 +145,8 @@ public class AllEventsActivity extends AppCompatActivity {
 
     @Override
     public void onPause() {
-       super.onPause();
-       /* try {
-            unregisterReceiver(broadcastReceiver);
-        } catch (IllegalArgumentException ex) {
-            ex.printStackTrace();
-        }*/
-    }
-
-    @Override
-    protected void onDestroy() {
-       super.onDestroy();
-       /*  try {
-            unregisterReceiver(broadcastReceiver);
-        } catch (IllegalArgumentException ex) {
-            ex.printStackTrace();
-        }*/
+        super.onPause();
+        preferenceManager.putString(Constants.PREF_LAST_FRAGMENT, lastFragmentTag);
     }
 
     /** запускает AllEventsActivity из текущего Контекста

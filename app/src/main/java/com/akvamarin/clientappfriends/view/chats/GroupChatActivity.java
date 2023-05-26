@@ -82,7 +82,7 @@ public class GroupChatActivity extends AppCompatActivity {
     }
 
     private void setListeners(){
-        binding.groupChatImageBack.setOnClickListener(view -> {
+        binding.iconImageBack.setOnClickListener(view -> {
             onBackPressed();
         });
         binding.layoutSend.setOnClickListener(view -> {

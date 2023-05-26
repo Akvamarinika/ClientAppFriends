@@ -131,7 +131,6 @@
     <string name="text_hidden_btn_organizer_approve">Заявка была успешно подтверждена!</string>
     <string name="text_hidden_btn_organizer_reject">Заявка была отклонена.</string>
 
-
     <string name="text_notification_title_approved">Ваша заявка принята!</string>
     <string name="text_notification_title_rejected">Ваша заявка отклонена!</string>
     <string name="text_notification_text_approved">Вашу заявку на участие в мероприятии Event одобрили.</string>
@@ -143,6 +142,37 @@
     <string name="btn_text_approve">Принять</string>
     <string name="btn_text_hidden">Скрыть</string>
     <string name="title_participant">Участники: </string>
+    <string name="info_about_me">Обо мне:</string>
+    <string name="chips_title_main">Основное:</string>
+    <string name="personal_information">Личная информация</string>
+    <string name="alcohol">Алкоголь</string>
+    <string name="smoking">Курение</string>
+    <string name="about_me">Обо мне:</string>
+    <string name="city">Город:</string>
+    <string name="gender">Пол:</string>
+    <string name="name">Имя</string>
+    <string name="psychotype">Характер</string>
+    <string name="btn_update_text">Сохранить изменения</string>
+
+    <string name="question_alcohol">Употребляете ли Вы алкоголь?</string>
+    <string name="question_smoking">Курите ли Вы?</string>
+    <string name="question_psychotype">Какой Ваш тип личности?</string>
+
+    <string name="for_company">за компанию</string>
+    <string name="often">часто</string>
+    <string name="never">никогда</string>
+    <string name="rarely">редко</string>
+    <string name="no_answer">нет ответа</string>
+
+    <string name="no">нет</string>
+    <string name="quit">бросаю</string>
+
+    <string name="introvert">интроверт</string>
+    <string name="extravert">экстраверт</string>
+    <string name="mixed">50 на 50</string>
+    <string name="close_btn_text">Закрыть</string>
+    <string name="error_text_title">Ошибка запроса данных!</string>
+    <string name="error_description_text">Проверьте доступность сети Интернет и выполните запрос позже.</string>
 
     <string-array name="event_categories_lst">
         <item>Бары, кафе и рестораны</item>

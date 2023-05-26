@@ -24,6 +24,7 @@ public class Constants {
     public static final String KEY_MESSAGE = "message";
     public static final String KEY_TIMESTAMP = "timestamp";
 
+    public static final String PREF_LAST_FRAGMENT = "fragment";
     public static final String KEY_APP_TOKEN = "token";
     public static final String KEY_LOGIN = "login";
     public static final String KEY_USER_ID = "id";

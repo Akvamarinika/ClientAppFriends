@@ -10,22 +10,25 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginBottom="0dp"
+        android:elevation="4dp"
         android:background="@color/colorPrimaryDark"
         app:layout_constraintBottom_toTopOf="@id/viewSupporter"
         app:layout_constraintTop_toTopOf="parent"/>
 
     <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/groupChatImageBack"
+        android:id="@+id/iconImageBack"
         android:layout_width="35dp"
         android:layout_height="35dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="12dp"
         android:padding="6dp"
+        android:elevation="5dp"
         android:src="@drawable/ic_arrow_back_chats"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        android:clickable="true"
         android:tint="@color/white"
-        />
+        android:focusable="true" />
 
     <TextView
         android:id="@+id/groupChatGroupName"
@@ -41,10 +44,10 @@
         android:textColor="@color/white"
         android:textSize="@dimen/subtitle_size"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/groupChatImageBack"
-        app:layout_constraintTop_toTopOf="@+id/groupChatImageBack"
+        app:layout_constraintBottom_toBottomOf="@+id/iconImageBack"
+        app:layout_constraintTop_toTopOf="@+id/iconImageBack"
         app:layout_constraintEnd_toStartOf="@+id/groupChatAddNewUsers"
-        app:layout_constraintStart_toEndOf="@+id/groupChatImageBack"
+        app:layout_constraintStart_toEndOf="@+id/iconImageBack"
         />
 
     <androidx.appcompat.widget.AppCompatImageView
@@ -68,7 +71,7 @@
         android:layout_height="1dp"
         android:layout_marginTop="12dp"
         android:background="@color/colorPrimaryDark"
-        app:layout_constraintTop_toBottomOf="@id/groupChatImageBack"
+        app:layout_constraintTop_toBottomOf="@id/iconImageBack"
         />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

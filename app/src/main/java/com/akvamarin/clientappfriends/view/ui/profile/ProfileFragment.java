@@ -1,44 +1,45 @@
 package com.akvamarin.clientappfriends.view.ui.profile;
 
+import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
-import com.akvamarin.clientappfriends.API.RetrofitService;
-import com.akvamarin.clientappfriends.API.connection.UserApi;
+import com.akvamarin.clientappfriends.API.presentor.BaseCallback;
+import com.akvamarin.clientappfriends.API.presentor.userdata.UserCallback;
+import com.akvamarin.clientappfriends.API.presentor.userdata.UserDataApi;
 import com.akvamarin.clientappfriends.R;
-import com.akvamarin.clientappfriends.domain.dto.AuthToken;
-import com.akvamarin.clientappfriends.domain.dto.CityDTO;
 import com.akvamarin.clientappfriends.domain.dto.ViewUserDTO;
-import com.akvamarin.clientappfriends.utils.Constants;
 import com.akvamarin.clientappfriends.utils.PreferenceManager;
 import com.akvamarin.clientappfriends.utils.Utils;
+import com.akvamarin.clientappfriends.view.AllEventsActivity;
 import com.akvamarin.clientappfriends.view.AuthenticationActivity;
 import com.akvamarin.clientappfriends.view.dialog.DelDialog;
 import com.akvamarin.clientappfriends.view.dialog.DelDialogListener;
+import com.akvamarin.clientappfriends.view.dialog.ErrorDialog;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.squareup.picasso.Picasso;
 import com.vk.api.sdk.VK;
 
 import java.time.LocalDate;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class ProfileFragment extends Fragment implements DelDialogListener {
     private static final String TAG = "ProfileFragment";
@@ -49,12 +50,24 @@ public class ProfileFragment extends Fragment implements DelDialogListener {
     private ImageView imageProfileAvatar;
     private LinearLayout linearLayoutLogOut;
     private LinearLayout layoutDeleteAccount;
+    private ImageButton imageBtnEditProfileView;
     private TextView tvProfileNameAge;
-
     private ViewUserDTO user;
-    private RetrofitService retrofitService;
-    private UserApi userApi;
+    private UserDataApi userDataApi;
     private PreferenceManager preferenceManager;
+    private String loading;
+
+    private final ActivityResultLauncher<Intent> editProfileLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
+                    ViewUserDTO updatedViewUserDTO = result.getData().getParcelableExtra("viewUserDTO");
+                    if (updatedViewUserDTO != null) {
+                        updateViewUserDTO(updatedViewUserDTO);
+                    }
+                }
+            }
+    );
 
     public View onCreateView(@NonNull LayoutInflater layoutInflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -74,11 +87,12 @@ public class ProfileFragment extends Fragment implements DelDialogListener {
 
         layoutDeleteAccount.setOnClickListener(view -> showDeleteDialog());
 
+        imageBtnEditProfileView.setOnClickListener(view -> startViewProfileActivity());
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             initUser();
         }
 
-           // requestUsers();
         return viewProfileFragment;
     }
 
@@ -89,10 +103,11 @@ public class ProfileFragment extends Fragment implements DelDialogListener {
         linearLayoutLogOut = viewProfileFragment.findViewById(R.id.layoutLogOut);
         layoutDeleteAccount = viewProfileFragment.findViewById(R.id.layoutDeleteAccount);
         tvProfileNameAge = viewProfileFragment.findViewById(R.id.tvProfileNameAge);
+        imageBtnEditProfileView = viewProfileFragment.findViewById(R.id.imageBtnEditProfileView);
 
+        userDataApi = new UserDataApi(requireActivity());
         preferenceManager = new PreferenceManager(requireActivity());
-        retrofitService = RetrofitService.getInstance(getContext());
-        userApi = retrofitService.getRetrofit().create(UserApi.class);
+        loading = requireActivity().getString(R.string.loading);
     }
 
 
@@ -107,92 +122,85 @@ public class ProfileFragment extends Fragment implements DelDialogListener {
         floatingActionButton.setVisibility(View.VISIBLE);
     }
 
-    private void startEditActivityWithFAB(){
+    private void startEditActivityWithFAB() {
         floatingActionButton.setOnClickListener(view -> {
             Intent intent = new Intent(getActivity(), EditProfileActivity.class);
-            startActivity(intent);
+            editProfileLauncher.launch(intent);
         });
     }
 
+    private void startViewProfileActivity() {
+        Intent intent = new Intent(getActivity(), ViewProfileActivity.class);
+        intent.putExtra("userId", user.getId());
+        startActivity(intent);
+    }
+
+    /** Получение данных пользователя
+     * по его логину
+     * */
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void initUser(){
-        String login = preferenceManager.getString(Constants.KEY_LOGIN);
-        String authToken = preferenceManager.getString(Constants.KEY_APP_TOKEN);
-        Log.d(TAG, "Login user: " + login);
+        AllEventsActivity allEventsActivity = (AllEventsActivity) requireActivity();
+        allEventsActivity.showProgressDialog(loading);
 
-        if (!login.equals("login") && authToken != null) {
-            userApi.getUserByLogin(login, new AuthToken(authToken)).enqueue(new Callback<>() {
-                @Override
-                public void onResponse(@NonNull Call<ViewUserDTO> call, @NonNull Response<ViewUserDTO> response) {
+        userDataApi.getUserByLogin(new UserCallback() {
+            @Override
+            public void onUserRetrieved(ViewUserDTO user) {
+                ProfileFragment.this.user = user;
+                allEventsActivity.dismissProgressDialog();
+                updateViewUserDTO(user);
+                Log.d(TAG, "Save user ID: " + user.getId());
+            }
 
-                    if (response.isSuccessful()) {
-                        assert response.body() != null;
-                        user = response.body();
-                        preferenceManager.putLong(Constants.KEY_USER_ID, user.getId()); // user id
-                        Log.d(TAG, "Save user ID: " + user.getId());
+            @Override
+            public void onUserRetrievalError(int responseCode) {
+                allEventsActivity.dismissProgressDialog();
+                showErrorDialog(responseCode);
+            }
+        });
+    }
 
-                        CityDTO cityDTO = user.getCityDTO();
-                        String gender = user.getSex().toString();
-                        LocalDate birthday = LocalDate.parse(user.getDateOfBirthday());
-                        int age = Utils.getAgeWithCalendar(birthday.getYear(), birthday.getMonthValue(), birthday.getDayOfMonth());
+    public void updateViewUserDTO(ViewUserDTO viewUserDTO) {
+        this.user = viewUserDTO;
+        LocalDate birthday = LocalDate.parse(user.getDateOfBirthday());
+        int age = Utils.getAgeWithCalendar(birthday.getYear(), birthday.getMonthValue(), birthday.getDayOfMonth());
 
-                        String nameUser = String.format("%s, %s %s %s %s", user.getNickname(), age,
-                                cityDTO.getName(), cityDTO.getCountryName(), gender);
-                        tvProfileNameAge.setText(nameUser);
+        String nameUser = String.format("%s, %s ", user.getNickname(), age);
+        tvProfileNameAge.setText(nameUser);
 
-                        Log.d(TAG, "user.getUrlAvatar() " + user.getUrlAvatar());
-                        if (!TextUtils.isEmpty(user.getUrlAvatar())) {  // Check if the photo URL is not empty
-                            Picasso.get().load(user.getUrlAvatar()) // Load the image from the URL
-                                    .error(R.drawable.no_avatar) // If an error occurs, set a placeholder image
-                                    .into(imageProfileAvatar); // Set the loaded image to the ImageView
-                        } else {  // If no photo URL is given, set a placeholder image
-                            imageProfileAvatar.setImageResource(R.drawable.no_avatar);
-                        }
-
-                    } else {
-                        Log.d(TAG, "getUserByLogin(), response code " + response.code());
-                    }
-                }
-
-                @Override
-                public void onFailure(@NonNull Call<ViewUserDTO> call, @NonNull Throwable t) {
-                    Toast.makeText(requireActivity(), "getUserByLogin() --- Fail", Toast.LENGTH_SHORT).show();
-                    Log.d(TAG, "Error fetching user: " + t.fillInStackTrace());
-                }
-            });
+        Log.d(TAG, "user.getUrlAvatar() " + user.getUrlAvatar());
+        if (!TextUtils.isEmpty(user.getUrlAvatar())) {
+            Picasso.get().load(user.getUrlAvatar()) // Load the image from the URL
+                    .error(R.drawable.no_avatar)
+                    .into(imageProfileAvatar); // Set to ImageView
+        } else {  // If no photo URL
+            imageProfileAvatar.setImageResource(R.drawable.no_avatar);
         }
     }
 
     /** Удаление пользователя
      * через коллбэк диалогового окна
      * */
-    private void deleteUser() {
-        Long id = preferenceManager.getLong(Constants.KEY_USER_ID);
-        String authToken = preferenceManager.getString(Constants.KEY_APP_TOKEN);
-        Log.d(TAG, "ID user: " + id);
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void deleteUser(){
+        AllEventsActivity allEventsActivity = (AllEventsActivity) requireActivity();
+        allEventsActivity.showProgressDialog(loading);
 
-        if (id != 0 && authToken != null) {
-            userApi.deleteUser(id, new AuthToken(authToken)).enqueue(new Callback<>() {
-                @Override
-                public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
+        userDataApi.deleteUser(new BaseCallback() {
+            @Override
+            public void onRetrieved() {
+                preferenceManager.clear(); // all values clear
+                VK.logout();  // Log out of VK ==> for delete user
+                AuthenticationActivity.startFrom(getActivity()); // Start AuthorizationActivity from this context
+                requireActivity().finish(); // Finish the current activity
+            }
 
-                    if (response.isSuccessful()) {
-                        preferenceManager.clear(); // all values clear
-                        VK.logout();  // Log out of VK ==> for delete user
-                        AuthenticationActivity.startFrom(getActivity()); // Start AuthorizationActivity from this context
-                        requireActivity().finish(); // Finish the current activity
-                    } else {
-                        Toast.makeText(requireActivity(), "deleteUser()", Toast.LENGTH_SHORT).show();
-                    }
-                }
-
-                @Override
-                public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
-                    Toast.makeText(requireActivity(), "deleteUser() --- Fail", Toast.LENGTH_SHORT).show();
-                    Log.d(TAG, "Error delete user: " + t.fillInStackTrace());
-                }
-            });
-        }
+            @Override
+            public void onRetrievalError(int responseCode) {
+                allEventsActivity.dismissProgressDialog();
+                showErrorDialog(responseCode);
+            }
+        });
     }
 
     @Override
@@ -203,5 +211,19 @@ public class ProfileFragment extends Fragment implements DelDialogListener {
     private void showDeleteDialog() {
         DelDialog dialog = new DelDialog(requireActivity(), this);
         dialog.show();
+    }
+
+    private void showErrorDialog(int responseCode) {
+        ErrorDialog dialog = new ErrorDialog(requireActivity(), responseCode);
+        dialog.show();
+    }
+
+    @SuppressLint("NewApi")
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (user == null) {
+            initUser();
+        }
     }
 }

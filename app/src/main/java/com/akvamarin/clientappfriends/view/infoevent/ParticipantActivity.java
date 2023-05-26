@@ -117,7 +117,7 @@ public class ParticipantActivity extends BaseActivity implements IUserSlimListen
             ViewUserSlimDTO currentUserSlim = userSlimList.get(position);
             Long currentUserSlimId = currentUserSlim.getId();
             Intent intent = new Intent(getApplicationContext(), ViewProfileActivity.class);
-            intent.putExtra("current_user_id", currentUserSlimId);
+            intent.putExtra("userId", currentUserSlimId);
             startActivity(intent);
         } else {
             showAuthDialog();
