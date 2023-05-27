@@ -2,6 +2,7 @@ package com.akvamarin.clientappfriends.API.connection;
 
 import com.akvamarin.clientappfriends.domain.dto.AuthToken;
 import com.akvamarin.clientappfriends.domain.dto.EventDTO;
+import com.akvamarin.clientappfriends.domain.dto.EventFilter;
 import com.akvamarin.clientappfriends.domain.dto.ViewEventDTO;
 
 import java.util.List;
@@ -28,5 +29,8 @@ public interface EventApi {
 
     @PATCH(PATH_PREFIX + "/")
     Call<ViewEventDTO> updateEvent (@Body EventDTO event, @Header("Authorization") AuthToken authToken);
+
+    @PATCH(PATH_PREFIX + "/filter")
+    Call<ViewEventDTO> filterEvents(@Body EventFilter eventFilter);
 
 }
