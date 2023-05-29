@@ -1,4 +1,4 @@
-package com.akvamarin.clientappfriends.API.presentor.userdata;
+package com.akvamarin.clientappfriends.api.presentor.userdata;
 
 import com.akvamarin.clientappfriends.domain.dto.ViewUserDTO;
 

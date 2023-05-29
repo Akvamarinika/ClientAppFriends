@@ -1,4 +1,4 @@
-package com.akvamarin.clientappfriends.API;
+package com.akvamarin.clientappfriends.api;
 
 import android.content.Context;
 import android.util.Log;

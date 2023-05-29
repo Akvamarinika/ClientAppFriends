@@ -1,9 +1,7 @@
-package com.akvamarin.clientappfriends.API.connection;
+package com.akvamarin.clientappfriends.api.connection;
 
 import com.akvamarin.clientappfriends.domain.dto.AuthToken;
-import com.akvamarin.clientappfriends.domain.dto.EventDTO;
 import com.akvamarin.clientappfriends.domain.dto.UserDTO;
-import com.akvamarin.clientappfriends.domain.dto.ViewEventDTO;
 import com.akvamarin.clientappfriends.domain.dto.ViewUserDTO;
 import com.akvamarin.clientappfriends.domain.dto.ViewUserSlimDTO;
 

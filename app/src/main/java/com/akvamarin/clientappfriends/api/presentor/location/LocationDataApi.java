@@ -1,17 +1,13 @@
-package com.akvamarin.clientappfriends.API.presentor.location;
+package com.akvamarin.clientappfriends.api.presentor.location;
 
 import android.content.Context;
 import android.util.Log;
-import android.widget.ArrayAdapter;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
-import com.akvamarin.clientappfriends.API.RetrofitService;
-import com.akvamarin.clientappfriends.API.connection.CityApi;
-import com.akvamarin.clientappfriends.API.connection.UserApi;
+import com.akvamarin.clientappfriends.api.RetrofitService;
+import com.akvamarin.clientappfriends.api.connection.CityApi;
 import com.akvamarin.clientappfriends.domain.dto.CityDTO;
-import com.akvamarin.clientappfriends.view.register.RegisterCityActivity;
 
 import java.util.List;
 

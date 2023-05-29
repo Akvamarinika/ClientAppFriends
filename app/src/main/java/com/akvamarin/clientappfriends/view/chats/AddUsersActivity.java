@@ -11,8 +11,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.akvamarin.clientappfriends.API.RetrofitService;
-import com.akvamarin.clientappfriends.API.connection.UserApi;
+import com.akvamarin.clientappfriends.api.RetrofitService;
+import com.akvamarin.clientappfriends.api.connection.UserApi;
 import com.akvamarin.clientappfriends.adapters.UserAdapter;
 import com.akvamarin.clientappfriends.databinding.ActivityAddUsersBinding;
 import com.akvamarin.clientappfriends.domain.dto.ViewUserSlimDTO;

@@ -12,8 +12,8 @@ import android.widget.TextView;
 
 import androidx.annotation.RequiresApi;
 
-import com.akvamarin.clientappfriends.API.presentor.userdata.UserCallback;
-import com.akvamarin.clientappfriends.API.presentor.userdata.UserDataApi;
+import com.akvamarin.clientappfriends.api.presentor.userdata.UserCallback;
+import com.akvamarin.clientappfriends.api.presentor.userdata.UserDataApi;
 import com.akvamarin.clientappfriends.BaseActivity;
 import com.akvamarin.clientappfriends.R;
 import com.akvamarin.clientappfriends.domain.dto.CityDTO;

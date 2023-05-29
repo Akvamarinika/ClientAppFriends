@@ -17,10 +17,10 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 
-import com.akvamarin.clientappfriends.API.ErrorResponse;
-import com.akvamarin.clientappfriends.API.ErrorUtils;
-import com.akvamarin.clientappfriends.API.RetrofitService;
-import com.akvamarin.clientappfriends.API.connection.AuthenticationApi;
+import com.akvamarin.clientappfriends.api.ErrorResponse;
+import com.akvamarin.clientappfriends.api.ErrorUtils;
+import com.akvamarin.clientappfriends.api.RetrofitService;
+import com.akvamarin.clientappfriends.api.connection.AuthenticationApi;
 import com.akvamarin.clientappfriends.BaseActivity;
 import com.akvamarin.clientappfriends.R;
 import com.akvamarin.clientappfriends.domain.dto.AuthToken;

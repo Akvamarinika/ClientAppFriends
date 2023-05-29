@@ -1,4 +1,4 @@
-package com.akvamarin.clientappfriends.API.presentor;
+package com.akvamarin.clientappfriends.api.presentor;
 
 public interface BaseCallback {
     void onRetrieved();

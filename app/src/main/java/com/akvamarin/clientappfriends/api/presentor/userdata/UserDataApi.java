@@ -1,4 +1,4 @@
-package com.akvamarin.clientappfriends.API.presentor.userdata;
+package com.akvamarin.clientappfriends.api.presentor.userdata;
 
 import android.content.Context;
 import android.os.Build;
@@ -7,9 +7,9 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 
-import com.akvamarin.clientappfriends.API.RetrofitService;
-import com.akvamarin.clientappfriends.API.connection.UserApi;
-import com.akvamarin.clientappfriends.API.presentor.BaseCallback;
+import com.akvamarin.clientappfriends.api.RetrofitService;
+import com.akvamarin.clientappfriends.api.connection.UserApi;
+import com.akvamarin.clientappfriends.api.presentor.BaseCallback;
 import com.akvamarin.clientappfriends.domain.dto.AuthToken;
 import com.akvamarin.clientappfriends.domain.dto.UserDTO;
 import com.akvamarin.clientappfriends.domain.dto.ViewUserDTO;

@@ -1,4 +1,4 @@
-package com.akvamarin.clientappfriends.API.connection;
+package com.akvamarin.clientappfriends.api.connection;
 
 import okhttp3.MultipartBody;
 import retrofit2.Call;

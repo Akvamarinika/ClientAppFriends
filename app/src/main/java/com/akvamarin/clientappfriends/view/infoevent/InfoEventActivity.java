@@ -21,12 +21,12 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.akvamarin.clientappfriends.API.ErrorResponse;
-import com.akvamarin.clientappfriends.API.ErrorUtils;
-import com.akvamarin.clientappfriends.API.RetrofitService;
-import com.akvamarin.clientappfriends.API.connection.CommentApi;
-import com.akvamarin.clientappfriends.API.connection.EventApi;
-import com.akvamarin.clientappfriends.API.connection.NotificationParticipantApi;
+import com.akvamarin.clientappfriends.api.ErrorResponse;
+import com.akvamarin.clientappfriends.api.ErrorUtils;
+import com.akvamarin.clientappfriends.api.RetrofitService;
+import com.akvamarin.clientappfriends.api.connection.CommentApi;
+import com.akvamarin.clientappfriends.api.connection.EventApi;
+import com.akvamarin.clientappfriends.api.connection.NotificationParticipantApi;
 import com.akvamarin.clientappfriends.BaseActivity;
 import com.akvamarin.clientappfriends.R;
 import com.akvamarin.clientappfriends.domain.dto.AuthToken;

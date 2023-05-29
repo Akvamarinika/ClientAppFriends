@@ -1,7 +1,6 @@
-package com.akvamarin.clientappfriends.API.connection;
+package com.akvamarin.clientappfriends.api.connection;
 
 import com.akvamarin.clientappfriends.domain.dto.CityDTO;
-import com.akvamarin.clientappfriends.domain.dto.ViewUserSlimDTO;
 
 import java.util.List;
 

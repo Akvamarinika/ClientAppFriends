@@ -23,11 +23,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.widget.Toolbar;
 
-import com.akvamarin.clientappfriends.API.ErrorResponse;
-import com.akvamarin.clientappfriends.API.ErrorUtils;
-import com.akvamarin.clientappfriends.API.RetrofitService;
-import com.akvamarin.clientappfriends.API.connection.EventApi;
-import com.akvamarin.clientappfriends.API.connection.EventCategoryApi;
+import com.akvamarin.clientappfriends.api.ErrorResponse;
+import com.akvamarin.clientappfriends.api.ErrorUtils;
+import com.akvamarin.clientappfriends.api.RetrofitService;
+import com.akvamarin.clientappfriends.api.connection.EventApi;
+import com.akvamarin.clientappfriends.api.connection.EventCategoryApi;
 import com.akvamarin.clientappfriends.BaseActivity;
 import com.akvamarin.clientappfriends.R;
 import com.akvamarin.clientappfriends.domain.dto.AuthToken;

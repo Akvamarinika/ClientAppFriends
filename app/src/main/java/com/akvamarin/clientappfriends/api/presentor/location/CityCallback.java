@@ -1,4 +1,4 @@
-package com.akvamarin.clientappfriends.API.presentor.location;
+package com.akvamarin.clientappfriends.api.presentor.location;
 
 import com.akvamarin.clientappfriends.domain.dto.CityDTO;
 

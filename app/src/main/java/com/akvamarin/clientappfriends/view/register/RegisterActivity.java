@@ -8,10 +8,10 @@ import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 
-import com.akvamarin.clientappfriends.API.ErrorResponse;
-import com.akvamarin.clientappfriends.API.ErrorUtils;
-import com.akvamarin.clientappfriends.API.RetrofitService;
-import com.akvamarin.clientappfriends.API.connection.UserApi;
+import com.akvamarin.clientappfriends.api.ErrorResponse;
+import com.akvamarin.clientappfriends.api.ErrorUtils;
+import com.akvamarin.clientappfriends.api.RetrofitService;
+import com.akvamarin.clientappfriends.api.connection.UserApi;
 import com.akvamarin.clientappfriends.BaseActivity;
 import com.akvamarin.clientappfriends.R;
 import com.akvamarin.clientappfriends.domain.dto.UserDTO;
