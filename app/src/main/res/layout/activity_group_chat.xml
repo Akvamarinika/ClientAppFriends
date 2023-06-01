@@ -42,7 +42,7 @@
         />
 
     <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/groupChatAddNewUsers"
+        android:id="@+id/deleteEvent"
         android:layout_width="35dp"
         android:layout_height="35dp"
         android:layout_marginStart="16dp"
@@ -70,7 +70,7 @@
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/iconImageBack"
         app:layout_constraintTop_toTopOf="@+id/iconImageBack"
-        app:layout_constraintEnd_toStartOf="@+id/groupChatAddNewUsers"
+        app:layout_constraintEnd_toStartOf="@+id/deleteEvent"
         app:layout_constraintStart_toEndOf="@+id/iconImageBack"
         />
 

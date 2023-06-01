@@ -40,6 +40,4 @@ public class DelDialog extends Dialog {
 
         btnCancel.setOnClickListener(v -> this.dismiss());
     }
-
-
 }

@@ -24,4 +24,13 @@ public enum DayOfWeek implements Serializable {
     public String toString() {
         return rusName;
     }
+
+    public static DayOfWeek getEnumValue(String rusValue) {
+        for (DayOfWeek dayOfWeek : DayOfWeek.values()) {
+            if (dayOfWeek.rusName.equalsIgnoreCase(rusValue)) {
+                return dayOfWeek;
+            }
+        }
+        throw new IllegalArgumentException("Invalid Russian value for DayOfWeek: " + rusValue);
+    }
 }

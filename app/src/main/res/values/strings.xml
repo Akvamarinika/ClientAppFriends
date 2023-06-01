@@ -173,19 +173,35 @@
     <string name="close_btn_text">Закрыть</string>
     <string name="error_text_title">Ошибка запроса данных!</string>
     <string name="error_description_text">Проверьте доступность сети Интернет и выполните запрос позже.</string>
+    <string name="menu_sort">Настройки сортировки</string>
+    <string name="btn_text_apply">Применить</string>
+    <string name="title_sort">Сортировать мероприятия по:</string>
+    <string name="sort_radio_creation_date">дате создания (сначала новые)</string>
+    <string name="sort_radio_event_date">дате проведения мероприятия</string>
+    <string name="sort_radio_location">местоположению (ближайшие к Вам)</string>
+    <string name="sort_radio_location_creation_date">местоположению и дате создания</string>
+    <string name="sort_radio_location_event_date">местоположению и дате мероприятия</string>
+    <string name="text_clear">Очистить</string>
+    <string name="filter_title">Фильтры для мероприятий</string>
+    <string name="filter_description">Используйте фильтры, чтобы видеть только те мероприятия, которые Вас интересуют.</string>
+    <string name="filter_day_of_week">День недели</string>
+    <string name="filter_period_of_time">Время суток</string>
+    <string name="filter_category">Категория мероприятия</string>
+    <string name="filter_partner">Партнер</string>
 
-    <string-array name="event_categories_lst">
-        <item>Бары, кафе и рестораны</item>
-        <item>Прогулки</item>
-        <item>Спорт</item>
-        <item>Кино, театры</item>
-        <item>Концерты</item>
-        <item>Путешествия</item>
-        <item>Походы</item>
-        <item>Фестивали</item>
-        <item>Квесты, квизы</item>
-        <item>Выставки, музеи</item>
-        <item>Другое</item>
-    </string-array>
+    <string name="filter_value_title_day_of_week">День недели</string>
+    <string name="filter_value_description_day_of_week">Какие дни недели проведения мероприятий Вам удобны?</string>
+
+    <string name="filter_value_title_period_of_time">Время суток</string>
+    <string name="filter_value_description_period_of_time">Какое время суток проведения мероприятий Вам удобно?</string>
+
+    <string name="filter_value_title_category">Категория мероприятия</string>
+    <string name="filter_value_description_category">Какие категории мероприятий Вам интересны?</string>
+
+    <string name="filter_value_title_partner">Партнер</string>
+    <string name="filter_value_description_partner">Вас интересуют мероприятия, где в поике…</string>
+    <string name="btn_ok">OK</string>
+    <string name="selected_filter">Ваш выбор: </string>
+
 
 </resources>

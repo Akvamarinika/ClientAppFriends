@@ -15,6 +15,7 @@
         app:layout_constraintBottom_toTopOf="@id/viewSupporter"
         app:layout_constraintTop_toTopOf="parent"/>
 
+
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/iconImageBack"
         android:layout_width="35dp"
@@ -25,6 +26,23 @@
         android:elevation="5dp"
         android:src="@drawable/ic_arrow_back_chats"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:clickable="true"
+        android:tint="@color/white"
+        android:focusable="true" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/deleteEvent"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="16dp"
+        android:padding="4dp"
+        android:elevation="5dp"
+        android:visibility="gone"
+        android:src="@drawable/ic_delete_event"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:clickable="true"
         android:tint="@color/white"
@@ -46,23 +64,8 @@
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/iconImageBack"
         app:layout_constraintTop_toTopOf="@+id/iconImageBack"
-        app:layout_constraintEnd_toStartOf="@+id/groupChatAddNewUsers"
+        app:layout_constraintEnd_toStartOf="@+id/deleteEvent"
         app:layout_constraintStart_toEndOf="@+id/iconImageBack"
-        />
-
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/groupChatAddNewUsers"
-        android:layout_width="35dp"
-        android:layout_height="35dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="12dp"
-        android:layout_marginEnd="16dp"
-        android:padding="4dp"
-        android:visibility="gone"
-        android:src="@drawable/ic_chats_person_add"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:tint="@color/white"
         />
 
     <View

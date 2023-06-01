@@ -21,8 +21,8 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.RequiresApi;
 
 import com.akvamarin.clientappfriends.api.presentor.BaseCallback;
-import com.akvamarin.clientappfriends.api.presentor.location.CityCallback;
-import com.akvamarin.clientappfriends.api.presentor.location.LocationDataApi;
+import com.akvamarin.clientappfriends.api.presentor.locationdata.CityCallback;
+import com.akvamarin.clientappfriends.api.presentor.locationdata.LocationDataApi;
 import com.akvamarin.clientappfriends.api.presentor.userdata.UserCallback;
 import com.akvamarin.clientappfriends.api.presentor.userdata.UserDataApi;
 import com.akvamarin.clientappfriends.BaseActivity;

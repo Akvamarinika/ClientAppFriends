@@ -1,6 +1,7 @@
 package com.akvamarin.clientappfriends.view.addevent;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -10,6 +11,7 @@ import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -30,6 +32,9 @@ import com.akvamarin.clientappfriends.api.connection.EventApi;
 import com.akvamarin.clientappfriends.api.connection.EventCategoryApi;
 import com.akvamarin.clientappfriends.BaseActivity;
 import com.akvamarin.clientappfriends.R;
+import com.akvamarin.clientappfriends.api.presentor.categorydata.CategoryCallback;
+import com.akvamarin.clientappfriends.api.presentor.categorydata.CategoryDataApi;
+import com.akvamarin.clientappfriends.api.presentor.eventdata.EventListCallback;
 import com.akvamarin.clientappfriends.domain.dto.AuthToken;
 import com.akvamarin.clientappfriends.domain.dto.EventCategoryDTO;
 import com.akvamarin.clientappfriends.domain.dto.EventDTO;
@@ -39,6 +44,7 @@ import com.akvamarin.clientappfriends.domain.enums.Partner;
 import com.akvamarin.clientappfriends.utils.Constants;
 import com.akvamarin.clientappfriends.utils.PreferenceManager;
 import com.akvamarin.clientappfriends.view.AllEventsActivity;
+import com.akvamarin.clientappfriends.view.dialog.ErrorDialog;
 import com.akvamarin.clientappfriends.view.infoevent.InfoEventActivity;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -88,8 +94,8 @@ public class AddEventActivity extends BaseActivity implements DatePickerDialog.O
 
     private List<EventCategoryDTO> categoriesList = new ArrayList<>();
     private RetrofitService retrofitService;
-    private EventCategoryApi categoryApi;
     private EventApi eventApi;
+    private CategoryDataApi categoryDataApi;
 
     private String loading;
     private ViewEventDTO viewEventDTO;
@@ -158,8 +164,8 @@ public class AddEventActivity extends BaseActivity implements DatePickerDialog.O
 
         preferenceManager = new PreferenceManager(getApplicationContext());
         retrofitService = RetrofitService.getInstance(getApplicationContext());
-        categoryApi = retrofitService.getRetrofit().create(EventCategoryApi.class);
         eventApi = retrofitService.getRetrofit().create(EventApi.class);
+        categoryDataApi = new CategoryDataApi(getApplicationContext());
     }
 
     private void setCreateTextOnWidgets(){
@@ -219,39 +225,29 @@ public class AddEventActivity extends BaseActivity implements DatePickerDialog.O
     /*** Spinner category methods:
      * Получение значений от Сервера
      * ***/
+    @RequiresApi(api = Build.VERSION_CODES.O)
     private void loadSpinnerEventCategoriesFromServer(){
-        showProgressDialog(loading);
-
-        categoryApi.getAllCategories().enqueue(new Callback<>() {
+        Log.d(TAG, "init categories list: preparing ...");
+        categoryDataApi.requestAllEventCategories(new CategoryCallback() {
             @Override
-            public void onResponse(@NonNull Call<List<EventCategoryDTO>> call, @NonNull Response<List<EventCategoryDTO>> response) {
-                dismissProgressDialog();
+            public void onCategoryListRetrieved(List<EventCategoryDTO> categoryDTOList) {
+                categoriesList = categoryDTOList;
+                ArrayAdapter<EventCategoryDTO> adapter = new ArrayAdapter<>(AddEventActivity.this, android.R.layout.simple_spinner_item, categoriesList);
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                spinnerEventCategories.setAdapter(adapter);
 
-                if (response.isSuccessful()) {
-                    categoriesList = response.body();
-                    ArrayAdapter<EventCategoryDTO> adapter = new ArrayAdapter<>(AddEventActivity.this, android.R.layout.simple_spinner_item, categoriesList);
-                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                    spinnerEventCategories.setAdapter(adapter);
-
-                    // Set the selected item
-                    Log.d(TAG, "viewEventDTO : " + viewEventDTO);
-                    if (viewEventDTO != null) {
-                        EventCategoryDTO selectedCategory = viewEventDTO.getEventCategory();
-                        int selectedItemPosition = adapter.getPosition(selectedCategory);
-                        spinnerEventCategories.setSelection(selectedItemPosition);
-                    }
-
-                    Log.d(TAG, "categoriesList size: " + categoriesList.size());
-                } else {
-                    Toast.makeText(getApplicationContext(), "getAllCategoriesDTOs() code:" + response.code(), Toast.LENGTH_SHORT).show();
+                Log.d(TAG, "viewEventDTO : " + viewEventDTO);
+                if (viewEventDTO != null) {  // Set the selected item
+                    EventCategoryDTO selectedCategory = viewEventDTO.getEventCategory();
+                    int selectedItemPosition = adapter.getPosition(selectedCategory);
+                    spinnerEventCategories.setSelection(selectedItemPosition);
                 }
+                Log.d(TAG, "categoriesList size: " + categoriesList.size());
             }
 
             @Override
-            public void onFailure(@NonNull Call<List<EventCategoryDTO>> call, @NonNull Throwable t) {
-                dismissProgressDialog();
-                Toast.makeText(AddEventActivity.this, "getAllCategoriesDTOs() filed!!!", Toast.LENGTH_SHORT).show();
-                Log.d(TAG, "error: " + t.fillInStackTrace());
+            public void onCategoryListRetrievalError(int responseCode) {
+                showErrorDialog(responseCode);
             }
         });
     }
@@ -377,13 +373,14 @@ public class AddEventActivity extends BaseActivity implements DatePickerDialog.O
                         loadSpinnerEventCategoriesFromServer();
                         eventFillingOutFormFields();
                     } else {
-
+                        showErrorDialog(response.code());
                     }
                 }
 
                 @Override
                 public void onFailure(@NonNull Call<ViewEventDTO> call, @NonNull Throwable t) {
                     dismissProgressDialog();
+                    showErrorDialog(-1);
                     Log.d(TAG, "Error fetching one event: " + t.fillInStackTrace());
                 }
             });
@@ -473,6 +470,11 @@ public class AddEventActivity extends BaseActivity implements DatePickerDialog.O
     private boolean checkCountSymbolsInEditText(EditText editText) {
         int textLength = editText.getText().toString().trim().length();
         return textLength <= MIN_TEXT_LENGTH;
+    }
+
+    private void showErrorDialog(int responseCode) {
+        ErrorDialog dialog = new ErrorDialog((Activity) getApplicationContext(), responseCode);
+        dialog.show();
     }
 
     /***

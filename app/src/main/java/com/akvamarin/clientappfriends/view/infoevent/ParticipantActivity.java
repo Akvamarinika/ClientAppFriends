@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -33,6 +34,7 @@ import retrofit2.Response;
 public class ParticipantActivity extends BaseActivity implements IUserSlimListener{
     private static final String TAG = "ParticipantActivity";
     private TextView titleParticipant;
+    private ImageView iconImageBack;
 
     //соединяются адаптером Recycler & List:
     private RecyclerView recyclerViewUserSlim;
@@ -56,12 +58,13 @@ public class ParticipantActivity extends BaseActivity implements IUserSlimListen
 
         initWidgets();
         initParticipantListFromServer();
+        iconImageBack.setOnClickListener(v -> finish());
     }
 
     private void initWidgets(){
         loading = getApplicationContext().getString(R.string.loading);
         titleParticipant = findViewById(R.id.titleParticipant);
-
+        iconImageBack = findViewById(R.id.iconImageBack);
         recyclerViewUserSlim = findViewById(R.id.recycler_view_participant);
         userSlimListener = this;
         recyclerViewUserSlim.setLayoutManager(new LinearLayoutManager(getApplicationContext()));

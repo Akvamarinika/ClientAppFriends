@@ -237,7 +237,7 @@ public class NotificationsFragment extends Fragment implements INotificationOrga
     public void startViewProfileActivity(int position){
         ViewNotificationDTO currentNotification = notificationList.get(position);
         Intent intent = new Intent(requireContext(), ViewProfileActivity.class);
-        intent.putExtra("current_user_id", currentNotification.getUserId()); // user id
+        intent.putExtra("userId", currentNotification.getUserId()); // user id
         startActivity(intent);
     }
 

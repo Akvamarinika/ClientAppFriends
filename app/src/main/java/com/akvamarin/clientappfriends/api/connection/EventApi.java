@@ -9,6 +9,7 @@ import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.PATCH;
@@ -30,7 +31,10 @@ public interface EventApi {
     @PATCH(PATH_PREFIX + "/")
     Call<ViewEventDTO> updateEvent (@Body EventDTO event, @Header("Authorization") AuthToken authToken);
 
-    @PATCH(PATH_PREFIX + "/filter")
-    Call<ViewEventDTO> filterEvents(@Body EventFilter eventFilter);
+    @POST(PATH_PREFIX + "/filter")
+    Call<List<ViewEventDTO>> filterEvents(@Body EventFilter eventFilter);
+
+    @DELETE(PATH_PREFIX + "/{id}")
+    Call<Void> deleteEvent(@Path("id") Long id, @Header("Authorization") AuthToken authToken);
 
 }

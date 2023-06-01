@@ -1,4 +1,4 @@
-package com.akvamarin.clientappfriends.api.presentor.location;
+package com.akvamarin.clientappfriends.api.presentor.locationdata;
 
 import android.content.Context;
 import android.util.Log;

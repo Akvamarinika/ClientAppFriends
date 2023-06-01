@@ -7,14 +7,22 @@
         android:title="@string/text_search"
         android:icon="@drawable/ic_search"
         yourapp:showAsAction="always|collapseActionView"
+        android:visible="false"
         yourapp:actionViewClass="androidx.appcompat.widget.SearchView" />
+
+    <item
+        android:id="@+id/event_sort"
+        android:title="@string/menu_sort"
+        android:icon="@drawable/ic_sort"
+        android:visible="false"
+        yourapp:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/event_filter"
         android:title="@string/text_filter"
         android:icon="@drawable/ic_tune_vertical"
+        android:visible="false"
         yourapp:showAsAction="ifRoom" />
-
 
 <!--    <item-->
 <!--        android:id="@+id/arrow_back"-->

@@ -40,6 +40,7 @@ import com.vk.api.sdk.VK;
 
 import java.time.LocalDate;
 
+@RequiresApi(api = Build.VERSION_CODES.O)
 public class ProfileFragment extends Fragment implements DelDialogListener {
     private static final String TAG = "ProfileFragment";
     private View viewProfileFragment;
@@ -159,6 +160,7 @@ public class ProfileFragment extends Fragment implements DelDialogListener {
         });
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public void updateViewUserDTO(ViewUserDTO viewUserDTO) {
         this.user = viewUserDTO;
         LocalDate birthday = LocalDate.parse(user.getDateOfBirthday());
@@ -204,7 +206,9 @@ public class ProfileFragment extends Fragment implements DelDialogListener {
 
     @Override
     public void onDeleteButtonClick() {
-        deleteUser();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            deleteUser();
+        }
     }
 
     private void showDeleteDialog() {

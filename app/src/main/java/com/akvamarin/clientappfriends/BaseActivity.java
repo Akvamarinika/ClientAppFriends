@@ -14,11 +14,13 @@ import com.google.android.material.textfield.TextInputEditText;
 
 public class BaseActivity extends AppCompatActivity {
     private ProgressDialog progressDialog;
+    private String loading;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //setContentView(R.layout.activity_main);
+        loading = getApplicationContext().getString(R.string.loading);
     }
 
     public void showProgressDialog(String message) {
@@ -57,5 +59,9 @@ public class BaseActivity extends AppCompatActivity {
         }
 
         return super.dispatchTouchEvent(event);
+    }
+
+    public String getLoading() {
+        return loading;
     }
 }
