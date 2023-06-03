@@ -62,6 +62,8 @@ public class ViewProfileActivity extends BaseActivity {
                 initUser(userId);
             }
         }
+
+        iconImageBack.setOnClickListener(v -> finish());
     }
 
     private void initWidgets() {

@@ -29,6 +29,9 @@ import com.akvamarin.clientappfriends.api.connection.EventApi;
 import com.akvamarin.clientappfriends.api.connection.NotificationParticipantApi;
 import com.akvamarin.clientappfriends.BaseActivity;
 import com.akvamarin.clientappfriends.R;
+import com.akvamarin.clientappfriends.api.presentor.BaseCallback;
+import com.akvamarin.clientappfriends.api.presentor.eventdata.EventDataApi;
+import com.akvamarin.clientappfriends.api.presentor.eventdata.EventListCallback;
 import com.akvamarin.clientappfriends.domain.dto.AuthToken;
 import com.akvamarin.clientappfriends.domain.dto.CityDTO;
 import com.akvamarin.clientappfriends.domain.dto.CommentDTO;
@@ -45,6 +48,8 @@ import com.akvamarin.clientappfriends.utils.CommentTag;
 import com.akvamarin.clientappfriends.utils.Constants;
 import com.akvamarin.clientappfriends.utils.PreferenceManager;
 import com.akvamarin.clientappfriends.view.addevent.AddEventActivity;
+import com.akvamarin.clientappfriends.view.dialog.DelDialog;
+import com.akvamarin.clientappfriends.view.dialog.DelDialogListener;
 import com.akvamarin.clientappfriends.view.dialog.ErrorDialog;
 import com.akvamarin.clientappfriends.view.ui.home.CommentAdapter;
 import com.akvamarin.clientappfriends.view.ui.profile.ViewProfileActivity;
@@ -60,7 +65,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class InfoEventActivity extends BaseActivity {
+public class InfoEventActivity extends BaseActivity implements DelDialogListener{
     private static final String TAG = "TagInfoEventActivity";
     private static final String DATE_PATTERN = "d/MM/uuuu";
 
@@ -80,9 +85,10 @@ public class InfoEventActivity extends BaseActivity {
     private TextView textViewTitleComment;
     private TextView textViewEditMode;
     private AppCompatImageView imageModeEditCancel;
-
+    private ImageView deleteEvent;
     private EditText inputMessageEditText;
     private ImageView chatsImageSend;
+    private ImageView iconImageBack;
 
     //соединяются адаптером Recycler & List:
     private RecyclerView recyclerViewComments;
@@ -97,6 +103,7 @@ public class InfoEventActivity extends BaseActivity {
     private PreferenceManager preferenceManager;
     private RetrofitService retrofitService;
     private EventApi eventApi;
+    private EventDataApi eventDataApi;
     private CommentApi commentApi;
     private NotificationParticipantApi notificationParticipantApi;
     private Long eventId;
@@ -171,6 +178,15 @@ public class InfoEventActivity extends BaseActivity {
             inputMessageEditText.setTag(""); // clear
             editModeGone();
         });
+
+        deleteEvent.setOnClickListener(v -> {
+            if (eventId != null && isOrganizer()) {
+                DelDialog delDialog = new DelDialog(this, () -> requestDeleteEvent(eventId));
+                delDialog.show();
+            }
+        });
+
+        iconImageBack.setOnClickListener(v -> finish());
     }
 
     private void initWidgets(){
@@ -191,9 +207,10 @@ public class InfoEventActivity extends BaseActivity {
         textViewTitleComment = findViewById(R.id.titleComment);
         inputMessageEditText = findViewById(R.id.inputMessageEditText);
         chatsImageSend = findViewById(R.id.chatsImageSend);
-
+        deleteEvent = findViewById(R.id.deleteEvent);
         textViewEditMode = findViewById(R.id.textViewEditMode);
         imageModeEditCancel = findViewById(R.id.imageModeEditCancel);
+        iconImageBack = findViewById(R.id.iconImageBack);
         editModeGone();
 
         // comments
@@ -214,6 +231,7 @@ public class InfoEventActivity extends BaseActivity {
         preferenceManager = new PreferenceManager(getApplicationContext());
         retrofitService = RetrofitService.getInstance(getApplicationContext());
         eventApi = retrofitService.getRetrofit().create(EventApi.class);
+        eventDataApi = new EventDataApi(getApplicationContext());
         commentApi = retrofitService.getRetrofit().create(CommentApi.class);
         notificationParticipantApi = retrofitService.getRetrofit().create(NotificationParticipantApi.class);
     }
@@ -317,6 +335,20 @@ public class InfoEventActivity extends BaseActivity {
                 }
             });
         }
+    }
+
+    private void requestDeleteEvent(Long idEvent){
+        eventDataApi.requestDeleteEvent(idEvent, new BaseCallback(){
+            @Override
+            public void onRetrieved() {
+                finish();
+            }
+
+            @Override
+            public void onRetrievalError(int responseCode) {
+                showErrorDialog(responseCode);
+            }
+        });
     }
 
     private CommentDTO initCommentDTO(String commentText){
@@ -447,6 +479,7 @@ public class InfoEventActivity extends BaseActivity {
         Log.d(TAG, "setParticipantButtonStyle() viewNotificationDTO: " + viewNotificationDTO);
         Log.d(TAG, "setParticipantButtonStyle() eventID: " + eventId);
         int colorBaseForText = ContextCompat.getColor(this, R.color.white);
+        deleteEvent.setVisibility(View.GONE);
 
         if (viewNotificationDTO != null && viewNotificationDTO.getFeedbackType() == FeedbackType.WAITING ){
             int color = ContextCompat.getColor(this, R.color.bgcolor);
@@ -469,6 +502,7 @@ public class InfoEventActivity extends BaseActivity {
             int color = ContextCompat.getColor(this, R.color.colorPrimaryDark);
             buttonParticipate.setBackgroundColor(color);
             buttonParticipate.setText(R.string.btn_text_participate_organizer);
+            deleteEvent.setVisibility(View.VISIBLE);
         } else {
             int color = ContextCompat.getColor(this, R.color.colorPrimary);
             buttonParticipate.setBackgroundColor(color);
@@ -636,5 +670,10 @@ public class InfoEventActivity extends BaseActivity {
     private void showErrorDialog(int responseCode) {
         ErrorDialog dialog = new ErrorDialog(InfoEventActivity.this, responseCode);
         dialog.show();
+    }
+
+    @Override
+    public void onDeleteButtonClick() {
+
     }
 }
