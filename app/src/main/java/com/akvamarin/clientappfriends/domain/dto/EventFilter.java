@@ -1,10 +1,10 @@
 package com.akvamarin.clientappfriends.domain.dto;
 
+import com.akvamarin.clientappfriends.domain.enums.DayOfWeek;
 import com.akvamarin.clientappfriends.domain.enums.DayPeriodOfTime;
 import com.akvamarin.clientappfriends.domain.enums.Partner;
 import com.akvamarin.clientappfriends.domain.enums.SortingType;
 
-import java.time.DayOfWeek;
 import java.util.List;
 
 import lombok.AllArgsConstructor;
@@ -20,6 +20,8 @@ public class EventFilter {
     private Long cityId;
 
     private List<Long> categoryIds;
+
+    private List<String> category; // для вывода
 
     private boolean isUserOrganizer;
 

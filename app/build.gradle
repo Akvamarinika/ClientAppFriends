@@ -88,6 +88,8 @@ dependencies {
     implementation "androidx.legacy:legacy-support-v4:1.0.0"
     //noinspection GradleDependency
     implementation "androidx.core:core-ktx:1.9.0"
+    implementation "me.leolin:ShortcutBadger:1.1.22@aar"
+
 
     // CircleImageView
     implementation "de.hdodenhof:circleimageview:$circleImageViewVersion"

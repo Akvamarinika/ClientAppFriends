@@ -2,14 +2,17 @@ package com.akvamarin.clientappfriends.view;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.akvamarin.clientappfriends.BaseActivity;
 import com.akvamarin.clientappfriends.R;
+import com.akvamarin.clientappfriends.domain.enums.SortingType;
 import com.akvamarin.clientappfriends.utils.Constants;
 import com.akvamarin.clientappfriends.utils.PreferenceManager;
 import com.akvamarin.clientappfriends.view.dialog.AuthDialog;
@@ -22,7 +25,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.Objects;
 
-public class AllEventsActivity extends BaseActivity {
+public class AllEventsActivity extends BaseActivity{
     private static final String TAG = "viewModel";
     NotificationsViewModel notificationsViewModel;
 
@@ -34,7 +37,7 @@ public class AllEventsActivity extends BaseActivity {
     //private InternetModeChangeReceiver internetModeChangeReceiver;
     //private BroadcastReceiver broadcastReceiver = null;
 
-
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,7 +57,7 @@ public class AllEventsActivity extends BaseActivity {
         Fragment lastFragment = getSupportFragmentManager().findFragmentByTag(lastFragmentTag);
 
         if (lastFragment == null) {
-            lastFragment = new HomeAllEventsFragment(); // Create a new fragment if it doesn't exist
+            lastFragment = new HomeAllEventsFragment(); //создает нов. фрагмент, если он не существует
         }
 
         replaceFragment(lastFragment, lastFragmentTag);
@@ -71,6 +74,7 @@ public class AllEventsActivity extends BaseActivity {
 
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     private void initBottomNavigationView() {
         bottomNavigation = findViewById(R.id.bottom_navigation_view);
 
@@ -156,4 +160,13 @@ public class AllEventsActivity extends BaseActivity {
     }
 
 
+    public void onSortOptionSelected(SortingType sortingType) {
+        HomeAllEventsFragment homeFragment = (HomeAllEventsFragment) getSupportFragmentManager()
+                .findFragmentByTag(HomeAllEventsFragment.class.getSimpleName());
+
+        if (homeFragment != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            homeFragment.onSortOptionSelected(sortingType);
+            homeFragment.filteredEventList();
+        }
+    }
 }
