@@ -2,19 +2,16 @@ package com.akvamarin.clientappfriends.view.ui.home;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.PopupWindow;
-import android.widget.Toast;
+import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -26,24 +23,28 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.akvamarin.clientappfriends.R;
-import com.akvamarin.clientappfriends.api.RetrofitService;
-import com.akvamarin.clientappfriends.api.connection.EventApi;
+import com.akvamarin.clientappfriends.api.presentor.eventdata.EventDataApi;
+import com.akvamarin.clientappfriends.api.presentor.eventdata.EventListCallback;
+import com.akvamarin.clientappfriends.domain.dto.EventFilter;
 import com.akvamarin.clientappfriends.domain.dto.ViewEventDTO;
+import com.akvamarin.clientappfriends.domain.enums.SortingType;
 import com.akvamarin.clientappfriends.utils.Constants;
+import com.akvamarin.clientappfriends.utils.EventFilterPreferences;
 import com.akvamarin.clientappfriends.utils.PreferenceManager;
+import com.akvamarin.clientappfriends.view.dialog.ErrorDialog;
+import com.akvamarin.clientappfriends.view.infoevent.InfoEventActivity;
 import com.akvamarin.clientappfriends.view.addevent.AddEventActivity;
 import com.akvamarin.clientappfriends.view.dialog.AuthDialog;
-import com.akvamarin.clientappfriends.view.infoevent.InfoEventActivity;
+import com.akvamarin.clientappfriends.view.ui.home.filter.FilterBottomSheetFragment;
+import com.akvamarin.clientappfriends.view.ui.home.filter.FilterBottomSheetListener;
+import com.akvamarin.clientappfriends.view.ui.home.sort.SortBottomSheetFragment;
+import com.akvamarin.clientappfriends.view.ui.home.sort.SortBottomSheetListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
-public class HomeAllEventsFragment extends Fragment implements IEventRecyclerListener {
+public class HomeAllEventsFragment extends Fragment implements IEventRecyclerListener, SortBottomSheetListener, FilterBottomSheetListener {
 
     private Toolbar toolbar;
     private MenuItem searchMenuItem;
@@ -51,7 +52,7 @@ public class HomeAllEventsFragment extends Fragment implements IEventRecyclerLis
     private MenuItem arrowBackMenuItem;
     private View rootViewFragmentHome;
 
-    private static final String TAG = "recyclerEvents";
+    private static final String TAG = "HomeFragment";
     private HomeAllEventsViewModel viewModel;
 
     /* соединяются адаптером Recycler & List: */
@@ -61,11 +62,12 @@ public class HomeAllEventsFragment extends Fragment implements IEventRecyclerLis
     private IEventRecyclerListener eventListener;
 
     private FloatingActionButton floatingActionButton;
+    private ProgressBar progressBar;
 
-    private RetrofitService retrofitService;
-    private EventApi eventApi;
+    private EventDataApi eventDataApi;
 
     private PreferenceManager preferenceManager;
+    private EventFilter eventFilter = new EventFilter();
 
     public View onCreateView(@NonNull LayoutInflater layoutInflater,
                              ViewGroup container,
@@ -73,6 +75,7 @@ public class HomeAllEventsFragment extends Fragment implements IEventRecyclerLis
 
         rootViewFragmentHome = layoutInflater.inflate(R.layout.fragment_home_all_events, container, false);
         recyclerViewAllEvents = rootViewFragmentHome.findViewById(R.id.recycler_view_all_events);
+        progressBar = rootViewFragmentHome.findViewById(R.id.progressBar);
         setHasOptionsMenu(true);    // фрагмент имеет собственное меню параметров
         updateToolbar();
         init();
@@ -84,8 +87,7 @@ public class HomeAllEventsFragment extends Fragment implements IEventRecyclerLis
 
     private void init(){
         preferenceManager = new PreferenceManager(requireActivity());
-        retrofitService = RetrofitService.getInstance(getContext());
-        eventApi = retrofitService.getRetrofit().create(EventApi.class);
+        eventDataApi = new EventDataApi(requireActivity());
     }
 
     private void updateToolbar(){
@@ -103,8 +105,14 @@ public class HomeAllEventsFragment extends Fragment implements IEventRecyclerLis
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        boolean isApplyFilters = setStoredFilters();
 
-        initEventList();
+        if (isApplyFilters){
+            filteredEventList();
+        } else {
+            initEventList();
+        }
+
         eventListener = this;
         eventAdapter = new EventAdapter(eventList, eventListener);
         recyclerViewAllEvents.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -124,6 +132,19 @@ public class HomeAllEventsFragment extends Fragment implements IEventRecyclerLis
 
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private boolean setStoredFilters() {
+        EventFilterPreferences filterPreferences = new EventFilterPreferences(requireContext());
+        EventFilter storedFilter = filterPreferences.getEventFilter();
+
+        if (storedFilter != null) {
+            this.eventFilter = storedFilter;
+            return true;
+        }
+        return false;
+    }
+
+
     private boolean isAuthenticated() {
         return preferenceManager != null && preferenceManager.getString(Constants.KEY_APP_TOKEN) != null;
     }
@@ -136,30 +157,52 @@ public class HomeAllEventsFragment extends Fragment implements IEventRecyclerLis
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void initEventList(){
         Log.d(TAG, "init event list: preparing ...");
+        progressBar.setVisibility(View.VISIBLE);
 
-        eventApi.getAllEvents().enqueue(new Callback<>() {
+        if (eventList.isEmpty()) {
+            eventDataApi.requestAllEvents(new EventListCallback() {
+                @Override
+                public void onEventListRetrieved(List<ViewEventDTO> viewEventDTOList) {
+                    progressBar.setVisibility(View.GONE);
+                    updateEventAdapter(viewEventDTOList);
+                }
+
+                @Override
+                public void onEventListRetrievalError(int responseCode) {
+                    progressBar.setVisibility(View.GONE);
+                    showErrorDialog(responseCode);
+                }
+            });
+        }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public void filteredEventList(){
+        Log.d(TAG, "filtered event list: preparing ...");
+        progressBar.setVisibility(View.VISIBLE);
+
+        eventDataApi.requestFilterEvents(eventFilter, new EventListCallback() {
             @SuppressLint("NotifyDataSetChanged")
             @Override
-            public void onResponse(@NonNull Call<List<ViewEventDTO>> call, @NonNull Response<List<ViewEventDTO>> response) {
-
-                if (response.isSuccessful() && response.body() != null) {
-                    eventList.clear();
-                    eventList.addAll(response.body());
-                    eventAdapter.notifyDataSetChanged(); // Notify the adapter that the data has changed
-                } else {
-                    Toast.makeText(requireActivity(), "getAllEvents()", Toast.LENGTH_SHORT).show();
-                }
+            public void onEventListRetrieved(List<ViewEventDTO> viewEventDTOList) {
+                progressBar.setVisibility(View.GONE);
+                Log.d(TAG, "filtered event list size: " + viewEventDTOList.size());
+                updateEventAdapter(viewEventDTOList);
             }
 
             @Override
-            public void onFailure(@NonNull Call<List<ViewEventDTO>> call, @NonNull Throwable t) {
-                Toast.makeText(requireActivity(), "getAllEvents() --- Fail", Toast.LENGTH_SHORT).show();
-                Log.d(TAG, "Error fetching events: " + t.fillInStackTrace());
+            public void onEventListRetrievalError(int responseCode) {
+                progressBar.setVisibility(View.GONE);
+                showErrorDialog(responseCode);
             }
         });
+    }
 
-   //     eventList.sort((event, otherEvent) -> otherEvent.getDateTimeCreated().compareTo(event.getDateTimeCreated())); // DESC
-
+    @SuppressLint("NotifyDataSetChanged")
+    private void updateEventAdapter(List<ViewEventDTO> viewEventDTOList){
+        eventList.clear();
+        eventList.addAll(viewEventDTOList);
+        eventAdapter.notifyDataSetChanged(); // Notify adapter
     }
 
     /*** Click card Event: ***/
@@ -181,9 +224,13 @@ public class HomeAllEventsFragment extends Fragment implements IEventRecyclerLis
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         inflater.inflate(R.menu.top_nav_menu_all_events, menu); //наполнение меню
 
-        // Hide a menu item by ID
-        //MenuItem itemToHide = menu.findItem(R.id.event_filter);
-        //itemToHide.setVisible(false);
+        // visible menu item
+        MenuItem itemFilter = menu.findItem(R.id.event_filter);
+        MenuItem itemSort = menu.findItem(R.id.event_sort);
+        MenuItem itemSearch = menu.findItem(R.id.event_search);
+        itemFilter.setVisible(true);
+        itemSort.setVisible(true);
+        itemSearch.setVisible(true);
         super.onCreateOptionsMenu(menu, inflater);
 
         searchMenuItem = menu.findItem(R.id.event_search);
@@ -218,33 +265,95 @@ public class HomeAllEventsFragment extends Fragment implements IEventRecyclerLis
 
         switch (item.getItemId()){
             case R.id.event_filter:
-                showPopupWindow(rootViewFragmentHome);  // filters
+                openFilterBottomSheet();  // filters
+                break;
+            case R.id.event_sort:
+                openSortBottomSheet();    // sort
+                break;
             case R.id.event_search:
                 Log.i("item id ", item.getItemId() + "");
+                break;
             default:
                 return super.onOptionsItemSelected(item);
         }
 
+        return true;
+//        if (item.getItemId() == R.id.arrow_back){
+//            return true;
+//        }
     }
 
-    public void showPopupWindow(View view) {
-        View popupView = LayoutInflater.from(requireActivity()).inflate(R.layout.bottom_sheet_list_filters, (ViewGroup) rootViewFragmentHome, false);
-        PopupWindow popupWindow = new PopupWindow(popupView, ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT, true);
-
-        int popupHeight = getResources().getDisplayMetrics().heightPixels / 2;
-        popupWindow.setHeight(popupHeight);
-
-        popupWindow.setAnimationStyle(android.R.style.Animation_Dialog);
-        popupWindow.setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-        popupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
+    private void showErrorDialog(int responseCode) {
+        ErrorDialog dialog = new ErrorDialog(requireActivity(), responseCode);
+        dialog.show();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onResume() {
         super.onResume();
-        initEventList();
+        setStoredFilters();
+        filteredEventList();
+
+        Bundle sortArgs = getArguments();
+        if (sortArgs != null && sortArgs.containsKey("sortingType")) {
+            SortingType sortingType = (SortingType) sortArgs.getSerializable("sortingType");
+            eventFilter.setSortingType(sortingType);
+            saveFilterParams(eventFilter);
+            getArguments().remove("sortingType");
+        }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    @Override
+    public void onSortOptionSelected(SortingType sortingType) {
+        Log.d(TAG,"onSortOptionSelected " + sortingType);
+
+        if (sortingType != null) {
+            eventFilter.setSortingType(sortingType);
+            saveFilterParams(eventFilter);
+            filteredEventList();
+        }
+
+        SortBottomSheetFragment sortBottomSheetFragment = (SortBottomSheetFragment) getChildFragmentManager().findFragmentByTag("sortBottomSheet");
+        if (sortBottomSheetFragment != null) {
+            sortBottomSheetFragment.dismiss();
+        }
+    }
+
+    private void openSortBottomSheet() {
+        SortBottomSheetFragment sortBottomSheet = SortBottomSheetFragment.newInstance();
+        sortBottomSheet.setListener(this); //listener to receive callback in this fragment
+        sortBottomSheet.show(getChildFragmentManager(), "sortBottomSheet");
+        Log.d(TAG, "openSortBottomSheet() " + getChildFragmentManager());
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    @Override
+    public void onFilterApplied(EventFilter eventFilter) {
+        Log.d(TAG,"onFilterOptionSelected " + eventFilter);
+
+        if (eventFilter != null) {
+            this.eventFilter.setPartnerList(eventFilter.getPartnerList());
+            this.eventFilter.setCategory(eventFilter.getCategory());
+            this.eventFilter.setCategoryIds(eventFilter.getCategoryIds());
+            this.eventFilter.setPeriodOfTimeList(eventFilter.getPeriodOfTimeList());
+            this.eventFilter.setDaysOfWeekList(eventFilter.getDaysOfWeekList());
+            saveFilterParams(eventFilter);
+            filteredEventList();
+        }
+    }
+
+    private void saveFilterParams(EventFilter eventFilter) {
+        EventFilterPreferences filterPreferences = new EventFilterPreferences(requireContext());
+        filterPreferences.saveEventFilter(eventFilter);
+    }
+
+    private void openFilterBottomSheet() {
+        FilterBottomSheetFragment filterBottomSheet = FilterBottomSheetFragment.newInstance();
+        filterBottomSheet.setListener(this); //listener to receive callback in this fragment
+        filterBottomSheet.show(getChildFragmentManager(), "filterBottomSheet");
+        Log.d(TAG, "openFilterBottomSheet() " + getChildFragmentManager());
     }
 
 }

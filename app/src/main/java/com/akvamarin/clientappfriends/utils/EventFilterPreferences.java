@@ -39,6 +39,11 @@ public class EventFilterPreferences {
         }
         return null;
     }
+
+    public void deleteEventFilter() {
+        sharedPreferences.edit().remove(KEY_EVENT_FILTER).apply();
+    }
+
 }
 
 

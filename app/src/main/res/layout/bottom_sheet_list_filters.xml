@@ -1,5 +1,7 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/popup_container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -8,189 +10,214 @@
     android:elevation="8dp"
     android:padding="16dp">
 
-    <TextView
-        android:id="@+id/textViewTitle"
+    <LinearLayout
+        android:id="@+id/layout_close"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="16sp"
+        android:padding="8dp"
+        android:layout_marginBottom="12dp"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/closeIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="150dp"
+            android:src="@drawable/ic_close"
+            android:padding="12dp"
+            android:clickable="true"
+            android:focusable="true" />
+
+        <TextView
+            android:id="@+id/tvClean"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical|end"
+            android:clickable="true"
+            android:text="@string/text_clear"
+            android:textSize="@dimen/info_size"
+            android:textStyle="bold"
+            android:focusable="true" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tvFilterTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/subtitle_size"
         android:gravity="center"
         android:textStyle="bold"
-        android:text="Фильтры и сортировка мероприятий"
+        android:text="@string/filter_title"
         android:textColor="@color/grey"
         android:paddingBottom="8dp" />
 
-    <!-- filter options: partner -->
     <TextView
-        android:id="@+id/partnerLabel"
-        android:layout_width="match_parent"
-        android:layout_height="20dp"
-        android:layout_marginStart="@dimen/title_edit_margin"
-        android:layout_marginTop="@dimen/title_edit_margin"
-        android:layout_marginEnd="@dimen/title_edit_margin"
-        android:text="Партнер:"
-        android:textSize="@dimen/label_size"
-        android:textStyle="bold" />
-
-    <RadioGroup
-        android:id="@+id/radioGroupPartner"
+        android:id="@+id/textViwFilterDescription"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/title_edit_margin"
-        android:layout_marginEnd="@dimen/title_edit_margin"
-        android:background="@android:color/transparent"
-        android:orientation="horizontal">
+        android:textSize="@dimen/text"
+        android:text="@string/filter_description"
+        android:textColor="@color/grey"
+        android:paddingBottom="16dp" />
 
-        <RadioButton
-            android:id="@+id/radioMen"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/activity_horizontal_margin"
-            android:layout_weight="1"
-            android:background="@android:color/transparent"
-            android:button="@android:color/transparent"
-            android:drawableTop="@drawable/add_radio_selector_men"
-            android:gravity="center"
-            android:text="@string/icon_label_men"
-            android:textColor="@color/grey"
-            android:textSize="@dimen/text" />
-
-        <RadioButton
-            android:id="@+id/radioGirl"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/activity_horizontal_margin"
-            android:layout_weight="1"
-            android:background="@android:color/transparent"
-            android:button="@android:color/transparent"
-            android:drawableTop="@drawable/add_radio_selector_girl"
-            android:gravity="center"
-            android:text="@string/icon_label_girl"
-            android:textColor="@color/grey"
-            android:textSize="@dimen/text" />
-
-        <RadioButton
-            android:id="@+id/radioCompany"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/activity_horizontal_margin"
-            android:layout_weight="1"
-            android:background="@android:color/transparent"
-            android:button="@android:color/transparent"
-            android:drawableTop="@drawable/add_radio_selector_group"
-            android:gravity="center"
-            android:text="@string/icon_label_company"
-            android:textColor="@color/grey"
-            android:textSize="@dimen/text" />
-
-        <RadioButton
-            android:id="@+id/radioAll"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/activity_horizontal_margin"
-            android:layout_weight="1"
-            android:background="@android:color/transparent"
-            android:button="@android:color/transparent"
-            android:checked="true"
-            android:drawableTop="@drawable/add_radio_selector_all"
-            android:gravity="center"
-            android:text="@string/icon_label_all"
-            android:textColor="@color/grey"
-            android:textSize="@dimen/text" />
-    </RadioGroup>
-
-
-    <TextView
-        android:id="@+id/twentyFourHoursLabel"
-        android:layout_width="match_parent"
-        android:layout_height="20dp"
-        android:layout_marginStart="@dimen/title_edit_margin"
-        android:layout_marginTop="@dimen/title_edit_margin"
-        android:layout_marginEnd="@dimen/title_edit_margin"
-        android:text="@string/add_label_hours"
-        android:textSize="@dimen/label_size"
-        android:textStyle="bold" />
-
-    <RadioGroup
-        android:id="@+id/radioGroupTwentyFourHours"
+    <!-- day_of_week -->
+    <LinearLayout
+        android:id="@+id/layout_day_of_week"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:padding="8dp"
         android:orientation="horizontal">
 
-        <RadioButton
-            android:id="@+id/radioMorning"
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/activity_horizontal_margin"
-            android:layout_weight="1"
-            android:background="@android:color/transparent"
-            android:button="@android:color/transparent"
-            android:drawableTop="@drawable/add_radio_selector_hours_morning"
-            android:gravity="center"
-            android:text="@string/add_label_icon_morning"
-            android:textColor="@color/grey"
-            android:textSize="@dimen/text" />
+            android:drawablePadding="8dp"
+            android:textStyle="bold"
+            android:textSize="@dimen/info_size"
+            android:text="@string/filter_day_of_week"
+            app:drawableStartCompat="@drawable/ic_day_of_week" />
 
-        <RadioButton
-            android:id="@+id/radioDay"
+        <TextView
+            android:id="@+id/tv_day_of_week"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="end"
+            android:drawablePadding="8dp"
+            android:text=""
+            app:drawableEndCompat="@drawable/ic_arrow_right"
+            tools:text=""/>
+    </LinearLayout>
+    <TextView
+        android:id="@+id/tv_day_of_week_selected"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/text"
+        android:text=""
+        tools:text="Твой выбор: суббота, воскресенье, ..."/>
+
+    <!-- period_of_time -->
+    <LinearLayout
+        android:id="@+id/layout_period_of_time"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        android:layout_marginTop="22dp"
+        android:orientation="horizontal">
+
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/activity_horizontal_margin"
-            android:layout_weight="1"
-            android:background="@android:color/transparent"
-            android:button="@android:color/transparent"
-            android:drawableTop="@drawable/add_radio_selector_hours_day"
-            android:gravity="center"
-            android:text="@string/add_label_icon_day"
-            android:textColor="@color/grey"
-            android:textSize="@dimen/text" />
+            android:drawablePadding="8dp"
+            android:textStyle="bold"
+            android:textSize="@dimen/info_size"
+            android:text="@string/filter_period_of_time"
+            app:drawableStartCompat="@drawable/ic_add_hours_day_25" />
 
-        <RadioButton
-            android:id="@+id/radioEvening"
+        <TextView
+            android:id="@+id/tv_period_of_time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="end"
+            android:drawablePadding="8dp"
+            android:text=""
+            app:drawableEndCompat="@drawable/ic_arrow_right"
+            tools:text=""/>
+    </LinearLayout>
+    <TextView
+        android:id="@+id/tv_period_of_time_selected"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/text"
+        android:text=""
+        tools:text="Твой выбор: день, вечер, ..."/>
+
+    <!-- category event -->
+    <LinearLayout
+        android:id="@+id/layout_category"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        android:layout_marginTop="22dp"
+        android:orientation="horizontal">
+
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/activity_horizontal_margin"
-            android:layout_weight="1"
-            android:background="@android:color/transparent"
-            android:button="@android:color/transparent"
-            android:drawableTop="@drawable/add_radio_selector_hours_evening"
-            android:gravity="center"
-            android:checked="true"
-            android:text="@string/add_label_icon_evening"
-            android:textColor="@color/grey"
-            android:textSize="@dimen/text" />
+            android:drawablePadding="8dp"
+            android:textStyle="bold"
+            android:textSize="@dimen/info_size"
+            android:text="@string/filter_category"
+            app:drawableStartCompat="@drawable/ic_category" />
 
-        <RadioButton
-            android:id="@+id/radioNight"
+        <TextView
+            android:id="@+id/tv_category"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="end"
+            android:drawablePadding="8dp"
+            android:text=""
+            app:drawableEndCompat="@drawable/ic_arrow_right"
+            tools:text=""/>
+    </LinearLayout>
+    <TextView
+        android:id="@+id/tv_category_selected"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/text"
+        android:text=""
+        tools:text="Твой выбор: хакатоны, фестивали, ..."/>
+
+    <!-- partner -->
+    <LinearLayout
+        android:id="@+id/layout_partner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        android:layout_marginTop="22dp"
+        android:orientation="horizontal">
+
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/activity_horizontal_margin"
-            android:layout_weight="1"
-            android:background="@android:color/transparent"
-            android:button="@android:color/transparent"
-            android:drawableTop="@drawable/add_radio_selector_hours_night"
-            android:gravity="center"
-            android:text="@string/add_label_icon_night"
-            android:textColor="@color/grey"
-            android:textSize="@dimen/text" />
-    </RadioGroup>
+            android:drawablePadding="8dp"
+            android:textStyle="bold"
+            android:textSize="@dimen/info_size"
+            android:text="@string/filter_partner"
+            app:drawableStartCompat="@drawable/ic_partner" />
 
-
+        <TextView
+            android:id="@+id/tv_partner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="end"
+            android:drawablePadding="8dp"
+            android:text=""
+            app:drawableEndCompat="@drawable/ic_arrow_right"
+            tools:text=""/>
+    </LinearLayout>
+    <TextView
+        android:id="@+id/tv_partner_selected"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/text"
+        android:text=""
+        tools:text="Твой выбор: парень, компания, ..."/>
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/buttonFilterApply"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
         style="@style/Widget.MaterialComponents.Button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
-        android:layout_marginStart="120dp"
-        android:layout_marginEnd="120dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="12dp"
         android:layout_marginBottom="18dp"
+        android:layout_gravity="center_horizontal"
         android:backgroundTint="@color/colorPrimary"
         android:textStyle="bold"
         android:textSize="14sp"
         android:elevation="10dp"
-        android:text="Применить"
+        android:text="@string/btn_text_apply"
         app:cornerRadius="10dp"
         app:strokeColor="@color/colorPrimaryDark"
         app:strokeWidth="1dp"/>
