@@ -2,8 +2,8 @@
  <img src="https://i.ibb.co/W3qMtnn/logoblack.png" alt="logoblack" border="0">
 </div>
 
- # Мобильное приложение "FriendsApp" Android 
-Клиентская часть для приложения FriendsApp для организации совместного досуга.
+ # Прототип мобильного приложения "FriendsApp" Android 
+Клиентская часть для прототипа приложения FriendsApp для организации совместного досуга.
 Для запуска приложения необходима [серверная часть приложения.](https://github.com/Akvamarinika/friendsappserver)
 
 
